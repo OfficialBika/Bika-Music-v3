@@ -15,8 +15,8 @@ class Config:
         self.OWNER_ID = int(getenv("OWNER_ID", 0))
 
         self.DURATION_LIMIT = int(getenv("DURATION_LIMIT", 120)) * 60
-        self.QUEUE_LIMIT = int(getenv("QUEUE_LIMIT", 20))
-        self.PLAYLIST_LIMIT = int(getenv("PLAYLIST_LIMIT", 20))
+        self.QUEUE_LIMIT = int(getenv("QUEUE_LIMIT", 25))
+        self.PLAYLIST_LIMIT = int(getenv("PLAYLIST_LIMIT", 25))
 
         self.SESSION1 = getenv("SESSION", None)
         self.SESSION2 = getenv("SESSION2", None)
@@ -37,10 +37,10 @@ class Config:
             url for url in getenv("COOKIES_URL", "").split(" ")
             if url and "batbin.me" in url
         ]
-        self.DEFAULT_THUMB = getenv("DEFAULT_THUMB", "https://te.legra.ph/file/3e40a408286d4eda24191.jpg")
-        self.PING_IMG = getenv("PING_IMG", "https://files.catbox.moe/haagg2.png")
-        self.START_IMG = getenv("START_IMG", "https://files.catbox.moe/zvziwk.jpg")
-        self.HELP_IMG = getenv("HELP_IMG", "https://graph.org/file/57c13c2b739bc2443c4f3-6a4fa57e870d529794.jpg")
+        self.DEFAULT_THUMB = getenv("DEFAULT_THUMB", "https://graph.org/file/57c13c2b739bc2443c4f3-6a4fa57e870d529794.jpg")
+        self.PING_IMG = getenv("PING_IMG", "https://graph.org/file/f4d7fcd322e9b4ff71875-1bd81abda440766e3d.jpg")
+        self.START_IMG = getenv("START_IMG", "https://graph.org/file/57c13c2b739bc2443c4f3-6a4fa57e870d529794.jpg")
+        self.HELP_IMG = getenv("HELP_IMG", "https://graph.org/file/e78cfe5618234c9d3b553-0a5d4efe2c378f50c3.jpg")
 
     def check(self):
         missing = [
