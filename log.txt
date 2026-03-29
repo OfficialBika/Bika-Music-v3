@@ -1,0 +1,1065 @@
+[20-Mar-26 20:18:00 - INFO] - anony: Cache directories updated.
+[20-Mar-26 20:18:00 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[20-Mar-26 20:18:01 - INFO] - anony: Database connection successful. (0.95s)
+[20-Mar-26 20:18:01 - INFO] - anony: Migrating users and chats from old collections...
+[20-Mar-26 20:18:02 - INFO] - anony: Migration completed successfully.
+[20-Mar-26 20:18:02 - INFO] - anony: Database cache loaded.
+[20-Mar-26 20:18:10 - INFO] - anony: Bot started as @BikaMusicBot
+[20-Mar-26 20:18:13 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[20-Mar-26 20:18:13 - INFO] - anony: PyTgCalls client(s) started.
+[20-Mar-26 20:18:13 - INFO] - anony: Loaded 22 modules.
+[20-Mar-26 20:18:13 - INFO] - anony: Loaded 1 sudo users.
+[20-Mar-26 20:20:06 - WARNING] - anony: Cookies are missing; downloads might fail.
+[20-Mar-26 20:22:49 - INFO] - anony: Stopping...
+[20-Mar-26 20:22:49 - INFO] - anony: Bot stopped.
+[20-Mar-26 20:22:49 - INFO] - anony: Assistants stopped.
+[20-Mar-26 20:22:49 - INFO] - anony: Database connection closed.
+[20-Mar-26 20:22:49 - INFO] - anony: Stopped.
+
+[20-Mar-26 20:24:44 - INFO] - anony: Cache directories updated.
+[20-Mar-26 20:24:44 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[20-Mar-26 20:24:45 - INFO] - anony: Database connection successful. (0.94s)
+[20-Mar-26 20:24:46 - INFO] - anony: Database cache loaded.
+[20-Mar-26 20:24:47 - INFO] - anony: Bot started as @BikaMusicBot
+[20-Mar-26 20:24:50 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[20-Mar-26 20:24:50 - INFO] - anony: PyTgCalls client(s) started.
+[20-Mar-26 20:24:50 - INFO] - anony: Loaded 22 modules.
+[20-Mar-26 20:24:51 - INFO] - anony: Loaded 1 sudo users.
+[20-Mar-26 20:26:10 - WARNING] - anony: Cookies are missing; downloads might fail.
+[20-Mar-26 20:27:39 - INFO] - anony: Stopping...
+[20-Mar-26 20:27:39 - INFO] - anony: Bot stopped.
+[20-Mar-26 20:27:39 - INFO] - anony: Assistants stopped.
+[20-Mar-26 20:27:39 - INFO] - anony: Database connection closed.
+[20-Mar-26 20:27:39 - INFO] - anony: Stopped.
+
+[20-Mar-26 20:49:33 - INFO] - anony: Cache directories updated.
+[20-Mar-26 20:49:33 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[20-Mar-26 20:49:34 - INFO] - anony: Database connection successful. (0.95s)
+[20-Mar-26 20:49:35 - INFO] - anony: Database cache loaded.
+[20-Mar-26 20:49:36 - INFO] - anony: Bot started as @BikaMusicBot
+[20-Mar-26 20:49:39 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[20-Mar-26 20:49:39 - INFO] - anony: PyTgCalls client(s) started.
+[20-Mar-26 20:49:39 - INFO] - anony: Loaded 22 modules.
+[20-Mar-26 20:49:39 - INFO] - anony: Loaded 1 sudo users.
+[20-Mar-26 20:56:37 - INFO] - anony: Stopping...
+[20-Mar-26 20:56:37 - INFO] - anony: Bot stopped.
+[20-Mar-26 20:56:37 - INFO] - anony: Assistants stopped.
+[20-Mar-26 20:56:37 - INFO] - anony: Database connection closed.
+[20-Mar-26 20:56:37 - INFO] - anony: Stopped.
+
+[20-Mar-26 20:57:45 - INFO] - anony: Cache directories updated.
+[20-Mar-26 20:57:46 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[20-Mar-26 20:57:47 - INFO] - anony: Database connection successful. (0.94s)
+[20-Mar-26 20:57:47 - INFO] - anony: Database cache loaded.
+[20-Mar-26 20:57:49 - INFO] - anony: Bot started as @BikaMusicBot
+[20-Mar-26 20:57:51 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[20-Mar-26 20:57:52 - INFO] - anony: PyTgCalls client(s) started.
+[20-Mar-26 20:57:52 - INFO] - anony: Loaded 22 modules.
+[20-Mar-26 20:57:52 - INFO] - anony: Loaded 1 sudo users.
+[21-Mar-26 06:18:22 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:18:22 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:18:23 - INFO] - anony: Database connection successful. (0.94s)
+[21-Mar-26 06:18:23 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:19:40 - INFO] - anony: Stopping...
+[21-Mar-26 06:19:40 - INFO] - anony: Bot stopped.
+[21-Mar-26 06:19:40 - INFO] - anony: Assistants stopped.
+[21-Mar-26 06:19:40 - INFO] - anony: Database connection closed.
+[21-Mar-26 06:19:40 - INFO] - anony: Stopped.
+
+[21-Mar-26 06:19:46 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:19:46 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:19:47 - INFO] - anony: Database connection successful. (0.96s)
+[21-Mar-26 06:19:48 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:19:49 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:19:52 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:19:52 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:19:52 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:19:52 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:19:53 - INFO] - anony: Database connection successful. (0.96s)
+[21-Mar-26 06:19:53 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:19:55 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:19:58 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:19:58 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:19:58 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:19:58 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:20:00 - INFO] - anony: Database connection successful. (0.97s)
+[21-Mar-26 06:20:00 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:20:02 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:20:04 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:20:05 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:20:11 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:20:11 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:20:12 - INFO] - anony: Database connection successful. (0.95s)
+[21-Mar-26 06:20:12 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:20:14 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:20:16 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:20:17 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:20:23 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:20:23 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:20:24 - INFO] - anony: Database connection successful. (0.96s)
+[21-Mar-26 06:20:24 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:20:26 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:20:29 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:20:29 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:20:35 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:20:35 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:20:36 - INFO] - anony: Database connection successful. (0.98s)
+[21-Mar-26 06:20:36 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:20:38 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:20:41 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:20:41 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:20:47 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:20:47 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:20:48 - INFO] - anony: Database connection successful. (0.96s)
+[21-Mar-26 06:20:49 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:20:50 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:20:53 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:20:53 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:20:54 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:20:54 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:20:55 - INFO] - anony: Database connection successful. (0.96s)
+[21-Mar-26 06:20:56 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:20:58 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:20:59 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:20:59 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:21:00 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:21:00 - INFO] - anony: Database connection successful. (0.99s)
+[21-Mar-26 06:21:01 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:21:01 - INFO] - anony: Loaded 22 modules.
+[21-Mar-26 06:21:01 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:21:01 - INFO] - anony: Loaded 1 sudo users.
+[21-Mar-26 06:21:08 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:21:08 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:21:09 - INFO] - anony: Database connection successful. (0.98s)
+[21-Mar-26 06:21:09 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:21:16 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:21:16 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:21:17 - INFO] - anony: Database connection successful. (1.02s)
+[21-Mar-26 06:21:18 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:21:25 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:21:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:21:26 - INFO] - anony: Database connection successful. (1.02s)
+[21-Mar-26 06:21:26 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:21:33 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:21:33 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:21:34 - INFO] - anony: Database connection successful. (1.03s)
+[21-Mar-26 06:21:35 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:21:42 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:21:42 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:21:43 - INFO] - anony: Database connection successful. (0.94s)
+[21-Mar-26 06:21:43 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:21:50 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:21:50 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:21:51 - INFO] - anony: Database connection successful. (0.94s)
+[21-Mar-26 06:21:52 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:21:59 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:21:59 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:22:00 - INFO] - anony: Database connection successful. (0.93s)
+[21-Mar-26 06:22:00 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:22:07 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:22:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:22:08 - INFO] - anony: Database connection successful. (0.95s)
+[21-Mar-26 06:22:09 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:22:16 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:22:16 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:22:16 - INFO] - anony: Stopping...
+[21-Mar-26 06:22:16 - INFO] - anony: Bot stopped.
+[21-Mar-26 06:22:16 - INFO] - anony: Assistants stopped.
+[21-Mar-26 06:22:17 - INFO] - anony: Database connection closed.
+[21-Mar-26 06:22:17 - INFO] - anony: Stopped.
+
+[21-Mar-26 06:22:17 - INFO] - anony: Database connection successful. (1.09s)
+[21-Mar-26 06:22:17 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:22:19 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:22:22 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:22:22 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:22:22 - INFO] - anony: Loaded 22 modules.
+[21-Mar-26 06:22:22 - INFO] - anony: Loaded 1 sudo users.
+[21-Mar-26 06:32:07 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:32:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:32:08 - INFO] - anony: Database connection successful. (0.98s)
+[21-Mar-26 06:32:09 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:33:08 - INFO] - anony: Stopping...
+[21-Mar-26 06:33:08 - INFO] - anony: Bot stopped.
+[21-Mar-26 06:33:08 - INFO] - anony: Assistants stopped.
+[21-Mar-26 06:33:08 - INFO] - anony: Database connection closed.
+[21-Mar-26 06:33:08 - INFO] - anony: Stopped.
+
+[21-Mar-26 06:33:21 - INFO] - anony: Cache directories updated.
+[21-Mar-26 06:33:21 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 06:33:22 - INFO] - anony: Database connection successful. (0.97s)
+[21-Mar-26 06:33:23 - INFO] - anony: Database cache loaded.
+[21-Mar-26 06:33:24 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 06:33:27 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 06:33:27 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 06:33:27 - INFO] - anony: Loaded 23 modules.
+[21-Mar-26 06:33:28 - INFO] - anony: Loaded 1 sudo users.
+[21-Mar-26 07:12:40 - INFO] - anony: Cache directories updated.
+[21-Mar-26 07:12:40 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 07:12:41 - INFO] - anony: Database connection successful. (1.00s)
+[21-Mar-26 07:12:42 - INFO] - anony: Database cache loaded.
+[21-Mar-26 07:12:44 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 07:12:46 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 07:12:47 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 07:12:47 - INFO] - anony: Loaded 23 modules.
+[21-Mar-26 07:12:47 - INFO] - anony: Loaded 1 sudo users.
+[21-Mar-26 14:02:37 - INFO] - anony: Stopping...
+[21-Mar-26 14:02:37 - INFO] - anony: Bot stopped.
+[21-Mar-26 14:02:37 - INFO] - anony: Assistants stopped.
+[21-Mar-26 14:02:37 - INFO] - anony: Database connection closed.
+[21-Mar-26 14:02:37 - INFO] - anony: Stopped.
+
+[21-Mar-26 14:02:38 - INFO] - anony: Cache directories updated.
+[21-Mar-26 14:02:38 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 14:02:39 - INFO] - anony: Database connection successful. (0.96s)
+[21-Mar-26 14:02:40 - INFO] - anony: Database cache loaded.
+[21-Mar-26 14:02:41 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 14:02:44 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 14:02:44 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 14:02:44 - INFO] - anony: Loaded 23 modules.
+[21-Mar-26 14:02:45 - INFO] - anony: Loaded 1 sudo users.
+[21-Mar-26 14:04:41 - INFO] - anony: Stopping...
+[21-Mar-26 14:04:41 - INFO] - anony: Bot stopped.
+[21-Mar-26 14:04:41 - INFO] - anony: Assistants stopped.
+[21-Mar-26 14:04:41 - INFO] - anony: Database connection closed.
+[21-Mar-26 14:04:41 - INFO] - anony: Stopped.
+
+[21-Mar-26 14:04:42 - INFO] - anony: Cache directories updated.
+[21-Mar-26 14:04:42 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 14:04:43 - INFO] - anony: Database connection successful. (0.95s)
+[21-Mar-26 14:04:43 - INFO] - anony: Database cache loaded.
+[21-Mar-26 14:04:45 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 14:04:47 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 14:04:48 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 14:04:48 - INFO] - anony: Loaded 23 modules.
+[21-Mar-26 14:04:48 - INFO] - anony: Loaded 1 sudo users.
+[21-Mar-26 14:30:48 - INFO] - anony: Stopping...
+[21-Mar-26 14:30:48 - INFO] - anony: Bot stopped.
+[21-Mar-26 14:30:48 - INFO] - anony: Assistants stopped.
+[21-Mar-26 14:30:48 - INFO] - anony: Database connection closed.
+[21-Mar-26 14:30:48 - INFO] - anony: Stopped.
+
+[21-Mar-26 14:30:49 - INFO] - anony: Cache directories updated.
+[21-Mar-26 14:30:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 14:30:50 - INFO] - anony: Database connection successful. (1.09s)
+[21-Mar-26 14:30:51 - INFO] - anony: Database cache loaded.
+[21-Mar-26 14:30:53 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 14:30:55 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 14:30:56 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 14:30:56 - INFO] - anony: Loaded 23 modules.
+[21-Mar-26 14:30:56 - INFO] - anony: Loaded 1 sudo users.
+[21-Mar-26 15:46:29 - INFO] - anony: Stopping...
+[21-Mar-26 15:46:29 - INFO] - anony: Bot stopped.
+[21-Mar-26 15:46:29 - INFO] - anony: Assistants stopped.
+[21-Mar-26 15:46:29 - INFO] - anony: Database connection closed.
+[21-Mar-26 15:46:29 - INFO] - anony: Stopped.
+
+[21-Mar-26 15:46:30 - INFO] - anony: Cache directories updated.
+[21-Mar-26 15:46:30 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[21-Mar-26 15:46:31 - INFO] - anony: Database connection successful. (0.97s)
+[21-Mar-26 15:46:31 - INFO] - anony: Database cache loaded.
+[21-Mar-26 15:46:32 - INFO] - anony: Bot started as @BikaMusicBot
+[21-Mar-26 15:46:34 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[21-Mar-26 15:46:34 - INFO] - anony: PyTgCalls client(s) started.
+[21-Mar-26 15:46:34 - INFO] - anony: Loaded 23 modules.
+[21-Mar-26 15:46:34 - INFO] - anony: Loaded 1 sudo users.
+[27-Mar-26 02:54:34 - INFO] - anony: Stopping...
+[27-Mar-26 02:54:34 - INFO] - anony: Bot stopped.
+[27-Mar-26 02:54:34 - INFO] - anony: Assistants stopped.
+[27-Mar-26 02:54:34 - INFO] - anony: Database connection closed.
+[27-Mar-26 02:54:34 - INFO] - anony: Stopped.
+
+[27-Mar-26 02:54:35 - INFO] - anony: Cache directories updated.
+[27-Mar-26 02:54:35 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[27-Mar-26 02:54:37 - INFO] - anony: Database connection successful. (0.95s)
+[27-Mar-26 02:54:37 - INFO] - anony: Database cache loaded.
+[27-Mar-26 02:54:38 - INFO] - anony: Bot started as @BikaMusicBot
+[27-Mar-26 02:54:39 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[27-Mar-26 02:54:40 - INFO] - anony: PyTgCalls client(s) started.
+[27-Mar-26 02:54:40 - INFO] - anony: Loaded 23 modules.
+[27-Mar-26 02:54:40 - INFO] - anony: Loaded 1 sudo users.
+[27-Mar-26 03:07:30 - INFO] - anony: Stopping...
+[27-Mar-26 03:07:30 - INFO] - anony: Bot stopped.
+[27-Mar-26 03:07:30 - INFO] - anony: Assistants stopped.
+[27-Mar-26 03:07:30 - INFO] - anony: Database connection closed.
+[27-Mar-26 03:07:30 - INFO] - anony: Stopped.
+
+[27-Mar-26 03:07:31 - INFO] - anony: Cache directories updated.
+[27-Mar-26 03:07:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[27-Mar-26 03:07:32 - INFO] - anony: Database connection successful. (0.96s)
+[27-Mar-26 03:07:33 - INFO] - anony: Database cache loaded.
+[27-Mar-26 03:07:33 - INFO] - anony: Bot started as @BikaMusicBot
+[27-Mar-26 03:07:35 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[27-Mar-26 03:07:35 - INFO] - anony: PyTgCalls client(s) started.
+[27-Mar-26 03:07:35 - INFO] - anony: Loaded 23 modules.
+[27-Mar-26 03:07:35 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 14:37:12 - INFO] - anony: Stopping...
+[28-Mar-26 14:37:12 - INFO] - anony: Bot stopped.
+[28-Mar-26 14:37:12 - INFO] - anony: Assistants stopped.
+[28-Mar-26 14:37:12 - INFO] - anony: Database connection closed.
+[28-Mar-26 14:37:12 - INFO] - anony: Stopped.
+
+[28-Mar-26 14:37:15 - INFO] - anony: Cache directories updated.
+[28-Mar-26 14:37:15 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 14:37:16 - INFO] - anony: Database connection successful. (1.09s)
+[28-Mar-26 14:37:17 - INFO] - anony: Database cache loaded.
+[28-Mar-26 14:37:18 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 14:37:19 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 14:37:20 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 14:37:20 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 14:37:20 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 15:14:36 - INFO] - anony: Stopping...
+[28-Mar-26 15:14:36 - INFO] - anony: Bot stopped.
+[28-Mar-26 15:14:36 - INFO] - anony: Assistants stopped.
+[28-Mar-26 15:14:36 - INFO] - anony: Database connection closed.
+[28-Mar-26 15:14:36 - INFO] - anony: Stopped.
+
+[28-Mar-26 15:14:37 - INFO] - anony: Cache directories updated.
+[28-Mar-26 15:14:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 15:14:38 - INFO] - anony: Database connection successful. (1.06s)
+[28-Mar-26 15:14:39 - INFO] - anony: Database cache loaded.
+[28-Mar-26 15:14:40 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 15:14:41 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 15:14:41 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 15:14:41 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 15:14:41 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 15:15:13 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/start.py", line 40, in start
+    await message.reply_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 4780, in reply_photo
+    return await self._client.send_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/send_photo.py", line 304, in send_photo
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:15:17 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/start.py", line 40, in start
+    await message.reply_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 4780, in reply_photo
+    return await self._client.send_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/send_photo.py", line 304, in send_photo
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:15:42 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/helpers/_play.py", line 124, in wrapper
+    return await play(_, m, force, m3u8, video, url)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/play.py", line 128, in play_hndlr
+    await anon.play_media(chat_id=m.chat.id, message=sent, media=file)
+  File "/home/ubuntu/AnonXMusic/anony/core/calls.py", line 94, in play_media
+    await message.edit_media(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 8299, in edit_media
+    return await self._client.edit_message_media(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/edit_message_media.py", line 295, in edit_message_media
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:16:05 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/start.py", line 40, in start
+    await message.reply_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 4780, in reply_photo
+    return await self._client.send_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/send_photo.py", line 304, in send_photo
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:16:06 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/start.py", line 40, in start
+    await message.reply_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 4780, in reply_photo
+    return await self._client.send_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/send_photo.py", line 304, in send_photo
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:16:12 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/start.py", line 40, in start
+    await message.reply_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 4780, in reply_photo
+    return await self._client.send_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/send_photo.py", line 304, in send_photo
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:16:12 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/start.py", line 40, in start
+    await message.reply_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 4780, in reply_photo
+    return await self._client.send_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/send_photo.py", line 304, in send_photo
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:16:27 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/start.py", line 40, in start
+    await message.reply_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 4780, in reply_photo
+    return await self._client.send_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/send_photo.py", line 304, in send_photo
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:16:30 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/start.py", line 40, in start
+    await message.reply_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 4780, in reply_photo
+    return await self._client.send_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/send_photo.py", line 304, in send_photo
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:16:31 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/start.py", line 40, in start
+    await message.reply_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/types/messages_and_media/message.py", line 4780, in reply_photo
+    return await self._client.send_photo(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/methods/messages/send_photo.py", line 304, in send_photo
+    reply_markup=await reply_markup.write(self) if reply_markup else None,
+AttributeError: 'dict' object has no attribute 'write'
+[28-Mar-26 15:19:40 - INFO] - anony: Stopping...
+[28-Mar-26 15:19:40 - INFO] - anony: Bot stopped.
+[28-Mar-26 15:19:40 - INFO] - anony: Assistants stopped.
+[28-Mar-26 15:19:41 - INFO] - anony: Database connection closed.
+[28-Mar-26 15:19:41 - INFO] - anony: Stopped.
+
+[28-Mar-26 15:19:41 - INFO] - anony: Cache directories updated.
+[28-Mar-26 15:19:41 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 15:19:42 - INFO] - anony: Database connection successful. (0.97s)
+[28-Mar-26 15:19:43 - INFO] - anony: Database cache loaded.
+[28-Mar-26 15:19:44 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 15:19:45 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 15:19:45 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 15:19:45 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 15:19:45 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 15:34:34 - INFO] - anony: Stopping...
+[28-Mar-26 15:34:34 - INFO] - anony: Bot stopped.
+[28-Mar-26 15:34:34 - INFO] - anony: Assistants stopped.
+[28-Mar-26 15:34:34 - INFO] - anony: Database connection closed.
+[28-Mar-26 15:34:34 - INFO] - anony: Stopped.
+
+[28-Mar-26 15:34:35 - INFO] - anony: Cache directories updated.
+[28-Mar-26 15:34:35 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 15:34:36 - INFO] - anony: Database connection successful. (0.98s)
+[28-Mar-26 15:34:37 - INFO] - anony: Database cache loaded.
+[28-Mar-26 15:34:38 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 15:34:39 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 15:34:39 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 15:34:39 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 15:34:39 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 15:43:48 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/helpers/_play.py", line 124, in wrapper
+    return await play(_, m, force, m3u8, video, url)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/play.py", line 98, in play_hndlr
+    rawtg.edit_message_text(
+  File "/home/ubuntu/AnonXMusic/anony/helpers/rawtg.py", line 15, in edit_message_text
+    return requests.post(f"{API}/editMessageText", json=payload, timeout=30).json()
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/sessions.py", line 575, in request
+    prep = self.prepare_request(req)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/sessions.py", line 484, in prepare_request
+    p.prepare(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/models.py", line 370, in prepare
+    self.prepare_body(data, files, json)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/models.py", line 510, in prepare_body
+    body = complexjson.dumps(json, allow_nan=False)
+  File "/usr/lib/python3.10/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+  File "/usr/lib/python3.10/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.10/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/usr/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type InlineKeyboardMarkup is not JSON serializable
+[28-Mar-26 15:44:20 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/helpers/_play.py", line 124, in wrapper
+    return await play(_, m, force, m3u8, video, url)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/play.py", line 98, in play_hndlr
+    rawtg.edit_message_text(
+  File "/home/ubuntu/AnonXMusic/anony/helpers/rawtg.py", line 15, in edit_message_text
+    return requests.post(f"{API}/editMessageText", json=payload, timeout=30).json()
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/sessions.py", line 575, in request
+    prep = self.prepare_request(req)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/sessions.py", line 484, in prepare_request
+    p.prepare(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/models.py", line 370, in prepare
+    self.prepare_body(data, files, json)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/models.py", line 510, in prepare_body
+    body = complexjson.dumps(json, allow_nan=False)
+  File "/usr/lib/python3.10/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+  File "/usr/lib/python3.10/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.10/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/usr/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type InlineKeyboardMarkup is not JSON serializable
+[28-Mar-26 15:47:53 - INFO] - anony: Stopping...
+[28-Mar-26 15:47:53 - INFO] - anony: Bot stopped.
+[28-Mar-26 15:47:53 - INFO] - anony: Assistants stopped.
+[28-Mar-26 15:47:53 - INFO] - anony: Database connection closed.
+[28-Mar-26 15:47:53 - INFO] - anony: Stopped.
+
+[28-Mar-26 15:47:54 - INFO] - anony: Cache directories updated.
+[28-Mar-26 15:47:54 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 15:47:55 - INFO] - anony: Database connection successful. (1.01s)
+[28-Mar-26 15:47:55 - INFO] - anony: Database cache loaded.
+[28-Mar-26 15:47:56 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 15:47:57 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 15:47:58 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 15:47:58 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 15:47:58 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 15:48:32 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/helpers/_play.py", line 124, in wrapper
+    return await play(_, m, force, m3u8, video, url)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/play.py", line 99, in play_hndlr
+    rawtg.send_message(
+  File "/home/ubuntu/AnonXMusic/anony/helpers/rawtg.py", line 15, in send_message
+    return requests.post(f"{API}/sendMessage", json=payload, timeout=30).json()
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/sessions.py", line 575, in request
+    prep = self.prepare_request(req)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/sessions.py", line 484, in prepare_request
+    p.prepare(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/models.py", line 370, in prepare
+    self.prepare_body(data, files, json)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/models.py", line 510, in prepare_body
+    body = complexjson.dumps(json, allow_nan=False)
+  File "/usr/lib/python3.10/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+  File "/usr/lib/python3.10/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.10/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/usr/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type InlineKeyboardMarkup is not JSON serializable
+[28-Mar-26 15:52:07 - ERROR] - pyrogram.dispatcher: Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/dispatcher.py", line 383, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/ubuntu/AnonXMusic/anony/core/lang.py", line 90, in wrapper
+    return await func(*args, **kwargs)
+  File "/home/ubuntu/AnonXMusic/anony/helpers/_play.py", line 124, in wrapper
+    return await play(_, m, force, m3u8, video, url)
+  File "/home/ubuntu/AnonXMusic/anony/plugins/play.py", line 99, in play_hndlr
+    rawtg.send_message(
+  File "/home/ubuntu/AnonXMusic/anony/helpers/rawtg.py", line 15, in send_message
+    return requests.post(f"{API}/sendMessage", json=payload, timeout=30).json()
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/sessions.py", line 575, in request
+    prep = self.prepare_request(req)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/sessions.py", line 484, in prepare_request
+    p.prepare(
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/models.py", line 370, in prepare
+    self.prepare_body(data, files, json)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/requests/models.py", line 510, in prepare_body
+    body = complexjson.dumps(json, allow_nan=False)
+  File "/usr/lib/python3.10/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+  File "/usr/lib/python3.10/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.10/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/usr/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type InlineKeyboardMarkup is not JSON serializable
+[28-Mar-26 15:53:45 - INFO] - anony: Stopping...
+[28-Mar-26 15:53:45 - INFO] - anony: Bot stopped.
+[28-Mar-26 15:53:45 - INFO] - anony: Assistants stopped.
+[28-Mar-26 15:53:45 - INFO] - anony: Database connection closed.
+[28-Mar-26 15:53:45 - INFO] - anony: Stopped.
+
+[28-Mar-26 15:53:46 - INFO] - anony: Cache directories updated.
+[28-Mar-26 15:53:46 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 15:53:47 - INFO] - anony: Database connection successful. (0.94s)
+[28-Mar-26 15:53:48 - INFO] - anony: Database cache loaded.
+[28-Mar-26 15:53:49 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 15:53:50 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 15:53:50 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 15:53:50 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 15:53:51 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 15:59:21 - INFO] - anony: Stopping...
+[28-Mar-26 15:59:21 - INFO] - anony: Bot stopped.
+[28-Mar-26 15:59:21 - INFO] - anony: Assistants stopped.
+[28-Mar-26 15:59:22 - INFO] - anony: Database connection closed.
+[28-Mar-26 15:59:22 - INFO] - anony: Stopped.
+
+[28-Mar-26 15:59:22 - INFO] - anony: Cache directories updated.
+[28-Mar-26 15:59:22 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 15:59:23 - INFO] - anony: Database connection successful. (0.99s)
+[28-Mar-26 15:59:24 - INFO] - anony: Database cache loaded.
+[28-Mar-26 15:59:25 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 15:59:26 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 15:59:26 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 15:59:26 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 15:59:27 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 16:17:18 - INFO] - anony: Stopping...
+[28-Mar-26 16:17:18 - INFO] - anony: Bot stopped.
+[28-Mar-26 16:17:18 - INFO] - anony: Assistants stopped.
+[28-Mar-26 16:17:18 - INFO] - anony: Database connection closed.
+[28-Mar-26 16:17:18 - INFO] - anony: Stopped.
+
+[28-Mar-26 16:17:19 - INFO] - anony: Cache directories updated.
+[28-Mar-26 16:17:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 16:17:20 - INFO] - anony: Database connection successful. (0.93s)
+[28-Mar-26 16:17:20 - INFO] - anony: Database cache loaded.
+[28-Mar-26 16:17:21 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 16:17:23 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 16:17:23 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 16:17:23 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 16:17:23 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 16:37:48 - INFO] - anony: Stopping...
+[28-Mar-26 16:37:48 - INFO] - anony: Bot stopped.
+[28-Mar-26 16:37:48 - INFO] - anony: Assistants stopped.
+[28-Mar-26 16:37:48 - INFO] - anony: Database connection closed.
+[28-Mar-26 16:37:48 - INFO] - anony: Stopped.
+
+[28-Mar-26 16:37:49 - INFO] - anony: Cache directories updated.
+[28-Mar-26 16:37:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 16:37:50 - INFO] - anony: Database connection successful. (0.95s)
+[28-Mar-26 16:37:50 - INFO] - anony: Database cache loaded.
+[28-Mar-26 16:37:51 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 16:37:52 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 16:37:53 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 16:37:53 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 16:37:53 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 16:48:41 - INFO] - anony: Stopping...
+[28-Mar-26 16:48:41 - INFO] - anony: Bot stopped.
+[28-Mar-26 16:48:41 - INFO] - anony: Assistants stopped.
+[28-Mar-26 16:48:41 - INFO] - anony: Database connection closed.
+[28-Mar-26 16:48:41 - INFO] - anony: Stopped.
+
+[28-Mar-26 16:48:42 - INFO] - anony: Cache directories updated.
+[28-Mar-26 16:48:42 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 16:48:43 - INFO] - anony: Database connection successful. (0.96s)
+[28-Mar-26 16:48:43 - INFO] - anony: Database cache loaded.
+[28-Mar-26 16:48:44 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 16:48:46 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 16:48:46 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 16:48:46 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 16:48:46 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 16:58:00 - INFO] - anony: Stopping...
+[28-Mar-26 16:58:00 - INFO] - anony: Bot stopped.
+[28-Mar-26 16:58:00 - INFO] - anony: Assistants stopped.
+[28-Mar-26 16:58:01 - INFO] - anony: Database connection closed.
+[28-Mar-26 16:58:01 - INFO] - anony: Stopped.
+
+[28-Mar-26 16:58:01 - INFO] - anony: Cache directories updated.
+[28-Mar-26 16:58:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 16:58:02 - INFO] - anony: Database connection successful. (0.98s)
+[28-Mar-26 16:58:03 - INFO] - anony: Database cache loaded.
+[28-Mar-26 16:58:04 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 16:58:05 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 16:58:06 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 16:58:06 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 16:58:06 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 17:01:47 - INFO] - anony: Stopping...
+[28-Mar-26 17:01:47 - INFO] - anony: Bot stopped.
+[28-Mar-26 17:01:47 - INFO] - anony: Assistants stopped.
+[28-Mar-26 17:01:47 - INFO] - anony: Database connection closed.
+[28-Mar-26 17:01:47 - INFO] - anony: Stopped.
+
+[28-Mar-26 17:01:48 - INFO] - anony: Cache directories updated.
+[28-Mar-26 17:01:48 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 17:01:49 - INFO] - anony: Database connection successful. (1.08s)
+[28-Mar-26 17:01:50 - INFO] - anony: Database cache loaded.
+[28-Mar-26 17:01:51 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 17:01:53 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 17:01:54 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 17:01:54 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 17:01:54 - INFO] - anony: Loaded 1 sudo users.
+[28-Mar-26 17:03:53 - INFO] - anony: Stopping...
+[28-Mar-26 17:03:53 - INFO] - anony: Bot stopped.
+[28-Mar-26 17:03:53 - INFO] - anony: Assistants stopped.
+[28-Mar-26 17:03:53 - INFO] - anony: Database connection closed.
+[28-Mar-26 17:03:53 - INFO] - anony: Stopped.
+
+[28-Mar-26 17:03:54 - INFO] - anony: Cache directories updated.
+[28-Mar-26 17:03:54 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[28-Mar-26 17:03:55 - INFO] - anony: Database connection successful. (1.12s)
+[28-Mar-26 17:03:56 - INFO] - anony: Database cache loaded.
+[28-Mar-26 17:03:57 - INFO] - anony: Bot started as @BikaMusicBot
+[28-Mar-26 17:03:58 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[28-Mar-26 17:03:58 - INFO] - anony: PyTgCalls client(s) started.
+[28-Mar-26 17:03:58 - INFO] - anony: Loaded 23 modules.
+[28-Mar-26 17:03:59 - INFO] - anony: Loaded 1 sudo users.
+[29-Mar-26 03:17:55 - INFO] - anony: Stopping...
+[29-Mar-26 03:17:55 - INFO] - anony: Bot stopped.
+[29-Mar-26 03:17:55 - ERROR] - asyncio: Task exception was never retrieved
+future: <Task finished name='Task-188366' coro=<Client.handle_updates() done, defined at /home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/client.py:796> exception=ProgrammingError('Cannot operate on a closed database.')>
+Traceback (most recent call last):
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/client.py", line 801, in handle_updates
+    await self.fetch_peers(updates.users),
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/client.py", line 789, in fetch_peers
+    await self.storage.update_peers(parsed_peers)
+  File "/home/ubuntu/AnonXMusic/venv/lib/python3.10/site-packages/pyrogram/storage/sqlite_storage.py", line 331, in update_peers
+    self.conn.executemany(
+sqlite3.ProgrammingError: Cannot operate on a closed database.
+[29-Mar-26 03:17:55 - INFO] - anony: Assistants stopped.
+[29-Mar-26 03:17:55 - INFO] - anony: Database connection closed.
+[29-Mar-26 03:17:55 - INFO] - anony: Stopped.
+
+[29-Mar-26 03:17:56 - INFO] - anony: Cache directories updated.
+[29-Mar-26 03:17:56 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 03:17:57 - INFO] - anony: Database connection successful. (0.97s)
+[29-Mar-26 03:17:57 - INFO] - anony: Database cache loaded.
+[29-Mar-26 03:17:58 - INFO] - anony: Bot started as @BikaMusicBot
+[29-Mar-26 03:17:59 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[29-Mar-26 03:18:00 - INFO] - anony: PyTgCalls client(s) started.
+[29-Mar-26 03:18:00 - INFO] - anony: Loaded 23 modules.
+[29-Mar-26 03:18:00 - INFO] - anony: Loaded 1 sudo users.
+[29-Mar-26 04:13:46 - INFO] - anony: Stopping...
+[29-Mar-26 04:13:46 - INFO] - anony: Bot stopped.
+[29-Mar-26 04:13:46 - INFO] - anony: Assistants stopped.
+[29-Mar-26 04:13:46 - INFO] - anony: Database connection closed.
+[29-Mar-26 04:13:46 - INFO] - anony: Stopped.
+
+[29-Mar-26 04:13:46 - INFO] - anony: Cache directories updated.
+[29-Mar-26 04:13:47 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 04:13:48 - INFO] - anony: Database connection successful. (1.09s)
+[29-Mar-26 04:13:48 - INFO] - anony: Database cache loaded.
+[29-Mar-26 04:13:49 - INFO] - anony: Bot started as @BikaMusicBot
+[29-Mar-26 04:13:51 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[29-Mar-26 04:13:51 - INFO] - anony: PyTgCalls client(s) started.
+[29-Mar-26 04:13:51 - INFO] - anony: Loaded 23 modules.
+[29-Mar-26 04:13:51 - INFO] - anony: Loaded 1 sudo users.
+[29-Mar-26 07:46:02 - INFO] - anony: Stopping...
+[29-Mar-26 07:46:02 - INFO] - anony: Bot stopped.
+[29-Mar-26 07:46:02 - INFO] - anony: Assistants stopped.
+[29-Mar-26 07:46:02 - INFO] - anony: Database connection closed.
+[29-Mar-26 07:46:02 - INFO] - anony: Stopped.
+
+[29-Mar-26 07:46:03 - INFO] - anony: Cache directories updated.
+[29-Mar-26 07:46:03 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 07:46:04 - INFO] - anony: Database connection successful. (1.00s)
+[29-Mar-26 07:46:05 - INFO] - anony: Database cache loaded.
+[29-Mar-26 07:46:06 - INFO] - anony: Bot started as @BikaMusicBot
+[29-Mar-26 07:46:07 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[29-Mar-26 07:46:07 - INFO] - anony: PyTgCalls client(s) started.
+[29-Mar-26 07:46:07 - INFO] - anony: Loaded 23 modules.
+[29-Mar-26 07:46:07 - INFO] - anony: Loaded 1 sudo users.
+[29-Mar-26 09:24:40 - INFO] - anony: Stopping...
+[29-Mar-26 09:24:40 - INFO] - anony: Bot stopped.
+[29-Mar-26 09:24:40 - INFO] - anony: Assistants stopped.
+[29-Mar-26 09:24:40 - INFO] - anony: Database connection closed.
+[29-Mar-26 09:24:40 - INFO] - anony: Stopped.
+
+[29-Mar-26 09:24:41 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:24:41 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:24:42 - INFO] - anony: Database connection successful. (0.98s)
+[29-Mar-26 09:24:43 - INFO] - anony: Database cache loaded.
+[29-Mar-26 09:24:44 - INFO] - anony: Bot started as @BikaMusicBot
+[29-Mar-26 09:24:45 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[29-Mar-26 09:24:45 - INFO] - anony: PyTgCalls client(s) started.
+[29-Mar-26 09:24:45 - INFO] - anony: Loaded 23 modules.
+[29-Mar-26 09:24:46 - INFO] - anony: Loaded 1 sudo users.
+[29-Mar-26 09:39:54 - INFO] - anony: Stopping...
+[29-Mar-26 09:39:54 - INFO] - anony: Bot stopped.
+[29-Mar-26 09:39:54 - INFO] - anony: Assistants stopped.
+[29-Mar-26 09:39:55 - INFO] - anony: Database connection closed.
+[29-Mar-26 09:39:55 - INFO] - anony: Stopped.
+
+[29-Mar-26 09:39:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:39:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:43 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:43 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:49 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:40:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:40:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:43 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:43 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:49 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:41:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:41:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:43 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:43 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:49 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:42:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:42:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:43 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:43 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:49 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:43:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:43:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:43 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:43 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:49 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:44:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:44:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:43 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:43 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:49 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:45:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:45:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:43 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:43 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:49 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:46:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:46:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:43 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:43 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:49 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:47:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:47:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:43 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:43 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:49 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:49 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:48:55 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:48:55 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:49:01 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:49:01 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:49:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:49:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:49:13 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:49:13 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:49:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:49:19 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:49:25 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:49:25 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:49:31 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:49:31 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:49:37 - INFO] - anony: Cache directories updated.
+[29-Mar-26 09:49:37 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 09:49:38 - INFO] - anony: Database connection successful. (0.94s)
+[29-Mar-26 09:49:39 - INFO] - anony: Database cache loaded.
+[29-Mar-26 09:49:40 - INFO] - anony: Bot started as @BikaMusicBot
+[29-Mar-26 09:49:41 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[29-Mar-26 09:49:42 - INFO] - anony: PyTgCalls client(s) started.
+[29-Mar-26 09:49:42 - INFO] - anony: Loaded 23 modules.
+[29-Mar-26 09:49:42 - INFO] - anony: Loaded 1 sudo users.
+[29-Mar-26 12:02:19 - INFO] - anony: Stopping...
+[29-Mar-26 12:02:19 - INFO] - anony: Bot stopped.
+[29-Mar-26 12:02:19 - INFO] - anony: Assistants stopped.
+[29-Mar-26 12:02:19 - INFO] - anony: Database connection closed.
+[29-Mar-26 12:02:19 - INFO] - anony: Stopped.
+
+[29-Mar-26 12:02:19 - INFO] - anony: Cache directories updated.
+[29-Mar-26 12:02:20 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 12:02:21 - INFO] - anony: Database connection successful. (1.01s)
+[29-Mar-26 12:02:21 - INFO] - anony: Database cache loaded.
+[29-Mar-26 12:02:22 - INFO] - anony: Bot started as @BikaMusicBot
+[29-Mar-26 12:02:24 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[29-Mar-26 12:02:24 - INFO] - anony: PyTgCalls client(s) started.
+[29-Mar-26 12:02:24 - INFO] - anony: Loaded 23 modules.
+[29-Mar-26 12:02:24 - INFO] - anony: Loaded 1 sudo users.
+[29-Mar-26 15:36:06 - INFO] - anony: Stopping...
+[29-Mar-26 15:36:06 - INFO] - anony: Bot stopped.
+[29-Mar-26 15:36:06 - INFO] - anony: Assistants stopped.
+[29-Mar-26 15:36:06 - INFO] - anony: Database connection closed.
+[29-Mar-26 15:36:06 - INFO] - anony: Stopped.
+
+[29-Mar-26 15:36:07 - INFO] - anony: Cache directories updated.
+[29-Mar-26 15:36:07 - INFO] - anony: Loaded languages: hi, ja, tr, my, zh, en, pt, pa, es, ar, de, fr, ru
+[29-Mar-26 15:36:08 - INFO] - anony: Database connection successful. (0.94s)
+[29-Mar-26 15:36:09 - INFO] - anony: Database cache loaded.
+[29-Mar-26 15:36:10 - INFO] - anony: Bot started as @BikaMusicBot
+[29-Mar-26 15:36:12 - INFO] - anony: Assistant 1 started as @BikaMusicAssistant
+[29-Mar-26 15:36:12 - INFO] - anony: PyTgCalls client(s) started.
+[29-Mar-26 15:36:12 - INFO] - anony: Loaded 23 modules.
+[29-Mar-26 15:36:12 - INFO] - anony: Loaded 1 sudo users.

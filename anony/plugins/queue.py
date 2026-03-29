@@ -3,10 +3,12 @@
 # This file is part of AnonXMusic
 
 
+import html
+
 from pyrogram import filters, types
 
 from anony import app, config, db, lang, queue, thumb
-from anony.helpers import Track, buttons
+from anony.helpers import Track, buttons, rawtg
 
 
 @app.on_message(filters.command(["queue", "playing"]) & filters.group & ~app.bl_users)
@@ -25,7 +27,7 @@ async def _queue_func(_, m: types.Message):
     ) if config.THUMB_GEN else None
     _text = m.lang["queue_curr"].format(
         _media.url,
-        _media.title[:50],
+        html.escape(_media.title[:50]),
         _media.duration,
         _media.user,
     )
@@ -37,7 +39,7 @@ async def _queue_func(_, m: types.Message):
             if i == 15:
                 break
             _text += m.lang["queue_item"].format(
-                i + 1, media.title, media.duration
+                i + 1, html.escape(media.title), media.duration
             )
         _text += "</blockquote>"
 
@@ -48,15 +50,16 @@ async def _queue_func(_, m: types.Message):
             _playing,
         )
     if thumb:
-        await _reply.edit_media(
-            media=types.InputMediaPhoto(
-                media=_thumb,
-                caption=_text,
-            ),
+        await _reply.delete()
+        rawtg.send_message(
+            chat_id=m.chat.id,
+            text=_text,
             reply_markup=_buttons,
         )
     else:
-        await _reply.edit_text(
+        await _reply.delete()
+        rawtg.send_message(
+            chat_id=m.chat.id,
             text=_text,
             reply_markup=_buttons,
         )

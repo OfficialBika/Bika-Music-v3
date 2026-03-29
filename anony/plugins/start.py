@@ -12,8 +12,9 @@ from anony.helpers import buttons, utils
 @app.on_message(filters.command(["help"]) & filters.private & ~app.bl_users)
 @lang.language()
 async def _help(_, m: types.Message):
-    await m.reply_text(
-        text=m.lang["help_menu"],
+    await m.reply_photo(
+        photo=config.HELP_IMG,
+        caption=m.lang["help_menu"],
         reply_markup=buttons.help_markup(m.lang),
         quote=True,
     )

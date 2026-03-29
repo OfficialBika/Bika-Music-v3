@@ -4,11 +4,12 @@
 
 
 from pathlib import Path
+import html
 
 from pyrogram import filters, types
 
 from anony import anon, app, config, db, lang, queue, tg, yt
-from anony.helpers import buttons, utils
+from anony.helpers import buttons, utils, rawtg
 from anony.helpers._play import checkUB
 
 
@@ -95,17 +96,20 @@ async def play_hndlr(
         position = queue.add(m.chat.id, file)
 
         if position != 0 or await db.get_call(m.chat.id):
-            await sent.edit_text(
-                m.lang["play_queued"].format(
-                    position,
-                    file.url,
-                    file.title,
-                    file.duration,
-                    m.from_user.mention,
+            await sent.delete()
+            rawtg.send_message(
+                chat_id=m.chat.id,
+                text=(
+                    f'<b><tg-emoji emoji-id="5470135030393090150">🎶</tg-emoji> Bika Music</b>\n'
+                    f'<blockquote><b>{position}</b> ခုမြောက် <b>queue</b> ထဲသို့ ထည့်ပြီးပါပြီ</blockquote>\n\n'
+                    f'<b>သီချင်း</b> : {html.escape(file.title)}\n'
+                    f'<b><tg-emoji emoji-id="6307610089259797932">⏱</tg-emoji> ကြာချိန်</b> : {file.duration}\n'
+                    f'<b><tg-emoji emoji-id="5258513401784573443">👥</tg-emoji> တောင်းဆိုသူ</b> : {html.escape(m.from_user.first_name)}'
                 ),
                 reply_markup=buttons.play_queued(
                     m.chat.id, file.id, m.lang["play_now"]
                 ),
+                parse_mode="HTML",
             )
             if tracks:
                 added = playlist_to_queue(m.chat.id, tracks)
