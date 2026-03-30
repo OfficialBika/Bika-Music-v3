@@ -184,29 +184,16 @@ class TgCall(PyTgCalls):
         media.message_id = msg.id
         await self.play_media(chat_id, msg, media)
 
-
     async def play_next(self, chat_id: int) -> None:
         if loop := await db.get_loop(chat_id):
             await db.set_loop(chat_id, loop - 1)
             return await self.replay(chat_id)
 
+        current = queue.get_current(chat_id)
         media = queue.get_next(chat_id)
-
-        try:
-            current = queue.get_current(chat_id)
-            if current and getattr(current, "message_id", 0):
-                await app.delete_messages(
-                    chat_id=chat_id,
-                    message_ids=current.message_id,
-                    revoke=True,
-                )
-                current.message_id = 0
-        except Exception:
-            pass
 
         if not media:
             try:
-                current = queue.get_current(chat_id)
                 if current and getattr(current, "message_id", 0):
                     _lang = await lang.get_lang(chat_id)
                     rawtg.edit_message_reply_markup(
@@ -221,6 +208,17 @@ class TgCall(PyTgCalls):
             except Exception:
                 pass
             return await self.stop(chat_id)
+
+        try:
+            if current and getattr(current, "message_id", 0):
+                await app.delete_messages(
+                    chat_id=chat_id,
+                    message_ids=current.message_id,
+                    revoke=True,
+                )
+                current.message_id = 0
+        except Exception:
+            pass
 
         _lang = await lang.get_lang(chat_id)
         msg = await app.send_message(
