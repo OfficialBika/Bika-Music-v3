@@ -87,7 +87,12 @@ async def _controls(_, query: types.CallbackQuery):
     elif action == "force":
         pos, media = queue.check_item(chat_id, args[3])
         if not media or pos == -1:
-            return await safe_edit_text(rawtg, query, query.lang["play_expired"])
+            return await safe_edit_text(
+                rawtg,
+                query,
+                query.lang["play_expired"],
+                parse_mode="HTML",
+            )
 
         m_id = queue.get_current(chat_id).message_id
         queue.force_add(chat_id, media, remove=pos)
@@ -119,21 +124,15 @@ async def _controls(_, query: types.CallbackQuery):
 
     try:
         if action in ["skip", "replay", "stop"]:
-            await safe_reply_text(query.message, reply)
+            await safe_reply_text(query.message, reply, parse_mode="HTML")
             await safe_delete(query.message)
         else:
             source_text = ""
 
             if getattr(query.message, "caption", None):
-                try:
-                    source_text = query.message.caption.html
-                except Exception:
-                    source_text = query.message.caption or ""
+                source_text = query.message.caption or ""
             elif getattr(query.message, "text", None):
-                try:
-                    source_text = query.message.text.html
-                except Exception:
-                    source_text = query.message.text or ""
+                source_text = query.message.text or ""
 
             mtext = re.sub(
                 r"\n\n<blockquote>.*?</blockquote>",
@@ -149,6 +148,7 @@ async def _controls(_, query: types.CallbackQuery):
                 query,
                 f"{mtext}\n\n<blockquote>{reply}</blockquote>",
                 reply_markup=keyboard,
+                parse_mode="HTML",
             )
     except Exception as e:
         print(f"CONTROLS CALLBACK ERROR: {e}")
@@ -176,6 +176,7 @@ async def _help(_, query: types.CallbackQuery):
                 query,
                 text=query.lang["help_menu"],
                 reply_markup=buttons.help_markup(query.lang),
+                parse_mode="HTML",
             )
 
         elif data[1] == "close":
@@ -203,6 +204,7 @@ async def _help(_, query: types.CallbackQuery):
             query,
             text=query.lang[key],
             reply_markup=buttons.help_markup(query.lang, True),
+            parse_mode="HTML",
         )
 
     except Exception as e:
