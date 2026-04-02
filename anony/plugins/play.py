@@ -109,7 +109,7 @@ async def play_hndlr(
 
     if file.duration_sec > config.DURATION_LIMIT:
         return await sent.edit_text(
-            m.lang["play_duration_limit"].format(config.DURATION_LIMIT // 60)
+            m.lang["play_duration_limit"].format(config.DURATION_LIMIT // 120)
         )
 
     if await db.is_logger():
