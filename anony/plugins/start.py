@@ -17,64 +17,75 @@ async def _maybe_await(result):
     return result
 
 
-async def _apply_raw_message(msg: types.Message, markup, text: str | None = None, caption: str | None = None):
-    try:
-        if caption is not None:
-            # rawtg မှာ edit_message_caption မရှိလို့ pyrogram method သုံး
-            return await msg.edit_caption(
-                caption=caption,
-                reply_markup=markup,
-                parse_mode=enums.ParseMode.HTML,
-            )
+async def _send_raw_photo_with_buttons(
+    chat_id: int,
+    photo,
+    caption: str,
+    reply_markup,
+):
+    result = rawtg.send_photo(
+        chat_id=chat_id,
+        photo=photo,
+        caption=caption,
+        reply_markup=reply_markup,
+        parse_mode="HTML",
+    )
+    result = await _maybe_await(result)
 
-        if text is not None:
-            result = rawtg.edit_message_text(
-                chat_id=msg.chat.id,
-                message_id=msg.id,
-                text=text,
-                reply_markup=markup,
+    # sendPhoto ပြီးချက်ချင်း caption+markup ကို raw edit ပြန်လုပ်
+    if isinstance(result, dict) and result.get("ok") and result.get("result"):
+        try:
+            msg = result["result"]
+            msg_id = msg["message_id"]
+
+            edited = rawtg.edit_message_caption(
+                chat_id=chat_id,
+                message_id=msg_id,
+                caption=caption,
+                reply_markup=reply_markup,
                 parse_mode="HTML",
             )
-            result = await _maybe_await(result)
+            edited = await _maybe_await(edited)
+            print(f"RAW PHOTO POST-EDIT: {edited}")
+        except Exception as e:
+            print(f"RAW PHOTO POST-EDIT ERROR: {e}")
 
-            if isinstance(result, dict) and result.get("ok") is False:
-                return await msg.edit_text(
-                    text=text,
-                    reply_markup=markup,
-                    disable_web_page_preview=True,
-                    parse_mode=enums.ParseMode.HTML,
-                )
-            return result
+    return result
 
-        result = rawtg.edit_message_reply_markup(
-            chat_id=msg.chat.id,
-            message_id=msg.id,
-            reply_markup=markup,
-        )
-        result = await _maybe_await(result)
 
-        if isinstance(result, dict) and result.get("ok") is False:
-            return await msg.edit_reply_markup(reply_markup=markup)
-
-        return result
-
-    except Exception as e:
-        print(f"RAW MESSAGE APPLY ERROR: {e}")
+async def _send_raw_text_with_buttons(
+    chat_id: int,
+    text: str,
+    reply_markup,
+):
+    result = rawtg.send_message(
+        chat_id=chat_id,
+        text=text,
+        reply_markup=reply_markup,
+        parse_mode="HTML",
+    )
+    return await _maybe_await(result)
 
 
 @app.on_message(filters.command(["help"]) & filters.private & ~app.bl_users)
 @lang.language()
 async def _help(_, m: types.Message):
     key = buttons.help_markup(m.lang)
-    caption = m.lang["help_menu"]
-
-    msg = await m.reply_photo(
+    result = await _send_raw_photo_with_buttons(
+        chat_id=m.chat.id,
         photo=config.HELP_IMG,
-        caption=caption,
+        caption=m.lang["help_menu"],
         reply_markup=key,
-        quote=True,
     )
-    await _apply_raw_message(msg, key, caption=caption)
+
+    if isinstance(result, dict) and result.get("ok") is False:
+        print(f"RAW HELP SEND ERROR: {result}")
+        await m.reply_photo(
+            photo=config.HELP_IMG,
+            caption=m.lang["help_menu"],
+            reply_markup=key,
+            quote=True,
+        )
 
 
 @app.on_message(filters.command(["start"]))
@@ -94,13 +105,21 @@ async def start(_, message: types.Message):
     )
 
     key = buttons.start_key(message.lang, private)
-    msg = await message.reply_photo(
+    result = await _send_raw_photo_with_buttons(
+        chat_id=message.chat.id,
         photo=config.START_IMG,
         caption=_text,
         reply_markup=key,
-        quote=not private,
     )
-    await _apply_raw_message(msg, key, caption=_text)
+
+    if isinstance(result, dict) and result.get("ok") is False:
+        print(f"RAW START SEND ERROR: {result}")
+        await message.reply_photo(
+            photo=config.START_IMG,
+            caption=_text,
+            reply_markup=key,
+            quote=not private,
+        )
 
     if private:
         if await db.is_user(message.from_user.id):
@@ -126,12 +145,19 @@ async def settings(_, message: types.Message):
         message.lang, admin_only, cmd_delete, _language, message.chat.id
     )
 
-    msg = await message.reply_text(
+    result = await _send_raw_text_with_buttons(
+        chat_id=message.chat.id,
         text=text,
         reply_markup=key,
-        quote=True,
     )
-    await _apply_raw_message(msg, key, text=text)
+
+    if isinstance(result, dict) and result.get("ok") is False:
+        print(f"RAW SETTINGS SEND ERROR: {result}")
+        await message.reply_text(
+            text=text,
+            reply_markup=key,
+            quote=True,
+        )
 
 
 @app.on_message(filters.new_chat_members, group=7)
