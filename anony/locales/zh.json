@@ -156,5 +156,9 @@
     "help_5": "播放",
     "help_6": "队列",
     "help_7": "统计",
-    "help_8": "Sudoers"
+    "help_8": "Sudoers",
+    "np_started": "Now Playing",
+    "np_song": "Song",
+    "np_duration": "Duration",
+    "np_requester": "Requested by"
 }
