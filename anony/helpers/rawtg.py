@@ -72,7 +72,7 @@ def send_message(
     text: str,
     reply_markup=None,
     parse_mode: str = "HTML",
-    disable_web_page_preview: bool = False,
+    disable_web_page_preview: bool = True,
 ):
     payload = {
         "chat_id": chat_id,
