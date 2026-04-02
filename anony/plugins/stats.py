@@ -8,7 +8,7 @@ import sys
 import inspect
 
 import psutil
-from pyrogram import __version__, filters, types
+from pyrogram import __version__, enums, filters, types
 from pytgcalls import __version__ as pytgver
 
 from anony import app, config, db, lang, userbot
@@ -22,13 +22,12 @@ async def _maybe_await(result):
     return result
 
 
-@app.on_message(filters.command(["stats"]) & filters.group & ~app.bl_users)
+@app.on_message(filters.command(["stats"]) & ~app.bl_users)
 @lang.language()
 async def _stats(_, m: types.Message):
     sent = await m.reply_photo(
         photo=config.PING_IMG,
         caption=m.lang["stats_fetching"],
-        parse_mode="HTML",
     )
 
     try:
@@ -44,7 +43,7 @@ async def _stats(_, m: types.Message):
             len(await db.get_users()),
         )
 
-        if m.from_user.id in app.sudoers:
+        if m.from_user and m.from_user.id in app.sudoers:
             process = psutil.Process(pid)
             storage = psutil.disk_usage("/")
             _utext += m.lang["stats_sudo"].format(
@@ -73,7 +72,7 @@ async def _stats(_, m: types.Message):
             print(f"RAW STATS EDIT ERROR: {result}")
             await sent.edit_caption(
                 _utext,
-                parse_mode="HTML",
+                parse_mode=enums.ParseMode.HTML,
             )
 
     except Exception as e:
@@ -81,9 +80,7 @@ async def _stats(_, m: types.Message):
         try:
             await sent.edit_caption(
                 f"<b>Stats error:</b>\n<code>{e}</code>",
-                parse_mode="HTML",
+                parse_mode=enums.ParseMode.HTML,
             )
         except Exception:
-            await m.reply_text(
-                f"Stats error:\n{e}",
-            )
+            await m.reply_text(f"Stats error:\n{e}")
