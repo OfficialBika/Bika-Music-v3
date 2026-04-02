@@ -123,12 +123,19 @@ async def play_hndlr(
             except Exception:
                 pass
 
+            song_link = html.escape(getattr(file, "url", None) or url or "https://t.me/Official_Bika")
+            song_title = html.escape(file.title)
+            requester_name = html.escape(m.from_user.first_name or "User")
+            requester_link = f"tg://user?id={m.from_user.id}"
+
             text = (
                 f'<b><tg-emoji emoji-id="5361979846845014099">💃</tg-emoji> Ｂɪᴋᴀ ꭙ Ｍᴜsɪᴄ</b>\n\n'
                 f'<blockquote><b>{position}</b> ခုမြောက် <b>queue</b> ထဲသို့ ထည့်ပြီးပါပြီ</blockquote>\n\n'
-                f'<b><tg-emoji emoji-id="5990337934526517811">🎶</tg-emoji> သီချင်း</b> : {html.escape(file.title)}\n\n'
+                f'<b><tg-emoji emoji-id="5990337934526517811">🎶</tg-emoji> သီချင်း</b> : '
+                f'<a href="{song_link}">{song_title}</a>\n\n'
                 f'<b><tg-emoji emoji-id="5316615057939897832">⏰</tg-emoji> ကြာချိန်</b> : {file.duration}\n\n'
-                f'<b><tg-emoji emoji-id="6154522383790114334">😅</tg-emoji> တောင်းဆိုသူ</b> : {html.escape(m.from_user.first_name or "User")}'
+                f'<b><tg-emoji emoji-id="6154522383790114334">😅</tg-emoji> တောင်းဆိုသူ</b> : '
+                f'<a href="{requester_link}">{requester_name}</a>'
             )
 
             result = await _send_raw_text_with_buttons(
