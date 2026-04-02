@@ -156,5 +156,9 @@
     "help_5": "चलाएं",
     "help_6": "कतार",
     "help_7": "आँकड़े",
-    "help_8": "सूडोर्स"
+    "help_8": "सूडोर्स",
+    "np_started": "Now Playing",
+    "np_song": "Song",
+    "np_duration": "Duration",
+    "np_requester": "Requested by"
 }
