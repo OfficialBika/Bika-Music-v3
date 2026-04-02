@@ -3,6 +3,7 @@ from anony import config
 
 API = f"https://api.telegram.org/bot{config.BOT_TOKEN}"
 
+
 def _to_plain(obj):
     if obj is None:
         return None
@@ -56,45 +57,96 @@ def _to_plain(obj):
     return obj
 
 
-def send_message(chat_id: int, text: str, reply_markup=None, parse_mode: str = "HTML"):
+def _post(method: str, payload: dict):
+    r = requests.post(f"{API}/{method}", json=payload, timeout=30)
+    try:
+        data = r.json()
+    except Exception:
+        data = {"ok": False, "raw": r.text}
+    print(f"RAWTG {method}:", data, flush=True)
+    return data
+
+
+def send_message(
+    chat_id: int,
+    text: str,
+    reply_markup=None,
+    parse_mode: str = "HTML",
+    disable_web_page_preview: bool = False,
+):
     payload = {
         "chat_id": chat_id,
         "text": text,
-        "disable_web_page_preview": False,
+        "disable_web_page_preview": disable_web_page_preview,
     }
     if parse_mode is not None:
         payload["parse_mode"] = parse_mode
     if reply_markup is not None:
         payload["reply_markup"] = _to_plain(reply_markup)
-
-    r = requests.post(f"{API}/sendMessage", json=payload, timeout=30)
-    try:
-        data = r.json()
-    except Exception:
-        data = {"ok": False, "raw": r.text}
-    print("RAWTG send_message:", data, flush=True)
-    return data
+    return _post("sendMessage", payload)
 
 
-def edit_message_text(chat_id: int, message_id: int, text: str, reply_markup=None, parse_mode: str = "HTML"):
+def send_photo(
+    chat_id: int,
+    photo,
+    caption: str | None = None,
+    reply_markup=None,
+    parse_mode: str = "HTML",
+    has_spoiler: bool | None = None,
+):
+    payload = {
+        "chat_id": chat_id,
+        "photo": photo,
+    }
+    if caption is not None:
+        payload["caption"] = caption
+    if parse_mode is not None:
+        payload["parse_mode"] = parse_mode
+    if reply_markup is not None:
+        payload["reply_markup"] = _to_plain(reply_markup)
+    if has_spoiler is not None:
+        payload["has_spoiler"] = has_spoiler
+    return _post("sendPhoto", payload)
+
+
+def edit_message_text(
+    chat_id: int,
+    message_id: int,
+    text: str,
+    reply_markup=None,
+    parse_mode: str = "HTML",
+    disable_web_page_preview: bool = False,
+):
     payload = {
         "chat_id": chat_id,
         "message_id": message_id,
         "text": text,
-        "disable_web_page_preview": False,
+        "disable_web_page_preview": disable_web_page_preview,
     }
     if parse_mode is not None:
         payload["parse_mode"] = parse_mode
     if reply_markup is not None:
         payload["reply_markup"] = _to_plain(reply_markup)
+    return _post("editMessageText", payload)
 
-    r = requests.post(f"{API}/editMessageText", json=payload, timeout=30)
-    try:
-        data = r.json()
-    except Exception:
-        data = {"ok": False, "raw": r.text}
-    print("RAWTG edit_message_text:", data, flush=True)
-    return data
+
+def edit_message_caption(
+    chat_id: int,
+    message_id: int,
+    caption: str,
+    reply_markup=None,
+    parse_mode: str = "HTML",
+):
+    payload = {
+        "chat_id": chat_id,
+        "message_id": message_id,
+        "caption": caption,
+    }
+    if parse_mode is not None:
+        payload["parse_mode"] = parse_mode
+    if reply_markup is not None:
+        payload["reply_markup"] = _to_plain(reply_markup)
+    return _post("editMessageCaption", payload)
 
 
 def edit_message_reply_markup(chat_id: int, message_id: int, reply_markup=None):
@@ -104,11 +156,4 @@ def edit_message_reply_markup(chat_id: int, message_id: int, reply_markup=None):
     }
     if reply_markup is not None:
         payload["reply_markup"] = _to_plain(reply_markup)
-
-    r = requests.post(f"{API}/editMessageReplyMarkup", json=payload, timeout=30)
-    try:
-        data = r.json()
-    except Exception:
-        data = {"ok": False, "raw": r.text}
-    print("RAWTG edit_message_reply_markup:", data, flush=True)
-    return data
+    return _post("editMessageReplyMarkup", payload)
