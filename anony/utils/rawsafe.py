@@ -46,7 +46,6 @@ async def safe_edit_text(
                 message_id=query.message.id,
                 text=text,
                 reply_markup=reply_markup,
-                disable_web_page_preview=disable_web_page_preview,
                 parse_mode=parse_mode,
             )
         except MessageNotModified:
