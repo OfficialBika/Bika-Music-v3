@@ -2,6 +2,8 @@
 # Licensed under the MIT License.
 # This file is part of AnonXMusic
 
+import html
+
 from ntgcalls import (
     ConnectionNotFound,
     RTMPStreamingUnsupported,
@@ -18,6 +20,21 @@ from pytgcalls.pytgcalls_session import PyTgCallsSession
 
 from anony import app, config, db, lang, logger, queue, thumb, userbot, yt
 from anony.helpers import Media, Track, buttons, rawtg
+
+
+def build_now_playing_caption(media: Media | Track, _lang: dict) -> str:
+    song_link = html.escape(getattr(media, "url", "") or "https://t.me/Official_Bika")
+    song_title = html.escape(getattr(media, "title", "") or "Unknown")
+    duration = html.escape(str(getattr(media, "duration", "") or "Unknown"))
+    requester = str(getattr(media, "user", "") or "User")
+
+    return (
+        f'<b><tg-emoji emoji-id="5361979846845014099">💃</tg-emoji> | {html.escape(_lang["np_started"])}</b>\n\n'
+        f'<b><tg-emoji emoji-id="5217933090483098080">🎵</tg-emoji> {html.escape(_lang["np_song"])}</b> : '
+        f'<a href="{song_link}">{song_title}</a>\n\n'
+        f'<b><tg-emoji emoji-id="5780543148782522693">🕒</tg-emoji> {html.escape(_lang["np_duration"])}</b>: {duration}\n\n'
+        f'<b><tg-emoji emoji-id="6228686680761569664">💅</tg-emoji> {html.escape(_lang["np_requester"])}</b>: {requester}'
+    )
 
 
 class TgCall(PyTgCalls):
@@ -91,12 +108,7 @@ class TgCall(PyTgCalls):
                 media.time = 1
                 await db.add_call(chat_id)
 
-                text = _lang["play_media"].format(
-                    media.url,
-                    media.title,
-                    media.duration,
-                    media.user,
-                )
+                text = build_now_playing_caption(media, _lang)
                 keyboard = buttons.controls(chat_id)
 
                 try:
@@ -111,8 +123,9 @@ class TgCall(PyTgCalls):
                         sent = message
                     else:
                         await message.edit_text(
-                            text,
+                            text=text,
                             reply_markup=keyboard,
+                            disable_web_page_preview=True,
                         )
                         sent = message
                 except (
@@ -132,16 +145,29 @@ class TgCall(PyTgCalls):
                             chat_id=chat_id,
                             text=text,
                             reply_markup=keyboard,
+                            disable_web_page_preview=True,
                         )
 
                 media.message_id = sent.id
 
                 try:
-                    rawtg.edit_message_reply_markup(
-                        chat_id=chat_id,
-                        message_id=media.message_id,
-                        reply_markup=buttons.controls(chat_id),
-                    )
+                    if _thumb:
+                        rawtg.edit_message_caption(
+                            chat_id=chat_id,
+                            message_id=media.message_id,
+                            caption=text,
+                            reply_markup=buttons.controls(chat_id),
+                            parse_mode="HTML",
+                        )
+                    else:
+                        rawtg.edit_message_text(
+                            chat_id=chat_id,
+                            message_id=media.message_id,
+                            text=text,
+                            reply_markup=buttons.controls(chat_id),
+                            parse_mode="HTML",
+                            disable_web_page_preview=True,
+                        )
                 except Exception:
                     pass
 
