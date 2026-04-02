@@ -5,21 +5,43 @@
 
 from pathlib import Path
 import html
+import inspect
 
-from pyrogram import filters, types
+from pyrogram import enums, filters, types
 
 from anony import anon, app, config, db, lang, queue, tg, yt
 from anony.helpers import buttons, utils, rawtg
 from anony.helpers._play import checkUB
 
 
+async def _maybe_await(result):
+    if inspect.isawaitable(result):
+        return await result
+    return result
+
+
+async def _send_raw_text_with_buttons(
+    chat_id: int,
+    text: str,
+    reply_markup,
+):
+    result = rawtg.send_message(
+        chat_id=chat_id,
+        text=text,
+        reply_markup=reply_markup,
+        parse_mode="HTML",
+    )
+    return await _maybe_await(result)
+
+
 def playlist_to_queue(chat_id: int, tracks: list) -> str:
     text = "<blockquote expandable>"
     for track in tracks:
         pos = queue.add(chat_id, track)
-        text += f"<b>{pos}.</b> {track.title}\n"
+        text += f"<b>{pos}.</b> {html.escape(track.title)}\n"
     text = text[:1948] + "</blockquote>"
     return text
+
 
 @app.on_message(
     filters.command(["play", "playforce", "vplay", "vplayforce"])
@@ -96,26 +118,44 @@ async def play_hndlr(
         position = queue.add(m.chat.id, file)
 
         if position != 0 or await db.get_call(m.chat.id):
-            await sent.delete()
-            rawtg.send_message(
+            try:
+                await sent.delete()
+            except Exception:
+                pass
+
+            text = (
+                f'<b><tg-emoji emoji-id="5361979846845014099">💃</tg-emoji> Ｂɪᴋᴀ ꭙ Ｍᴜsɪᴄ</b>\n\n'
+                f'<blockquote><b>{position}</b> ခုမြောက် <b>queue</b> ထဲသို့ ထည့်ပြီးပါပြီ</blockquote>\n\n'
+                f'<b><tg-emoji emoji-id="5990337934526517811">🎶</tg-emoji> သီချင်း</b> : {html.escape(file.title)}\n\n'
+                f'<b><tg-emoji emoji-id="5316615057939897832">⏰</tg-emoji> ကြာချိန်</b> : {file.duration}\n\n'
+                f'<b><tg-emoji emoji-id="6154522383790114334">😅</tg-emoji> တောင်းဆိုသူ</b> : {html.escape(m.from_user.first_name or "User")}'
+            )
+
+            result = await _send_raw_text_with_buttons(
                 chat_id=m.chat.id,
-                text=(
-                    f'<b><tg-emoji emoji-id="5470135030393090150">🎶</tg-emoji> Bika Music</b>\n'
-                    f'<blockquote><b>{position}</b> ခုမြောက် <b>queue</b> ထဲသို့ ထည့်ပြီးပါပြီ</blockquote>\n\n'
-                    f'<b>သီချင်း</b> : {html.escape(file.title)}\n'
-                    f'<b><tg-emoji emoji-id="6307610089259797932">⏱</tg-emoji> ကြာချိန်</b> : {file.duration}\n'
-                    f'<b><tg-emoji emoji-id="5258513401784573443">👥</tg-emoji> တောင်းဆိုသူ</b> : {html.escape(m.from_user.first_name)}'
-                ),
+                text=text,
                 reply_markup=buttons.play_queued(
                     m.chat.id, file.id, m.lang["play_now"]
                 ),
-                parse_mode="HTML",
             )
+
+            if isinstance(result, dict) and result.get("ok") is False:
+                print(f"RAW PLAY QUEUE SEND ERROR: {result}")
+                await m.reply_text(
+                    text=text,
+                    reply_markup=buttons.play_queued(
+                        m.chat.id, file.id, m.lang["play_now"]
+                    ),
+                    parse_mode=enums.ParseMode.HTML,
+                    disable_web_page_preview=True,
+                )
+
             if tracks:
                 added = playlist_to_queue(m.chat.id, tracks)
                 await app.send_message(
                     chat_id=m.chat.id,
                     text=m.lang["playlist_queued"].format(len(tracks)) + added,
+                    parse_mode=enums.ParseMode.HTML,
                 )
             return
 
@@ -128,10 +168,13 @@ async def play_hndlr(
             file.file_path = await yt.download(file.id, video=video)
 
     await anon.play_media(chat_id=m.chat.id, message=sent, media=file)
+
     if not tracks:
         return
+
     added = playlist_to_queue(m.chat.id, tracks)
     await app.send_message(
         chat_id=m.chat.id,
         text=m.lang["playlist_queued"].format(len(tracks)) + added,
+        parse_mode=enums.ParseMode.HTML,
     )
