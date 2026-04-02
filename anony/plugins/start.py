@@ -3,36 +3,78 @@
 # This file is part of AnonXMusic
 
 import asyncio
+import inspect
+
 from pyrogram import enums, filters, types
 
 from anony import app, config, db, lang
 from anony.helpers import buttons, rawtg, utils
 
 
-async def _apply_raw_markup(msg: types.Message, markup):
+async def _maybe_await(result):
+    if inspect.isawaitable(result):
+        return await result
+    return result
+
+
+async def _apply_raw_message(msg: types.Message, markup, text: str | None = None, caption: str | None = None):
     try:
+        if caption is not None:
+            # rawtg မှာ edit_message_caption မရှိလို့ pyrogram method သုံး
+            return await msg.edit_caption(
+                caption=caption,
+                reply_markup=markup,
+                parse_mode=enums.ParseMode.HTML,
+            )
+
+        if text is not None:
+            result = rawtg.edit_message_text(
+                chat_id=msg.chat.id,
+                message_id=msg.id,
+                text=text,
+                reply_markup=markup,
+                parse_mode="HTML",
+            )
+            result = await _maybe_await(result)
+
+            if isinstance(result, dict) and result.get("ok") is False:
+                return await msg.edit_text(
+                    text=text,
+                    reply_markup=markup,
+                    disable_web_page_preview=True,
+                    parse_mode=enums.ParseMode.HTML,
+                )
+            return result
+
         result = rawtg.edit_message_reply_markup(
             chat_id=msg.chat.id,
             message_id=msg.id,
             reply_markup=markup,
         )
-        if hasattr(result, "__await__"):
-            await result
+        result = await _maybe_await(result)
+
+        if isinstance(result, dict) and result.get("ok") is False:
+            return await msg.edit_reply_markup(reply_markup=markup)
+
+        return result
+
     except Exception as e:
-        print(f"RAW MARKUP APPLY ERROR: {e}")
+        print(f"RAW MESSAGE APPLY ERROR: {e}")
 
 
 @app.on_message(filters.command(["help"]) & filters.private & ~app.bl_users)
 @lang.language()
 async def _help(_, m: types.Message):
     key = buttons.help_markup(m.lang)
+    caption = m.lang["help_menu"]
+
     msg = await m.reply_photo(
         photo=config.HELP_IMG,
-        caption=m.lang["help_menu"],
+        caption=caption,
         reply_markup=key,
         quote=True,
     )
-    await _apply_raw_markup(msg, key)
+    await _apply_raw_message(msg, key, caption=caption)
 
 
 @app.on_message(filters.command(["start"]))
@@ -58,7 +100,7 @@ async def start(_, message: types.Message):
         reply_markup=key,
         quote=not private,
     )
-    await _apply_raw_markup(msg, key)
+    await _apply_raw_message(msg, key, caption=_text)
 
     if private:
         if await db.is_user(message.from_user.id):
@@ -78,15 +120,18 @@ async def settings(_, message: types.Message):
     admin_only = await db.get_play_mode(message.chat.id)
     cmd_delete = await db.get_cmd_delete(message.chat.id)
     _language = await db.get_lang(message.chat.id)
+
+    text = message.lang["start_settings"].format(message.chat.title)
     key = buttons.settings_markup(
         message.lang, admin_only, cmd_delete, _language, message.chat.id
     )
+
     msg = await message.reply_text(
-        text=message.lang["start_settings"].format(message.chat.title),
+        text=text,
         reply_markup=key,
         quote=True,
     )
-    await _apply_raw_markup(msg, key)
+    await _apply_raw_message(msg, key, text=text)
 
 
 @app.on_message(filters.new_chat_members, group=7)
