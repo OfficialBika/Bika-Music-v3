@@ -36,13 +36,26 @@ class Inline:
         remove: bool = False,
     ) -> types.InlineKeyboardMarkup:
         keyboard = []
+
         if status:
             keyboard.append(
-                [self.ikb(text=self._clean_btn_text(status), callback_data=f"controls status {chat_id}", style="primary")]
+                [
+                    self.ikb(
+                        text=self._clean_btn_text(status),
+                        callback_data=f"controls status {chat_id}",
+                        style="primary",
+                    )
+                ]
             )
         elif timer:
             keyboard.append(
-                [self.ikb(text=self._clean_btn_text(timer), callback_data=f"controls status {chat_id}", style="primary")]
+                [
+                    self.ikb(
+                        text=self._clean_btn_text(timer),
+                        callback_data=f"controls status {chat_id}",
+                        style="primary",
+                    )
+                ]
             )
 
         if not remove:
@@ -55,6 +68,7 @@ class Inline:
                     self.ikb(text="▢", callback_data=f"controls stop {chat_id}", style="danger"),
                 ]
             )
+
         return self.ikm(keyboard)
 
     def help_markup(
@@ -63,27 +77,29 @@ class Inline:
         if back:
             rows = [
                 [
-                    self.ikb(
-                        text=self._clean_btn_text(_lang["back"]),
-                        callback_data="help back",
-                        style="primary",
-                    ),
-                    self.ikb(
-                        text=self._clean_btn_text(_lang["close"]),
-                        callback_data="help close",
-                        style="danger",
-                    ),
+                    self.ikb(text="◁ Back", callback_data="help back", style="primary"),
+                    self.ikb(text="Close", callback_data="help close", style="danger"),
                 ]
             ]
         else:
-            cbs = ["admins", "auth", "blist", "lang", "ping", "play", "queue", "stats", "sudo"]
+            items = [
+                ("Admins", "admins"),
+                ("Auth", "auth"),
+                ("Blacklist", "blist"),
+                ("Language", "lang"),
+                ("Ping", "ping"),
+                ("Play", "play"),
+                ("Queue", "queue"),
+                ("Stats", "stats"),
+                ("Sudoers", "sudo"),
+            ]
             buttons = [
                 self.ikb(
-                    text=self._clean_btn_text(_lang[f"help_{cb}"]),
+                    text=label,
                     callback_data=f"help {cb}",
                     style="primary",
                 )
-                for cb in cbs
+                for label, cb in items
             ]
             rows = [buttons[i:i + 3] for i in range(0, len(buttons), 3)]
 
@@ -133,7 +149,7 @@ class Inline:
                 self.ikb(
                     text=self._clean_btn_text(_text),
                     callback_data=f"controls {_action} {chat_id} q",
-                    style=_style
+                    style=_style,
                 )
             ]]
         )
@@ -193,7 +209,13 @@ class Inline:
                     style="primary",
                 )
             ],
-            [self.ikb(text=self._clean_btn_text(lang["help"]), callback_data="help", style="success")],
+            [
+                self.ikb(
+                    text=self._clean_btn_text(lang["help"]),
+                    callback_data="help",
+                    style="success",
+                )
+            ],
             [
                 self.ikb(
                     text=self._clean_btn_text(lang["support"]),
@@ -207,6 +229,7 @@ class Inline:
                 ),
             ],
         ]
+
         if private:
             rows += [
                 [
@@ -219,12 +242,15 @@ class Inline:
             ]
         else:
             rows += [
-                [self.ikb(
-                    text=self._clean_btn_text(lang["language"]),
-                    callback_data="language",
-                    style="success"
-                )]
+                [
+                    self.ikb(
+                        text=self._clean_btn_text(lang["language"]),
+                        callback_data="language",
+                        style="success",
+                    )
+                ]
             ]
+
         return self.ikm(rows)
 
     def yt_key(self, link: str) -> types.InlineKeyboardMarkup:
