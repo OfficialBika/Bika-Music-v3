@@ -30,6 +30,7 @@ async def _send_raw_text_with_buttons(
         text=text,
         reply_markup=reply_markup,
         parse_mode="HTML",
+        disable_web_page_preview=True,
     )
     return await _maybe_await(result)
 
@@ -60,9 +61,12 @@ async def play_hndlr(
 ) -> None:
     sent = await m.reply_text(m.lang["play_searching"])
     file = None
-    mention = m.from_user.mention
     media = tg.get_media(m.reply_to_message) if m.reply_to_message else None
     tracks = []
+
+    requester_name = html.escape(m.from_user.first_name or "User")
+    requester_link = f'tg://user?id={m.from_user.id}'
+    requester_mention = f'<a href="{requester_link}">{requester_name}</a>'
 
     if media:
         setattr(sent, "lang", m.lang)
@@ -75,7 +79,7 @@ async def play_hndlr(
         if "playlist" in url:
             await sent.edit_text(m.lang["playlist_fetch"])
             tracks = await yt.playlist(
-                config.PLAYLIST_LIMIT, mention, url, video
+                config.PLAYLIST_LIMIT, requester_mention, url, video
             )
 
             if not tracks:
@@ -111,7 +115,8 @@ async def play_hndlr(
     if await db.is_logger():
         await utils.play_log(m, sent.link, file.title, file.duration)
 
-    file.user = mention
+    file.user = requester_mention
+
     if force:
         queue.force_add(m.chat.id, file)
     else:
@@ -123,10 +128,10 @@ async def play_hndlr(
             except Exception:
                 pass
 
-            song_link = html.escape(getattr(file, "url", None) or url or "https://t.me/Official_Bika")
-            song_title = html.escape(file.title)
-            requester_name = html.escape(m.from_user.first_name or "User")
-            requester_link = f"tg://user?id={m.from_user.id}"
+            song_link = html.escape(
+                getattr(file, "url", None) or url or "https://t.me/Official_Bika"
+            )
+            song_title = html.escape(file.title or "Unknown")
 
             text = (
                 f'<b><tg-emoji emoji-id="5361979846845014099">💃</tg-emoji> Ｂɪᴋᴀ ꭙ Ｍᴜsɪᴄ</b>\n\n'
@@ -135,7 +140,7 @@ async def play_hndlr(
                 f'<a href="{song_link}">{song_title}</a>\n\n'
                 f'<b><tg-emoji emoji-id="5316615057939897832">⏰</tg-emoji> ကြာချိန်</b> : {file.duration}\n\n'
                 f'<b><tg-emoji emoji-id="6154522383790114334">😅</tg-emoji> တောင်းဆိုသူ</b> : '
-                f'<a href="{requester_link}">{requester_name}</a>'
+                f'{requester_mention}'
             )
 
             result = await _send_raw_text_with_buttons(
@@ -163,6 +168,7 @@ async def play_hndlr(
                     chat_id=m.chat.id,
                     text=m.lang["playlist_queued"].format(len(tracks)) + added,
                     parse_mode=enums.ParseMode.HTML,
+                    disable_web_page_preview=True,
                 )
             return
 
@@ -184,4 +190,5 @@ async def play_hndlr(
         chat_id=m.chat.id,
         text=m.lang["playlist_queued"].format(len(tracks)) + added,
         parse_mode=enums.ParseMode.HTML,
+        disable_web_page_preview=True,
     )
