@@ -56,6 +56,7 @@ async def safe_edit_text(
                 text=text,
                 reply_markup=reply_markup,
                 parse_mode=parse_mode,
+                disable_web_page_preview=disable_web_page_preview,
             )
             result = await _maybe_await(result)
 
@@ -63,24 +64,41 @@ async def safe_edit_text(
                 desc = _dict_desc(result)
 
                 if "there is no text in the message to edit" in desc:
-                    try:
-                        return await query.message.edit_caption(
-                            caption=text,
-                            reply_markup=reply_markup,
-                            parse_mode=parse_mode,
-                        )
-                    except MessageNotModified:
-                        return None
-                    except FloodWait as fw:
-                        await _handle_flood_wait(fw)
-                        continue
-                    except Exception:
+                    cap_result = rawtg.edit_message_caption(
+                        chat_id=query.message.chat.id,
+                        message_id=query.message.id,
+                        caption=text,
+                        reply_markup=reply_markup,
+                        parse_mode=parse_mode,
+                    )
+                    cap_result = await _maybe_await(cap_result)
+
+                    if isinstance(cap_result, dict) and cap_result.get("ok") is False:
+                        cap_desc = _dict_desc(cap_result)
+
+                        if "message is not modified" in cap_desc:
+                            return None
+
+                        if (
+                            "message to edit not found" in cap_desc
+                            or "message_id_invalid" in cap_desc
+                            or "message id invalid" in cap_desc
+                        ):
+                            return await query.message.reply_text(
+                                text=text,
+                                reply_markup=reply_markup,
+                                disable_web_page_preview=disable_web_page_preview,
+                                parse_mode=parse_mode,
+                            )
+
                         return await query.message.reply_text(
                             text=text,
                             reply_markup=reply_markup,
                             disable_web_page_preview=disable_web_page_preview,
                             parse_mode=parse_mode,
                         )
+
+                    return cap_result
 
                 if "message is not modified" in desc:
                     return None
@@ -114,16 +132,29 @@ async def safe_edit_text(
 
             if "there is no text in the message to edit" in err:
                 try:
-                    return await query.message.edit_caption(
+                    result = rawtg.edit_message_caption(
+                        chat_id=query.message.chat.id,
+                        message_id=query.message.id,
                         caption=text,
                         reply_markup=reply_markup,
                         parse_mode=parse_mode,
                     )
-                except MessageNotModified:
-                    return None
-                except FloodWait as fw:
-                    await _handle_flood_wait(fw)
-                    continue
+                    result = await _maybe_await(result)
+
+                    if isinstance(result, dict) and result.get("ok") is False:
+                        desc = _dict_desc(result)
+
+                        if "message is not modified" in desc:
+                            return None
+
+                        return await query.message.reply_text(
+                            text=text,
+                            reply_markup=reply_markup,
+                            disable_web_page_preview=disable_web_page_preview,
+                            parse_mode=parse_mode,
+                        )
+
+                    return result
                 except Exception:
                     return await query.message.reply_text(
                         text=text,
@@ -154,16 +185,41 @@ async def safe_edit_caption(
 ) -> Any:
     for _ in range(2):
         try:
-            return await query.message.edit_caption(
+            result = rawtg.edit_message_caption(
+                chat_id=query.message.chat.id,
+                message_id=query.message.id,
                 caption=caption,
                 reply_markup=reply_markup,
                 parse_mode=parse_mode,
             )
+            result = await _maybe_await(result)
+
+            if isinstance(result, dict) and result.get("ok") is False:
+                desc = _dict_desc(result)
+
+                if "message is not modified" in desc:
+                    return None
+
+                if (
+                    "message to edit not found" in desc
+                    or "message_id_invalid" in desc
+                    or "message id invalid" in desc
+                ):
+                    return await query.message.reply_text(
+                        text=caption,
+                        reply_markup=reply_markup,
+                        parse_mode=parse_mode,
+                    )
+
+            return result
+
         except MessageNotModified:
             return None
+
         except FloodWait as e:
             await _handle_flood_wait(e)
             continue
+
         except (BadRequest, MessageIdInvalid) as e:
             if _is_message_not_modified(e):
                 return None
@@ -182,6 +238,7 @@ async def safe_edit_caption(
                         parse_mode=parse_mode,
                     )
             raise
+
         except Exception:
             raise
 
@@ -217,15 +274,18 @@ async def safe_edit_reply_markup(
 
         except MessageNotModified:
             return None
+
         except FloodWait as e:
             await _handle_flood_wait(e)
             continue
+
         except (BadRequest, MessageIdInvalid) as e:
             if _is_message_not_modified(e):
                 return None
             if _is_message_to_edit_not_found(e):
                 return None
             raise
+
         except Exception:
             raise
 
@@ -262,6 +322,7 @@ async def safe_send_text(
         except FloodWait as e:
             await _handle_flood_wait(e)
             continue
+
         except Exception:
             try:
                 return await message.reply_text(
