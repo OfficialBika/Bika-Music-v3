@@ -9,9 +9,23 @@ class Inline:
         self.ikm = types.InlineKeyboardMarkup
         self.ikb = types.InlineKeyboardButton
 
+    def _clean_btn_text(self, text: str) -> str:
+        if not isinstance(text, str):
+            return str(text)
+        for tag in [
+            "<b>", "</b>",
+            "<u>", "</u>",
+            "<i>", "</i>",
+            "<code>", "</code>",
+            "<blockquote>", "</blockquote>",
+            "<blockquote expandable>", "</blockquote expandable>",
+        ]:
+            text = text.replace(tag, "")
+        return text.strip()
+
     def cancel_dl(self, text) -> types.InlineKeyboardMarkup:
         return self.ikm([
-            [self.ikb(text=text, callback_data="cancel_dl", style="danger")]
+            [self.ikb(text=self._clean_btn_text(text), callback_data="cancel_dl", style="danger")]
         ])
 
     def controls(
@@ -24,11 +38,11 @@ class Inline:
         keyboard = []
         if status:
             keyboard.append(
-                [self.ikb(text=status, callback_data=f"controls status {chat_id}", style="primary")]
+                [self.ikb(text=self._clean_btn_text(status), callback_data=f"controls status {chat_id}", style="primary")]
             )
         elif timer:
             keyboard.append(
-                [self.ikb(text=timer, callback_data=f"controls status {chat_id}", style="primary")]
+                [self.ikb(text=self._clean_btn_text(timer), callback_data=f"controls status {chat_id}", style="primary")]
             )
 
         if not remove:
@@ -49,15 +63,23 @@ class Inline:
         if back:
             rows = [
                 [
-                    self.ikb(text=_lang["back"], callback_data="help back", style="primary"),
-                    self.ikb(text=_lang["close"], callback_data="help close", style="danger"),
+                    self.ikb(
+                        text=self._clean_btn_text(_lang["back"]),
+                        callback_data="help back",
+                        style="primary",
+                    ),
+                    self.ikb(
+                        text=self._clean_btn_text(_lang["close"]),
+                        callback_data="help close",
+                        style="danger",
+                    ),
                 ]
             ]
         else:
             cbs = ["admins", "auth", "blist", "lang", "ping", "play", "queue", "stats", "sudo"]
             buttons = [
                 self.ikb(
-                    text=_lang[f"help_{cb}"],
+                    text=self._clean_btn_text(_lang[f"help_{cb}"]),
                     callback_data=f"help {cb}",
                     style="primary",
                 )
@@ -72,7 +94,7 @@ class Inline:
 
         buttons = [
             self.ikb(
-                text=f"{name} ({code}) {'✔️' if code == _lang else ''}",
+                text=self._clean_btn_text(f"{name} ({code}) {'✔️' if code == _lang else ''}"),
                 callback_data=f"lang_change {code}",
                 style="primary" if code == _lang else "success",
             )
@@ -83,7 +105,7 @@ class Inline:
 
     def ping_markup(self, text: str) -> types.InlineKeyboardMarkup:
         return self.ikm([
-            [self.ikb(text=text, url=config.SUPPORT_CHAT, style="primary")]
+            [self.ikb(text=self._clean_btn_text(text), url=config.SUPPORT_CHAT, style="primary")]
         ])
 
     def play_queued(
@@ -93,7 +115,7 @@ class Inline:
             [
                 [
                     self.ikb(
-                        text=_text,
+                        text=self._clean_btn_text(_text),
                         callback_data=f"controls force {chat_id} {item_id}",
                         style="danger",
                     )
@@ -107,7 +129,13 @@ class Inline:
         _action = "pause" if playing else "resume"
         _style = "success" if playing else "primary"
         return self.ikm(
-            [[self.ikb(text=_text, callback_data=f"controls {_action} {chat_id} q", style=_style)]]
+            [[
+                self.ikb(
+                    text=self._clean_btn_text(_text),
+                    callback_data=f"controls {_action} {chat_id} q",
+                    style=_style
+                )
+            ]]
         )
 
     def settings_markup(
@@ -116,7 +144,11 @@ class Inline:
         return self.ikm(
             [
                 [
-                    self.ikb(text=lang["play_mode"] + " ➜", callback_data="settings", style="primary"),
+                    self.ikb(
+                        text=self._clean_btn_text(lang["play_mode"] + " ➜"),
+                        callback_data="settings",
+                        style="primary",
+                    ),
                     self.ikb(
                         text="ON" if admin_only else "OFF",
                         callback_data="settings play",
@@ -124,7 +156,11 @@ class Inline:
                     ),
                 ],
                 [
-                    self.ikb(text=lang["cmd_delete"] + " ➜", callback_data="settings", style="primary"),
+                    self.ikb(
+                        text=self._clean_btn_text(lang["cmd_delete"] + " ➜"),
+                        callback_data="settings",
+                        style="primary",
+                    ),
                     self.ikb(
                         text="ON" if cmd_delete else "OFF",
                         callback_data="settings delete",
@@ -132,8 +168,16 @@ class Inline:
                     ),
                 ],
                 [
-                    self.ikb(text=lang["language"] + " ➜", callback_data="settings", style="primary"),
-                    self.ikb(text=lang_codes[language], callback_data="language", style="success"),
+                    self.ikb(
+                        text=self._clean_btn_text(lang["language"] + " ➜"),
+                        callback_data="settings",
+                        style="primary",
+                    ),
+                    self.ikb(
+                        text=self._clean_btn_text(lang_codes[language]),
+                        callback_data="language",
+                        style="success",
+                    ),
                 ],
             ]
         )
@@ -144,15 +188,23 @@ class Inline:
         rows = [
             [
                 self.ikb(
-                    text=lang["add_me"],
+                    text=self._clean_btn_text(lang["add_me"]),
                     url=f"https://t.me/{app.username}?startgroup=true",
                     style="primary",
                 )
             ],
-            [self.ikb(text=lang["help"], callback_data="help", style="success")],
+            [self.ikb(text=self._clean_btn_text(lang["help"]), callback_data="help", style="success")],
             [
-                self.ikb(text=lang["support"], url=config.SUPPORT_CHAT, style="primary"),
-                self.ikb(text=lang["channel"], url=config.SUPPORT_CHANNEL, style="primary"),
+                self.ikb(
+                    text=self._clean_btn_text(lang["support"]),
+                    url=config.SUPPORT_CHAT,
+                    style="primary",
+                ),
+                self.ikb(
+                    text=self._clean_btn_text(lang["channel"]),
+                    url=config.SUPPORT_CHANNEL,
+                    style="primary",
+                ),
             ],
         ]
         if private:
@@ -167,7 +219,11 @@ class Inline:
             ]
         else:
             rows += [
-                [self.ikb(text=lang["language"], callback_data="language", style="success")]
+                [self.ikb(
+                    text=self._clean_btn_text(lang["language"]),
+                    callback_data="language",
+                    style="success"
+                )]
             ]
         return self.ikm(rows)
 
