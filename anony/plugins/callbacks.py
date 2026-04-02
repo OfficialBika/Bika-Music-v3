@@ -158,33 +158,62 @@ async def _controls(_, query: types.CallbackQuery):
 @lang.language()
 async def _help(_, query: types.CallbackQuery):
     data = query.data.split()
+    print(f"HELP CALLBACK DATA: {query.data}")
+
     if len(data) == 1:
-        return await query.answer(url=f"https://t.me/{app.username}?start=help")
+        try:
+            return await query.answer(url=f"https://t.me/{app.username}?start=help")
+        except Exception as e:
+            print(f"HELP URL ERROR: {e}")
+            return
 
     await safe_answer_callback(query)
 
-    if data[1] == "back":
+    try:
+        if data[1] == "back":
+            return await safe_edit_text(
+                rawtg,
+                query,
+                text=query.lang["help_menu"],
+                reply_markup=buttons.help_markup(query.lang),
+            )
+
+        elif data[1] == "close":
+            try:
+                await safe_delete(query.message)
+                if query.message.reply_to_message:
+                    await safe_delete(query.message.reply_to_message)
+                return
+            except Exception as e:
+                print(f"HELP CLOSE ERROR: {e}")
+                return
+
+        key = f"help_{data[1]}"
+        print(f"HELP LANG KEY: {key}")
+
+        if key not in query.lang:
+            print(f"HELP KEY NOT FOUND: {key}")
+            return await safe_reply_text(
+                query.message,
+                f"Missing help text key: {key}",
+            )
+
         return await safe_edit_text(
             rawtg,
             query,
-            text=query.lang["help_menu"],
-            reply_markup=buttons.help_markup(query.lang),
+            text=query.lang[key],
+            reply_markup=buttons.help_markup(query.lang, True),
         )
-    elif data[1] == "close":
-        try:
-            await safe_delete(query.message)
-            if query.message.reply_to_message:
-                return await safe_delete(query.message.reply_to_message)
-            return
-        except Exception:
-            return
 
-    await safe_edit_text(
-        rawtg,
-        query,
-        text=query.lang[f"help_{data[1]}"],
-        reply_markup=buttons.help_markup(query.lang, True),
-    )
+    except Exception as e:
+        print(f"HELP CALLBACK ERROR: {e}")
+        try:
+            await safe_reply_text(
+                query.message,
+                f"Help callback error:\n{e}",
+            )
+        except Exception:
+            pass
 
 
 @app.on_callback_query(filters.regex("settings") & ~app.bl_users)
@@ -219,4 +248,4 @@ async def _settings_cb(_, query: types.CallbackQuery):
             _language,
             chat_id,
         ),
-            )
+    )
