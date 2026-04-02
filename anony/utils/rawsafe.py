@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 from typing import Any
 
 from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid, MessageNotModified
@@ -27,6 +28,12 @@ async def _handle_flood_wait(error: Exception) -> None:
         await asyncio.sleep(int(error.value) + 1)
 
 
+async def _maybe_await(result: Any) -> Any:
+    if inspect.isawaitable(result):
+        return await result
+    return result
+
+
 async def safe_edit_text(
     rawtg: Any,
     query: Any,
@@ -35,19 +42,16 @@ async def safe_edit_text(
     disable_web_page_preview: bool = True,
     parse_mode: Any = None,
 ) -> Any:
-    """
-    Safely edit callback message text via rawtg.
-    If edit target no longer exists, fallback to reply_text().
-    """
     for _ in range(2):
         try:
-            return await rawtg.edit_message_text(
+            result = rawtg.edit_message_text(
                 chat_id=query.message.chat.id,
                 message_id=query.message.id,
                 text=text,
                 reply_markup=reply_markup,
                 parse_mode=parse_mode,
             )
+            return await _maybe_await(result)
         except MessageNotModified:
             return None
         except FloodWait as e:
@@ -84,19 +88,16 @@ async def safe_edit_caption(
     reply_markup: Any = None,
     parse_mode: Any = None,
 ) -> Any:
-    """
-    Safely edit callback message caption via rawtg.
-    If edit target no longer exists, fallback to reply_text().
-    """
     for _ in range(2):
         try:
-            return await rawtg.edit_message_caption(
+            result = rawtg.edit_message_caption(
                 chat_id=query.message.chat.id,
                 message_id=query.message.id,
                 caption=caption,
                 reply_markup=reply_markup,
                 parse_mode=parse_mode,
             )
+            return await _maybe_await(result)
         except MessageNotModified:
             return None
         except FloodWait as e:
@@ -129,17 +130,14 @@ async def safe_edit_reply_markup(
     query: Any,
     reply_markup: Any = None,
 ) -> Any:
-    """
-    Safely edit only reply markup via rawtg.
-    If edit target no longer exists, just ignore and return None.
-    """
     for _ in range(2):
         try:
-            return await rawtg.edit_message_reply_markup(
+            result = rawtg.edit_message_reply_markup(
                 chat_id=query.message.chat.id,
                 message_id=query.message.id,
                 reply_markup=reply_markup,
             )
+            return await _maybe_await(result)
         except MessageNotModified:
             return None
         except FloodWait as e:
@@ -163,19 +161,16 @@ async def safe_send_text(
     disable_web_page_preview: bool = True,
     parse_mode: Any = None,
 ) -> Any:
-    """
-    Safely send a new message via rawtg.
-    If rawtg send fails, fallback to message.reply_text().
-    """
     for _ in range(2):
         try:
-            return await rawtg.send_message(
+            result = rawtg.send_message(
                 chat_id=message.chat.id,
                 text=text,
                 reply_markup=reply_markup,
                 disable_web_page_preview=disable_web_page_preview,
                 parse_mode=parse_mode,
             )
+            return await _maybe_await(result)
         except FloodWait as e:
             await _handle_flood_wait(e)
             continue
@@ -204,9 +199,6 @@ async def safe_reply_text(
     disable_web_page_preview: bool = True,
     parse_mode: Any = None,
 ) -> Any:
-    """
-    Safe wrapper for normal Pyrogram reply_text().
-    """
     for _ in range(2):
         try:
             return await message.reply_text(
@@ -222,12 +214,10 @@ async def safe_reply_text(
 
 
 async def safe_delete(message: Any) -> bool:
-    """
-    Safely delete a message.
-    """
     for _ in range(2):
         try:
-            await message.delete()
+            result = message.delete()
+            await _maybe_await(result)
             return True
         except FloodWait as e:
             await _handle_flood_wait(e)
@@ -243,20 +233,17 @@ async def safe_answer_callback(
     show_alert: bool = False,
     cache_time: int = 0,
 ) -> bool:
-    """
-    Safely answer callback query.
-    """
     for _ in range(2):
         try:
-            await query.answer(
+            result = query.answer(
                 text=text,
                 show_alert=show_alert,
                 cache_time=cache_time,
             )
+            await _maybe_await(result)
             return True
         except FloodWait as e:
             await _handle_flood_wait(e)
             continue
         except Exception:
             return False
-    return False
