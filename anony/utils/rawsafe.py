@@ -52,14 +52,52 @@ async def safe_edit_text(
                 parse_mode=parse_mode,
             )
             return await _maybe_await(result)
+
         except MessageNotModified:
             return None
+
         except FloodWait as e:
             await _handle_flood_wait(e)
             continue
+
         except (BadRequest, MessageIdInvalid) as e:
+            err = str(e).lower()
+
             if _is_message_not_modified(e):
                 return None
+
+            if "there is no text in the message to edit" in err:
+                try:
+                    result = rawtg.edit_message_caption(
+                        chat_id=query.message.chat.id,
+                        message_id=query.message.id,
+                        caption=text,
+                        reply_markup=reply_markup,
+                        parse_mode=parse_mode,
+                    )
+                    return await _maybe_await(result)
+                except MessageNotModified:
+                    return None
+                except FloodWait as fw:
+                    await _handle_flood_wait(fw)
+                    continue
+                except Exception:
+                    try:
+                        return await query.message.reply_text(
+                            text=text,
+                            reply_markup=reply_markup,
+                            disable_web_page_preview=disable_web_page_preview,
+                            parse_mode=parse_mode,
+                        )
+                    except FloodWait as fw:
+                        await _handle_flood_wait(fw)
+                        return await query.message.reply_text(
+                            text=text,
+                            reply_markup=reply_markup,
+                            disable_web_page_preview=disable_web_page_preview,
+                            parse_mode=parse_mode,
+                        )
+
             if _is_message_to_edit_not_found(e):
                 try:
                     return await query.message.reply_text(
@@ -77,6 +115,7 @@ async def safe_edit_text(
                         parse_mode=parse_mode,
                     )
             raise
+
         except Exception:
             raise
 
