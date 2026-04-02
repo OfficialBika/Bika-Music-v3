@@ -156,5 +156,9 @@
     "help_5": "Reproducir",
     "help_6": "Cola",
     "help_7": "Estadísticas",
-    "help_8": "Sudoers"
+    "help_8": "Sudoers",
+    "np_started": "Now Playing",
+    "np_song": "Song",
+    "np_duration": "Duration",
+    "np_requester": "Requested by"
 }
