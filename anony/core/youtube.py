@@ -131,16 +131,16 @@ class YouTube:
         }
 
         if video:
-    ydl_opts = {
-        **base_opts,
-        "format": "bv*[height<=720][width<=1280]+ba/b[height<=720][width<=1280]/bv*+ba/best",
-        "merge_output_format": "mp4",
-    }
+            ydl_opts = {
+                **base_opts,
+                "format": "bv*[height<=720][width<=1280]+ba/b[height<=720][width<=1280]/bv*+ba/best",
+                "merge_output_format": "mp4",
+            }
         else:
-    ydl_opts = {
-        **base_opts,
-        "format": "ba/bestaudio/best",
-        }
+            ydl_opts = {
+                **base_opts,
+                "format": "ba/bestaudio/best",
+            }
 
         def _download():
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
