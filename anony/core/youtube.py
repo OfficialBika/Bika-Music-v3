@@ -112,12 +112,11 @@ class YouTube:
 
     async def download(self, video_id: str, video: bool = False) -> str | None:
         url = self.base + video_id
+        ext = "mp4" if video else "webm"
+        filename = f"downloads/{video_id}.{ext}"
 
-        # Already downloaded file check
-        for ext in ("mp4", "webm", "m4a", "mp3", "opus"):
-            cached = Path(f"downloads/{video_id}.{ext}")
-            if cached.exists():
-                return str(cached)
+        if Path(filename).exists():
+            return filename
 
         cookie = self.get_cookies()
         base_opts = {
@@ -125,60 +124,33 @@ class YouTube:
             "quiet": True,
             "noplaylist": True,
             "geo_bypass": True,
-            "no_warnings": False,
+            "no_warnings": True,
             "overwrites": False,
             "nocheckcertificate": True,
             "cookiefile": cookie,
-            "extractor_args": {
-                "youtube": {
-                    "player_client": ["web"]
-                }
-            },
         }
 
         if video:
             ydl_opts = {
                 **base_opts,
-                "format": "bv*[height<=720][width<=1280]+ba/b[height<=720][width<=1280]/bv*+ba/best",
+                "format": "(bestvideo[height<=?720][width<=?1280][ext=mp4])+(bestaudio)",
                 "merge_output_format": "mp4",
             }
         else:
             ydl_opts = {
                 **base_opts,
-                "format": "ba/bestaudio/best",
+                "format": "bestaudio[ext=webm][acodec=opus]",
             }
 
         def _download():
-            try:
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    info = ydl.extract_info(url, download=True)
-                    real_file = ydl.prepare_filename(info)
-
-                    # If merge/remux changed extension, find actual downloaded file
-                    possible = [
-                        Path(real_file),
-                        Path(f"downloads/{video_id}.mp4"),
-                        Path(f"downloads/{video_id}.webm"),
-                        Path(f"downloads/{video_id}.m4a"),
-                        Path(f"downloads/{video_id}.mp3"),
-                        Path(f"downloads/{video_id}.opus"),
-                    ]
-
-                    for f in possible:
-                        if f.exists():
-                            return str(f)
-
-                    matches = list(Path("downloads").glob(f"{video_id}.*"))
-                    if matches:
-                        return str(matches[0])
-
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                try:
+                    ydl.download([url])
+                except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError):
                     return None
-
-            except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as ex:
-                logger.warning("YouTube download failed: %s", ex)
-                return None
-            except Exception as ex:
-                logger.warning("Download failed: %s", ex)
-                return None
+                except Exception as ex:
+                    logger.warning("Download failed: %s", ex)
+                    return None
+            return filename
 
         return await asyncio.to_thread(_download)
