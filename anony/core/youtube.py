@@ -2,7 +2,6 @@
 # Licensed under the MIT License.
 # This file is part of AnonXMusic
 
-
 import os
 import re
 import yt_dlp
@@ -37,19 +36,28 @@ class YouTube:
 
     def get_cookies(self):
         if not self.checked:
-            for file in os.listdir(self.cookie_dir):
-                if file.endswith(".txt"):
-                    self.cookies.append(f"{self.cookie_dir}/{file}")
+            try:
+                if os.path.isdir(self.cookie_dir):
+                    for file in os.listdir(self.cookie_dir):
+                        if file.endswith(".txt"):
+                            self.cookies.append(f"{self.cookie_dir}/{file}")
+            except Exception as ex:
+                logger.warning("Cookie directory check failed: %s", ex)
+
             self.checked = True
+
         if not self.cookies:
             if not self.warned:
                 self.warned = True
                 logger.warning("Cookies are missing; downloads might fail.")
             return None
+
         return random.choice(self.cookies)
 
     async def save_cookies(self, urls: list[str]) -> None:
         logger.info("Saving cookies from urls...")
+        os.makedirs(self.cookie_dir, exist_ok=True)
+
         async with aiohttp.ClientSession() as session:
             for url in urls:
                 name = url.split("/")[-1]
@@ -58,6 +66,7 @@ class YouTube:
                     resp.raise_for_status()
                     with open(f"{self.cookie_dir}/{name}.txt", "wb") as fw:
                         fw.write(await resp.read())
+
         logger.info(f"Cookies saved in {self.cookie_dir}.")
 
     def valid(self, url: str) -> bool:
@@ -72,6 +81,7 @@ class YouTube:
             results = await _search.next()
         except Exception:
             return None
+
         if results and results["result"]:
             data = results["result"][0]
             return Track(
@@ -86,6 +96,7 @@ class YouTube:
                 view_count=data.get("viewCount", {}).get("short"),
                 video=video,
             )
+
         return None
 
     async def playlist(self, limit: int, user: str, url: str, video: bool) -> list[Track | None]:
@@ -108,23 +119,28 @@ class YouTube:
                 tracks.append(track)
         except Exception:
             pass
+
         return tracks
 
     async def download(self, video_id: str, video: bool = False) -> str | None:
         url = self.base + video_id
-        ext = "mp4" if video else "webm"
-        filename = f"downloads/{video_id}.{ext}"
+        download_dir = Path("downloads")
+        download_dir.mkdir(parents=True, exist_ok=True)
 
-        if Path(filename).exists():
-            return filename
+        # Return already downloaded file if exists
+        for ext in ("mp4", "webm", "m4a", "mp3", "opus"):
+            cached = download_dir / f"{video_id}.{ext}"
+            if cached.exists():
+                return str(cached)
 
         cookie = self.get_cookies()
+
         base_opts = {
             "outtmpl": "downloads/%(id)s.%(ext)s",
             "quiet": True,
             "noplaylist": True,
             "geo_bypass": True,
-            "no_warnings": True,
+            "no_warnings": False,
             "overwrites": False,
             "nocheckcertificate": True,
             "cookiefile": cookie,
@@ -133,24 +149,56 @@ class YouTube:
         if video:
             ydl_opts = {
                 **base_opts,
-                "format": "(bestvideo[height<=?720][width<=?1280][ext=mp4])+(bestaudio)",
+                "format": "bv*[height<=720][width<=1280]+ba/b[height<=720][width<=1280]/bv*+ba/best",
                 "merge_output_format": "mp4",
             }
         else:
             ydl_opts = {
                 **base_opts,
-                "format": "bestaudio[ext=webm][acodec=opus]",
+                "format": "ba/bestaudio/best",
             }
 
         def _download():
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                try:
-                    ydl.download([url])
-                except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError):
+            try:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url, download=True)
+
+                    real_file = None
+                    try:
+                        real_file = ydl.prepare_filename(info)
+                    except Exception:
+                        pass
+
+                    possible_files = []
+
+                    if real_file:
+                        possible_files.append(Path(real_file))
+
+                    possible_files.extend(
+                        [
+                            download_dir / f"{video_id}.mp4",
+                            download_dir / f"{video_id}.webm",
+                            download_dir / f"{video_id}.m4a",
+                            download_dir / f"{video_id}.mp3",
+                            download_dir / f"{video_id}.opus",
+                        ]
+                    )
+
+                    for file in possible_files:
+                        if file.exists():
+                            return str(file)
+
+                    matches = list(download_dir.glob(f"{video_id}.*"))
+                    if matches:
+                        return str(matches[0])
+
                     return None
-                except Exception as ex:
-                    logger.warning("Download failed: %s", ex)
-                    return None
-            return filename
+
+            except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as ex:
+                logger.warning("YouTube download failed: %s", ex)
+                return None
+            except Exception as ex:
+                logger.warning("Download failed: %s", ex)
+                return None
 
         return await asyncio.to_thread(_download)
