@@ -132,9 +132,9 @@ class YouTube:
 
         if video:
             ydl_opts = {
-                **base_opts,
-                "format": "(bestvideo[height<=?720][width<=?1280][ext=mp4])+(bestaudio)",
-                "merge_output_format": "mp4",
+               **base_opts,
+              "format": "(bestvideo[height<=?720][width<=?1280][ext=mp4])+(bestaudio)",
+              "merge_output_format": "mp4",
             }
         else:
             ydl_opts = {
