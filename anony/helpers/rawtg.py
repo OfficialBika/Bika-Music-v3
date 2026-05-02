@@ -4,6 +4,33 @@ from anony import config
 API = f"https://api.telegram.org/bot{config.BOT_TOKEN}"
 
 
+IGNORABLE_EDIT_ERRORS = (
+    "message to edit not found",
+    "there is no caption in the message to edit",
+    "message content and reply markup are exactly the same",
+    "message is not modified",
+    "message id invalid",
+    "message can't be edited",
+    "message to edit not found",
+    "specified new message content and reply markup are exactly the same",
+)
+
+
+def _is_ignorable_edit_error(method: str, data: dict) -> bool:
+    if not isinstance(data, dict):
+        return False
+
+    if data.get("ok") is not False:
+        return False
+
+    # Only ignore edit-related API errors.
+    if not method.startswith("editMessage"):
+        return False
+
+    desc = str(data.get("description", "")).lower()
+    return any(err in desc for err in IGNORABLE_EDIT_ERRORS)
+
+
 def _to_plain(obj):
     if obj is None:
         return None
@@ -63,6 +90,14 @@ def _post(method: str, payload: dict):
         data = r.json()
     except Exception:
         data = {"ok": False, "raw": r.text}
+
+    if _is_ignorable_edit_error(method, data):
+        print(
+            f"RAWTG {method}: ignored harmless edit error: {data.get('description')}",
+            flush=True,
+        )
+        return {"ok": True, "ignored": True, "raw": data}
+
     print(f"RAWTG {method}:", data, flush=True)
     return data
 
