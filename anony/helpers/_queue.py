@@ -1,7 +1,11 @@
 # Copyright (c) 2025 AnonymousX1025
 # Licensed under the MIT License.
 # This file is part of AnonXMusic
-
+#
+# Production stability patch:
+# - Adds safe helpers for stale/empty queues.
+# - clear() removes the chat key to avoid endless empty deque growth.
+# - force_add() is bounded when the target position is invalid.
 
 from collections import defaultdict, deque
 from typing import Union
@@ -16,21 +20,19 @@ class Queue:
         self.queues: dict[int, deque[MediaItem]] = defaultdict(deque)
 
     def add(self, chat_id: int, item: MediaItem) -> int:
-        """Add an item to the queue and return its position (1-based)."""
+        """Add an item to the queue and return its position (0-based)."""
         self.queues[chat_id].append(item)
         return len(self.queues[chat_id]) - 1
 
     def check_item(self, chat_id: int, item_id: str) -> tuple[int, MediaItem | None]:
         """Check if an item with the given ID exists in the queue."""
-        pos, track = next(
-            (
-                (i, track)
-                for i, track in enumerate(list(self.queues[chat_id]))
-                if track.id == item_id
-            ),
-            (-1, None),
-        )
-        return pos, track
+        if not item_id:
+            return -1, None
+
+        for i, track in enumerate(list(self.queues[chat_id])):
+            if getattr(track, "id", None) == item_id:
+                return i, track
+        return -1, None
 
     def force_add(
         self, chat_id: int, item: MediaItem, remove: int | bool = False
@@ -38,7 +40,11 @@ class Queue:
         """Replace the currently playing item with a new one."""
         self.remove_current(chat_id)
         self.queues[chat_id].appendleft(item)
-        if remove:
+
+        if isinstance(remove, bool):
+            remove = int(remove)
+
+        if remove and len(self.queues[chat_id]) > remove:
             self.queues[chat_id].rotate(-remove)
             self.queues[chat_id].popleft()
             self.queues[chat_id].rotate(remove)
@@ -68,4 +74,4 @@ class Queue:
 
     def clear(self, chat_id: int) -> None:
         """Clear the entire queue."""
-        self.queues[chat_id].clear()
+        self.queues.pop(chat_id, None)

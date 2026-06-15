@@ -1,7 +1,11 @@
 # Copyright (c) 2025 AnonymousX1025
 # Licensed under the MIT License.
 # This file is part of AnonXMusic
-
+#
+# Production stability patch:
+# - Properly supports /play -v and /play -f -v.
+# - Parses flags without treating them as the search query.
+# - Guards missing assistant session/client states.
 
 import asyncio
 
@@ -21,22 +25,38 @@ def checkUB(play):
             await m.reply_text(m.lang["play_chat_invalid"])
             return await app.leave_chat(chat_id)
 
-        if not m.reply_to_message and (
-            len(m.command) < 2 or (len(m.command) == 2 and m.command[1] == "-f")
-        ):
+        args = list(m.command[1:])
+        flags = {"-f", "-v", "--force", "--video"}
+        query_args = [arg for arg in args if arg not in flags]
+
+        if not m.reply_to_message and not query_args:
             return await m.reply_text(m.lang["play_usage"])
 
         if len(queue.get_queue(chat_id)) >= config.QUEUE_LIMIT:
             return await m.reply_text(m.lang["play_queue_full"].format(config.QUEUE_LIMIT))
 
-        force = m.command[0].endswith("force") or (
-            len(m.command) > 1 and "-f" in m.command[1]
+        force = (
+            m.command[0].endswith("force")
+            or "-f" in args
+            or "--force" in args
         )
-        video = m.command[0][0] == "v" and config.VIDEO_PLAY
+        video = (
+            m.command[0].startswith("v")
+            or "-v" in args
+            or "--video" in args
+        ) and config.VIDEO_PLAY
+
         url = utils.get_url(m)
         if url and yt.invalid(url):
             return await m.reply_text(m.lang["play_not_found"].format(config.SUPPORT_CHAT))
-        m3u8 = url and not yt.valid(url)
+        m3u8 = bool(url and not yt.valid(url))
+
+        # Remove flags from command before play.py builds the text query.
+        # Keep command[0] intact because play_hndlr still reads the command name.
+        if query_args:
+            m.command = [m.command[0], *query_args]
+        else:
+            m.command = [m.command[0]]
 
         play_mode = await db.get_play_mode(chat_id)
         if play_mode or force:
@@ -44,12 +64,17 @@ def checkUB(play):
             if (
                 m.from_user.id not in adminlist
                 and not await db.is_auth(chat_id, m.from_user.id)
-                and not m.from_user.id in app.sudoers
+                and m.from_user.id not in app.sudoers
             ):
                 return await m.reply_text(m.lang["play_admin"])
 
         if chat_id not in db.active_calls:
             client = await db.get_client(chat_id)
+            if not client:
+                return await m.reply_text(
+                    m.lang["play_invite_error"].format("No assistant session available")
+                )
+
             try:
                 member = await app.get_chat_member(chat_id, client.id)
                 if member.status in [
@@ -112,8 +137,15 @@ def checkUB(play):
                         m.lang["play_invite_error"].format(type(ex).__name__)
                     )
 
-                await umm.delete()
-                await client.resolve_peer(chat_id)
+                try:
+                    await umm.delete()
+                except Exception:
+                    pass
+
+                try:
+                    await client.resolve_peer(chat_id)
+                except Exception:
+                    pass
 
         if await db.get_cmd_delete(chat_id):
             try:

@@ -1,17 +1,27 @@
+# Stable raw Telegram Bot API helper.
+#
+# This module intentionally keeps sync function signatures because existing
+# code and rawsafe.py call these functions directly. Call these through
+# asyncio.to_thread(...) inside async loops when high frequency is expected.
+
+from __future__ import annotations
+
 import requests
+
 from anony import config
 
 API = f"https://api.telegram.org/bot{config.BOT_TOKEN}"
+REQUEST_TIMEOUT = 12
 
 
 IGNORABLE_EDIT_ERRORS = (
     "message to edit not found",
     "there is no caption in the message to edit",
+    "there is no text in the message to edit",
     "message content and reply markup are exactly the same",
     "message is not modified",
     "message id invalid",
     "message can't be edited",
-    "message to edit not found",
     "specified new message content and reply markup are exactly the same",
 )
 
@@ -23,7 +33,6 @@ def _is_ignorable_edit_error(method: str, data: dict) -> bool:
     if data.get("ok") is not False:
         return False
 
-    # Only ignore edit-related API errors.
     if not method.startswith("editMessage"):
         return False
 
@@ -85,11 +94,26 @@ def _to_plain(obj):
 
 
 def _post(method: str, payload: dict):
-    r = requests.post(f"{API}/{method}", json=payload, timeout=30)
     try:
-        data = r.json()
-    except Exception:
-        data = {"ok": False, "raw": r.text}
+        response = requests.post(
+            f"{API}/{method}",
+            json=payload,
+            timeout=REQUEST_TIMEOUT,
+        )
+        try:
+            data = response.json()
+        except Exception:
+            data = {
+                "ok": False,
+                "description": "Non-JSON response from Telegram Bot API",
+                "status_code": response.status_code,
+                "raw": response.text[:500],
+            }
+    except requests.RequestException as e:
+        data = {
+            "ok": False,
+            "description": f"Request failed: {type(e).__name__}: {e}",
+        }
 
     if _is_ignorable_edit_error(method, data):
         print(
@@ -98,7 +122,10 @@ def _post(method: str, payload: dict):
         )
         return {"ok": True, "ignored": True, "raw": data}
 
-    print(f"RAWTG {method}:", data, flush=True)
+    # Avoid noisy logs for successful high-frequency timer edits.
+    if data.get("ok") is False:
+        print(f"RAWTG {method} ERROR:", data, flush=True)
+
     return data
 
 
