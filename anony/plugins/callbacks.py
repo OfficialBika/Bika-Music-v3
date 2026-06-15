@@ -1,12 +1,18 @@
 # Copyright (c) 2025 AnonymousX1025
 # Licensed under the MIT License.
 # This file is part of AnonXMusic
+#
+# Production stability patch:
+# - Safer callback data parsing.
+# - Fixes Play Now / force race when current queue was removed by /skip or /stop.
+# - Avoids None media crash in replay/force.
+# - Handles pause/resume failures gracefully.
 
 import re
 
 from pyrogram import errors, filters, types
 
-from anony import anon, app, db, lang, queue, tg, yt
+from anony import anon, app, config, db, lang, queue, tg, yt
 from anony.helpers import admin_check, buttons, can_manage_vc, rawtg
 from anony.utils.rawsafe import (
     safe_answer_callback,
@@ -28,10 +34,21 @@ async def cancel_dl(_, query: types.CallbackQuery):
 @lang.language()
 @can_manage_vc
 async def _controls(_, query: types.CallbackQuery):
-    args = query.data.split()
-    action, chat_id = args[1], int(args[2])
-    qaction = len(args) == 4
-    user = query.from_user.mention
+    args = (query.data or "").split()
+    if len(args) < 3:
+        return await safe_answer_callback(query, query.lang["play_expired"], show_alert=True)
+
+    action = args[1]
+    try:
+        chat_id = int(args[2])
+    except (TypeError, ValueError):
+        return await safe_answer_callback(query, query.lang["play_expired"], show_alert=True)
+
+    qaction = len(args) == 4 and action in ("pause", "resume")
+    user = query.from_user.mention if query.from_user else "User"
+
+    if action == "status":
+        return await safe_answer_callback(query)
 
     if not await db.get_call(chat_id):
         try:
@@ -39,14 +56,8 @@ async def _controls(_, query: types.CallbackQuery):
                 query, query.lang["not_playing"], show_alert=True
             )
         except errors.QueryIdInvalid:
-            try:
-                await safe_delete(query.message)
-            except Exception:
-                pass
+            await safe_delete(query.message)
             return
-
-    if action == "status":
-        return await safe_answer_callback(query)
 
     await safe_answer_callback(query, query.lang["processing"], show_alert=True)
 
@@ -55,7 +66,10 @@ async def _controls(_, query: types.CallbackQuery):
             return await safe_answer_callback(
                 query, query.lang["play_already_paused"], show_alert=True
             )
-        await anon.pause(chat_id)
+        if not await anon.pause(chat_id):
+            return await safe_answer_callback(
+                query, query.lang["error_tg_server"], show_alert=True
+            )
         if qaction:
             return await safe_edit_reply_markup(
                 rawtg,
@@ -70,7 +84,10 @@ async def _controls(_, query: types.CallbackQuery):
             return await safe_answer_callback(
                 query, query.lang["play_not_paused"], show_alert=True
             )
-        await anon.resume(chat_id)
+        if not await anon.resume(chat_id):
+            return await safe_answer_callback(
+                query, query.lang["error_tg_server"], show_alert=True
+            )
         if qaction:
             return await safe_edit_reply_markup(
                 rawtg,
@@ -85,6 +102,18 @@ async def _controls(_, query: types.CallbackQuery):
         reply = query.lang["play_skipped"].format(user)
 
     elif action == "force":
+        if len(args) < 4:
+            return await safe_edit_text(
+                rawtg, query, query.lang["play_expired"], parse_mode="HTML"
+            )
+
+        current = queue.get_current(chat_id)
+        if not current:
+            await db.remove_call(chat_id)
+            return await safe_edit_text(
+                rawtg, query, query.lang["play_expired"], parse_mode="HTML"
+            )
+
         pos, media = queue.check_item(chat_id, args[3])
         if not media or pos == -1:
             return await safe_edit_text(
@@ -94,24 +123,38 @@ async def _controls(_, query: types.CallbackQuery):
                 parse_mode="HTML",
             )
 
-        m_id = queue.get_current(chat_id).message_id
+        m_id = getattr(current, "message_id", 0)
+        old_media_msg_id = getattr(media, "message_id", 0)
         queue.force_add(chat_id, media, remove=pos)
+
         try:
-            await app.delete_messages(
-                chat_id=chat_id, message_ids=[m_id, media.message_id], revoke=True
-            )
-            media.message_id = None
+            ids = [x for x in [m_id, old_media_msg_id] if x]
+            if ids:
+                await app.delete_messages(chat_id=chat_id, message_ids=ids, revoke=True)
+            media.message_id = 0
         except Exception:
             pass
 
         msg = await app.send_message(chat_id=chat_id, text=query.lang["play_next"])
-        if not media.file_path:
+        if not getattr(media, "file_path", None):
             media.file_path = await yt.download(media.id, video=media.video)
+
+        if not getattr(media, "file_path", None):
+            return await msg.edit_text(
+                query.lang["error_no_file"].format(config.SUPPORT_CHAT)
+            )
+
         media.message_id = msg.id
-        return await anon.play_media(chat_id, msg, media)
+        await anon.play_media(chat_id, msg, media)
+        return
 
     elif action == "replay":
         media = queue.get_current(chat_id)
+        if not media:
+            await db.remove_call(chat_id)
+            return await safe_answer_callback(
+                query, query.lang["not_playing"], show_alert=True
+            )
         media.user = user
         await anon.replay(chat_id)
         status = query.lang["replayed"]
@@ -121,6 +164,9 @@ async def _controls(_, query: types.CallbackQuery):
         await anon.stop(chat_id)
         status = query.lang["stopped"]
         reply = query.lang["play_stopped"].format(user)
+
+    else:
+        return await safe_answer_callback(query, query.lang["play_expired"], show_alert=True)
 
     try:
         if action in ["skip", "replay", "stop"]:
