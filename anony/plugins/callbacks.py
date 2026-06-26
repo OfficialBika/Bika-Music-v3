@@ -8,6 +8,7 @@
 # - Avoids None media crash in replay/force.
 # - Handles pause/resume failures gracefully.
 
+import asyncio
 import re
 
 from pyrogram import errors, filters, types
@@ -21,6 +22,73 @@ from anony.utils.rawsafe import (
     safe_edit_text,
     safe_reply_text,
 )
+
+
+def _clean_button_text(text: str) -> str:
+    try:
+        cleaner = getattr(buttons, "_clean_btn_text", None)
+        return cleaner(text) if callable(cleaner) else str(text)
+    except Exception:
+        return str(text)
+
+
+def _patch_settings_markup_for_auto_delete() -> None:
+    """Append Auto Delete Old Posts ON/OFF row without overwriting _inline.py."""
+    if getattr(buttons, "_auto_delete_old_posts_patch", False):
+        return
+
+    original_settings_markup = buttons.settings_markup
+
+    def settings_markup_with_auto_delete(
+        lang_dict: dict,
+        admin_only: bool,
+        cmd_delete: bool,
+        language: str,
+        chat_id: int,
+        auto_delete_old_posts: bool = False,
+    ):
+        markup = original_settings_markup(
+            lang_dict, admin_only, cmd_delete, language, chat_id
+        )
+
+        try:
+            label = _clean_button_text(
+                str(lang_dict.get("auto_delete_old_posts", "Auto Delete Old Posts")) + " ➜"
+            )
+            status = "ON" if auto_delete_old_posts else "OFF"
+            row = [
+                buttons.ikb(
+                    text=label,
+                    callback_data="settings",
+                    style="primary",
+                ),
+                buttons.ikb(
+                    text=status,
+                    callback_data="settings autodel",
+                    style="success" if auto_delete_old_posts else "danger",
+                ),
+            ]
+            markup.inline_keyboard.append(row)
+        except Exception as e:
+            print(f"AUTO DELETE SETTINGS MARKUP PATCH ERROR: {e}")
+
+        return markup
+
+    buttons.settings_markup = settings_markup_with_auto_delete
+    buttons._auto_delete_old_posts_patch = True
+
+
+_patch_settings_markup_for_auto_delete()
+
+
+async def _delete_callback_message_later(query: types.CallbackQuery, delay: int = 10) -> None:
+    try:
+        await asyncio.sleep(max(0, int(delay or 10)))
+        await safe_delete(query.message)
+    except asyncio.CancelledError:
+        raise
+    except Exception:
+        pass
 
 
 @app.on_callback_query(filters.regex("cancel_dl") & ~app.bl_users)
@@ -171,7 +239,11 @@ async def _controls(_, query: types.CallbackQuery):
     try:
         if action in ["skip", "replay", "stop"]:
             await safe_reply_text(query.message, reply, parse_mode="HTML")
-            await safe_delete(query.message)
+            try:
+                if await db.get_auto_delete_play(chat_id):
+                    asyncio.create_task(_delete_callback_message_later(query, delay=10))
+            except Exception:
+                pass
         else:
             source_text = ""
 
@@ -278,6 +350,7 @@ async def _settings_cb(_, query: types.CallbackQuery):
     _admin = await db.get_play_mode(chat_id)
     _delete = await db.get_cmd_delete(chat_id)
     _language = await db.get_lang(chat_id)
+    _auto_delete = await db.get_auto_delete_play(chat_id)
 
     if cmd[1] == "delete":
         _delete = not _delete
@@ -285,6 +358,9 @@ async def _settings_cb(_, query: types.CallbackQuery):
     elif cmd[1] == "play":
         await db.set_play_mode(chat_id, _admin)
         _admin = not _admin
+    elif cmd[1] == "autodel":
+        _auto_delete = not _auto_delete
+        await db.set_auto_delete_play(chat_id, _auto_delete)
 
     await safe_edit_reply_markup(
         rawtg,
@@ -295,5 +371,6 @@ async def _settings_cb(_, query: types.CallbackQuery):
             _delete,
             _language,
             chat_id,
+            _auto_delete,
         ),
     )
