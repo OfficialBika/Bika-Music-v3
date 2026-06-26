@@ -155,8 +155,19 @@ class Inline:
         )
 
     def settings_markup(
-        self, lang: dict, admin_only: bool, cmd_delete: bool, language: str, chat_id: int
+        self,
+        lang: dict,
+        admin_only: bool,
+        cmd_delete: bool,
+        language: str,
+        chat_id: int,
+        auto_delete_old_posts: bool = False,
     ) -> types.InlineKeyboardMarkup:
+        auto_delete_label = self._clean_btn_text(
+            str(lang.get("auto_delete_old_posts", "Auto Delete Old Posts")) + " ➜"
+        )
+        auto_delete_status = "ON" if auto_delete_old_posts else "OFF"
+
         return self.ikm(
             [
                 [
@@ -181,6 +192,18 @@ class Inline:
                         text="ON" if cmd_delete else "OFF",
                         callback_data="settings delete",
                         style="success" if cmd_delete else "danger",
+                    ),
+                ],
+                [
+                    self.ikb(
+                        text=auto_delete_label,
+                        callback_data="settings",
+                        style="primary",
+                    ),
+                    self.ikb(
+                        text=auto_delete_status,
+                        callback_data="settings autodel",
+                        style="success" if auto_delete_old_posts else "danger",
                     ),
                 ],
                 [
@@ -235,7 +258,7 @@ class Inline:
                 [
                     self.ikb(
                         text="Owner",
-                        url="https://t.me/Official_Bika",
+                        url="https://t.me/Offical_zeen",
                         style="success",
                     )
                 ]
