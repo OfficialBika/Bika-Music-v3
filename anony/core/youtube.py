@@ -2,14 +2,12 @@
 # Licensed under the MIT License.
 # This file is part of AnonXMusic
 #
-# Production stability patch for Bika-Music-v3:
-# - Uses YouTube web client only for yt-dlp downloads because the VPS test passed with
-#   --extractor-args "youtube:player_client=web" while Android/iOS clients skipped cookies.
-# - Forces IPv4/source_address to avoid some VPS/AWS IPv6/media CDN 403 issues.
-# - Uses cookiefile from anony/cookies/*.txt when available.
-# - Supports wider YouTube playlist URL formats.
-# - Handles missing metadata safely and returns the actual downloaded file path.
-# - Keeps yt-dlp work off the event loop by running it in a thread.
+# Bika-Music-v3 YouTube reliable downloader patch
+# - Uses YouTube WEB client only, matching the VPS command that worked:
+#   yt-dlp --cookies anony/cookies/cookies.txt --force-ipv4 --extractor-args "youtube:player_client=web"
+# - Tries progressive WEB format 18 first because it succeeded on this VPS while audio-only streams returned 403.
+# - Falls back to audio-only formats if progressive format is unavailable.
+# - Keeps cookie loading, playlist/search safety, actual downloaded file detection, and threaded yt-dlp execution.
 
 import asyncio
 import os
@@ -32,8 +30,9 @@ class YouTube:
         self.checked = False
         self.cookie_dir = "anony/cookies"
         self.warned = False
+        self._patch_logged = False
 
-        # Accept normal videos, shorts, playlist pages, and watch URLs with list=.
+        # Accept videos, shorts, playlist pages, and watch URLs that include list=.
         self.regex = re.compile(
             r"(https?://)?(www\.|m\.|music\.)?"
             r"(youtube\.com/(watch\?v=|shorts/|playlist\?list=)|youtu\.be/)"
@@ -44,6 +43,11 @@ class YouTube:
             r"(?!/(watch\?v=[A-Za-z0-9_-]{11}|shorts/[A-Za-z0-9_-]{11}"
             r"|playlist\?list=[A-Za-z0-9_-]+|[A-Za-z0-9_-]{11}))\S*"
         )
+
+    def _log_patch_once(self) -> None:
+        if not self._patch_logged:
+            self._patch_logged = True
+            logger.info("YouTube downloader patch active: web-client, cookies, IPv4, format-18 fallback")
 
     def _safe_title(self, value, limit: int = 50) -> str:
         return str(value or "Unknown")[:limit]
@@ -70,7 +74,7 @@ class YouTube:
         candidates = [
             p for p in downloads.glob(f"{video_id}.*")
             if p.is_file()
-            and not p.name.endswith((".part", ".ytdl", ".temp", ".tmp"))
+            and not p.name.endswith((".part", ".ytdl", ".temp", ".tmp", ".download"))
             and p.stat().st_size > 0
         ]
         if not candidates:
@@ -79,8 +83,8 @@ class YouTube:
         if video:
             preferred_exts = (".mp4", ".mkv", ".webm", ".mov")
         else:
-            # Web client can sometimes provide format 18 as mp4 even for audio play.
-            preferred_exts = (".webm", ".m4a", ".opus", ".mp3", ".aac", ".mp4")
+            # Format 18 is mp4 with audio+video. PyTgCalls/ffmpeg can still use it for /play audio.
+            preferred_exts = (".mp4", ".webm", ".m4a", ".opus", ".mp3", ".aac")
 
         for ext in preferred_exts:
             for path in candidates:
@@ -88,7 +92,18 @@ class YouTube:
                     return str(path)
         return str(candidates[0])
 
-    def get_cookies(self):
+    def _cleanup_partial_files(self, video_id: str) -> None:
+        downloads = Path("downloads")
+        if not downloads.exists():
+            return
+        for path in downloads.glob(f"{video_id}.*"):
+            if path.name.endswith((".part", ".ytdl", ".temp", ".tmp", ".download")):
+                try:
+                    path.unlink()
+                except Exception:
+                    pass
+
+    def get_cookies(self) -> str | None:
         if not self.checked:
             try:
                 os.makedirs(self.cookie_dir, exist_ok=True)
@@ -172,58 +187,57 @@ class YouTube:
                     continue
 
                 link = data.get("link") or f"{self.base}{video_id}"
-                track = Track(
-                    id=video_id,
-                    channel_name=data.get("channel", {}).get("name", ""),
-                    duration=data.get("duration") or "00:00",
-                    duration_sec=self._safe_duration_sec(data.get("duration")),
-                    title=self._safe_title(data.get("title"), 50),
-                    thumbnail=self._safe_thumb(data.get("thumbnails", [])),
-                    url=link.split("&list=")[0],
-                    user=user,
-                    view_count="",
-                    video=video,
+                tracks.append(
+                    Track(
+                        id=video_id,
+                        channel_name=data.get("channel", {}).get("name", ""),
+                        duration=data.get("duration") or "00:00",
+                        duration_sec=self._safe_duration_sec(data.get("duration")),
+                        title=self._safe_title(data.get("title"), 50),
+                        thumbnail=self._safe_thumb(data.get("thumbnails", [])),
+                        url=link.split("&list=")[0],
+                        user=user,
+                        view_count="",
+                        video=video,
+                    )
                 )
-                tracks.append(track)
         except Exception as e:
             logger.warning("Playlist fetch failed for %s: %s", url, e)
         return tracks
 
-    def _base_ydl_opts(self, cookie: str | None) -> dict:
+    def _base_ydl_opts(self, cookie: str | None, fmt: str, video: bool) -> dict:
         opts = {
             "outtmpl": "downloads/%(id)s.%(ext)s",
+            "format": fmt,
             "quiet": True,
             "noplaylist": True,
             "geo_bypass": True,
             "no_warnings": True,
             "overwrites": False,
             "nocheckcertificate": True,
-            "source_address": "0.0.0.0",  # same effect as --force-ipv4 for this VPS case
+            # This is the Python equivalent of the working CLI --force-ipv4.
+            "source_address": "0.0.0.0",
             "retries": 3,
             "fragment_retries": 3,
             "extractor_retries": 3,
-            "http_headers": {
-                "User-Agent": (
-                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-                    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-                ),
-                "Accept-Language": "en-US,en;q=0.9",
-            },
             "extractor_args": {
                 "youtube": {
-                    # Your VPS test succeeded only with web client + cookies.
+                    # Android/iOS skipped cookies on your VPS; web client worked.
                     "player_client": ["web"],
                 }
             },
         }
         if cookie:
             opts["cookiefile"] = cookie
+        if video:
+            opts["merge_output_format"] = "mp4"
         return opts
 
     async def download(self, video_id: str, video: bool = False) -> str | None:
         if not video_id:
             return None
 
+        self._log_patch_once()
         os.makedirs("downloads", exist_ok=True)
 
         existing = self._find_downloaded_file(video_id, video=video)
@@ -232,32 +246,45 @@ class YouTube:
 
         url = self.base + video_id
         cookie = self.get_cookies()
-        base_opts = self._base_ydl_opts(cookie)
 
+        # Try format 18 first because your VPS direct test succeeded by downloading format 18.
+        # If 18 is unavailable, fall back to audio-only / best formats.
         if video:
-            ydl_opts = {
-                **base_opts,
-                # Prefer progressive web formats that work reliably on VPS with cookies.
-                "format": "18/22/b[height<=720][width<=1280]/best[height<=720]/best",
-                "merge_output_format": "mp4",
-            }
+            formats_to_try = [
+                "18",
+                "22",
+                "18/22/b[height<=720][width<=1280]/best[height<=720]/best",
+                "best",
+            ]
         else:
-            ydl_opts = {
-                **base_opts,
-                # 18 fallback is intentional: your web-client test downloaded format 18 successfully.
-                "format": "251/140/18/ba/bestaudio/best",
-            }
+            formats_to_try = [
+                "18",
+                "251/140/ba/bestaudio/best",
+                "ba/bestaudio/best",
+                "best",
+            ]
 
-        def _download():
-            try:
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([url])
-                return self._find_downloaded_file(video_id, video=video)
-            except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as ex:
-                logger.warning("Download failed for %s: %s", video_id, ex)
-                return None
-            except Exception as ex:
-                logger.warning("Unexpected download failed for %s: %s", video_id, ex)
-                return None
+        def _download_with_fallbacks() -> str | None:
+            last_error = None
+            for fmt in formats_to_try:
+                self._cleanup_partial_files(video_id)
+                opts = self._base_ydl_opts(cookie, fmt, video=video)
+                try:
+                    logger.info("Downloading YouTube %s with web client format=%s", video_id, fmt)
+                    with yt_dlp.YoutubeDL(opts) as ydl:
+                        ydl.download([url])
+                    found = self._find_downloaded_file(video_id, video=video)
+                    if found:
+                        return found
+                except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as ex:
+                    last_error = ex
+                    logger.warning("Download attempt failed for %s format=%s: %s", video_id, fmt, ex)
+                except Exception as ex:
+                    last_error = ex
+                    logger.warning("Unexpected download attempt failed for %s format=%s: %s", video_id, fmt, ex)
 
-        return await asyncio.to_thread(_download)
+            if last_error:
+                logger.warning("All YouTube download attempts failed for %s: %s", video_id, last_error)
+            return None
+
+        return await asyncio.to_thread(_download_with_fallbacks)
