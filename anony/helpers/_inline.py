@@ -235,7 +235,7 @@ class Inline:
                 [
                     self.ikb(
                         text="Owner",
-                        url="https://t.me/Offical_Bika",
+                        url="https://t.me/Official_Bika",
                         style="success",
                     )
                 ]
