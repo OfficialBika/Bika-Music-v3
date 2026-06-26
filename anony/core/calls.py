@@ -8,6 +8,7 @@
 # - stop/replay/play_next are guarded against stale DB call state and empty queue.
 # - raw Bot API edits are moved to asyncio.to_thread to avoid blocking the event loop.
 # - background update exceptions are logged instead of killing handlers.
+# - Optional per-chat auto-delete for old Now Playing posts after 10 seconds.
 
 import asyncio
 import html
@@ -70,6 +71,55 @@ async def _safe_delete_message(chat_id: int, message_id: int | None) -> None:
         await app.delete_messages(chat_id=chat_id, message_ids=message_id, revoke=True)
     except Exception:
         pass
+
+
+async def _auto_delete_old_play_message(chat_id: int, message_id: int | None, delay: int = 10) -> None:
+    """Delete an old Now Playing post after a delay when the group setting is enabled."""
+    if not message_id:
+        return
+
+    try:
+        enabled = await db.get_auto_delete_play(chat_id)
+    except Exception as e:
+        logger.warning("auto-delete setting check failed chat=%s: %s", chat_id, e)
+        return
+
+    if not enabled:
+        return
+
+    async def _runner() -> None:
+        try:
+            await asyncio.sleep(max(0, int(delay or 10)))
+            await _safe_delete_message(chat_id, message_id)
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:
+            logger.warning("auto-delete old play post failed chat=%s msg=%s: %s", chat_id, message_id, e)
+
+    asyncio.create_task(_runner())
+
+
+async def _mark_old_play_post_finished(chat_id: int, media: Media | Track | None) -> None:
+    """Mark the old Now Playing post as ended and optionally delete it after 10 seconds."""
+    message_id = getattr(media, "message_id", 0) if media else 0
+    if not message_id:
+        return
+
+    try:
+        _lang = await lang.get_lang(chat_id)
+        await _raw_edit_reply_markup(
+            chat_id=chat_id,
+            message_id=message_id,
+            reply_markup=buttons.controls(
+                chat_id=chat_id,
+                status=_lang.get("stopped", "Stream ended"),
+                remove=True,
+            ),
+        )
+    except Exception:
+        pass
+
+    await _auto_delete_old_play_message(chat_id, message_id, delay=10)
 
 
 async def _raw_edit_reply_markup(chat_id: int, message_id: int, reply_markup=None) -> None:
@@ -406,25 +456,12 @@ class TgCall(PyTgCalls):
         media = queue.get_next(chat_id)
 
         if not media:
-            try:
-                if current and getattr(current, "message_id", 0):
-                    _lang = await lang.get_lang(chat_id)
-                    await _raw_edit_reply_markup(
-                        chat_id=chat_id,
-                        message_id=current.message_id,
-                        reply_markup=buttons.controls(
-                            chat_id=chat_id,
-                            status=_lang["stopped"],
-                            remove=True,
-                        ),
-                    )
-            except Exception:
-                pass
+            await _mark_old_play_post_finished(chat_id, current)
             return await self.stop(chat_id)
 
-        await _safe_delete_message(chat_id, getattr(current, "message_id", None))
-        if current:
-            current.message_id = 0
+        # Keep the old Now Playing post visible briefly, then remove it only when
+        # Auto Delete Old Posts is enabled for this chat.
+        await _mark_old_play_post_finished(chat_id, current)
 
         _lang = await lang.get_lang(chat_id)
         msg = await app.send_message(
