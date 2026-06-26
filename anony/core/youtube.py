@@ -2,20 +2,23 @@
 # Licensed under the MIT License.
 # This file is part of AnonXMusic
 #
-# Production stability patch:
-# - Handles missing cookie directory.
-# - Avoids None slicing crashes from YouTube search/playlist metadata.
-# - Returns the actual downloaded file path from yt-dlp instead of assuming .webm.
-# - Runs yt-dlp in a thread and logs failures clearly.
+# Production stability patch for Bika-Music-v3:
+# - Uses YouTube web client only for yt-dlp downloads because the VPS test passed with
+#   --extractor-args "youtube:player_client=web" while Android/iOS clients skipped cookies.
+# - Forces IPv4/source_address to avoid some VPS/AWS IPv6/media CDN 403 issues.
+# - Uses cookiefile from anony/cookies/*.txt when available.
+# - Supports wider YouTube playlist URL formats.
+# - Handles missing metadata safely and returns the actual downloaded file path.
+# - Keeps yt-dlp work off the event loop by running it in a thread.
 
-import os
-import re
-import yt_dlp
-import random
 import asyncio
-import aiohttp
+import os
+import random
+import re
 from pathlib import Path
 
+import aiohttp
+import yt_dlp
 from py_yt import Playlist, VideosSearch
 
 from anony import logger
@@ -25,19 +28,21 @@ from anony.helpers import Track, utils
 class YouTube:
     def __init__(self):
         self.base = "https://www.youtube.com/watch?v="
-        self.cookies = []
+        self.cookies: list[str] = []
         self.checked = False
         self.cookie_dir = "anony/cookies"
         self.warned = False
+
+        # Accept normal videos, shorts, playlist pages, and watch URLs with list=.
         self.regex = re.compile(
             r"(https?://)?(www\.|m\.|music\.)?"
             r"(youtube\.com/(watch\?v=|shorts/|playlist\?list=)|youtu\.be/)"
-            r"([A-Za-z0-9_-]{11}|PL[A-Za-z0-9_-]+)([&?][^\s]*)?"
+            r"([A-Za-z0-9_-]{11}|[A-Za-z0-9_-]+)([&?][^\s]*)?"
         )
         self.iregex = re.compile(
             r"https?://(?:www\.|m\.|music\.)?(?:youtube\.com|youtu\.be)"
             r"(?!/(watch\?v=[A-Za-z0-9_-]{11}|shorts/[A-Za-z0-9_-]{11}"
-            r"|playlist\?list=PL[A-Za-z0-9_-]+|[A-Za-z0-9_-]{11}))\S*"
+            r"|playlist\?list=[A-Za-z0-9_-]+|[A-Za-z0-9_-]{11}))\S*"
         )
 
     def _safe_title(self, value, limit: int = 50) -> str:
@@ -68,38 +73,39 @@ class YouTube:
             and not p.name.endswith((".part", ".ytdl", ".temp", ".tmp"))
             and p.stat().st_size > 0
         ]
-
         if not candidates:
             return None
 
         if video:
-            for ext in (".mp4", ".mkv", ".webm", ".mov"):
-                for path in candidates:
-                    if path.suffix.lower() == ext:
-                        return str(path)
+            preferred_exts = (".mp4", ".mkv", ".webm", ".mov")
         else:
-            for ext in (".webm", ".m4a", ".opus", ".mp3", ".aac"):
-                for path in candidates:
-                    if path.suffix.lower() == ext:
-                        return str(path)
+            # Web client can sometimes provide format 18 as mp4 even for audio play.
+            preferred_exts = (".webm", ".m4a", ".opus", ".mp3", ".aac", ".mp4")
 
+        for ext in preferred_exts:
+            for path in candidates:
+                if path.suffix.lower() == ext:
+                    return str(path)
         return str(candidates[0])
 
     def get_cookies(self):
         if not self.checked:
             try:
                 os.makedirs(self.cookie_dir, exist_ok=True)
-                for file in os.listdir(self.cookie_dir):
-                    if file.endswith(".txt"):
-                        self.cookies.append(f"{self.cookie_dir}/{file}")
+                self.cookies = [
+                    f"{self.cookie_dir}/{file}"
+                    for file in os.listdir(self.cookie_dir)
+                    if file.endswith(".txt")
+                ]
             except Exception as e:
                 logger.warning("Failed to read cookies dir: %s", e)
+                self.cookies = []
             self.checked = True
 
         if not self.cookies:
             if not self.warned:
                 self.warned = True
-                logger.warning("Cookies are missing; downloads might fail.")
+                logger.warning("Cookies are missing; YouTube downloads may fail.")
             return None
         return random.choice(self.cookies)
 
@@ -119,7 +125,7 @@ class YouTube:
                     logger.warning("Failed to save cookie from %s: %s", url, e)
         self.checked = False
         self.cookies.clear()
-        logger.info(f"Cookies saved in {self.cookie_dir}.")
+        logger.info("Cookies saved in %s.", self.cookie_dir)
 
     def valid(self, url: str) -> bool:
         return bool(re.match(self.regex, url or ""))
@@ -180,8 +186,39 @@ class YouTube:
                 )
                 tracks.append(track)
         except Exception as e:
-            logger.warning("Playlist fetch failed: %s", e)
+            logger.warning("Playlist fetch failed for %s: %s", url, e)
         return tracks
+
+    def _base_ydl_opts(self, cookie: str | None) -> dict:
+        opts = {
+            "outtmpl": "downloads/%(id)s.%(ext)s",
+            "quiet": True,
+            "noplaylist": True,
+            "geo_bypass": True,
+            "no_warnings": True,
+            "overwrites": False,
+            "nocheckcertificate": True,
+            "source_address": "0.0.0.0",  # same effect as --force-ipv4 for this VPS case
+            "retries": 3,
+            "fragment_retries": 3,
+            "extractor_retries": 3,
+            "http_headers": {
+                "User-Agent": (
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+                ),
+                "Accept-Language": "en-US,en;q=0.9",
+            },
+            "extractor_args": {
+                "youtube": {
+                    # Your VPS test succeeded only with web client + cookies.
+                    "player_client": ["web"],
+                }
+            },
+        }
+        if cookie:
+            opts["cookiefile"] = cookie
+        return opts
 
     async def download(self, video_id: str, video: bool = False) -> str | None:
         if not video_id:
@@ -195,28 +232,20 @@ class YouTube:
 
         url = self.base + video_id
         cookie = self.get_cookies()
-        base_opts = {
-            "outtmpl": "downloads/%(id)s.%(ext)s",
-            "quiet": True,
-            "noplaylist": True,
-            "geo_bypass": True,
-            "no_warnings": True,
-            "overwrites": False,
-            "nocheckcertificate": True,
-        }
-        if cookie:
-            base_opts["cookiefile"] = cookie
+        base_opts = self._base_ydl_opts(cookie)
 
         if video:
             ydl_opts = {
                 **base_opts,
-                "format": "bv*[height<=720][width<=1280]+ba/b[height<=720][width<=1280]/b[height<=720][width<=1280]/best",
+                # Prefer progressive web formats that work reliably on VPS with cookies.
+                "format": "18/22/b[height<=720][width<=1280]/best[height<=720]/best",
                 "merge_output_format": "mp4",
             }
         else:
             ydl_opts = {
                 **base_opts,
-                "format": "ba/bestaudio/best",
+                # 18 fallback is intentional: your web-client test downloaded format 18 successfully.
+                "format": "251/140/18/ba/bestaudio/best",
             }
 
         def _download():
