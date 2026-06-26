@@ -3,7 +3,6 @@
 <h2>BikaMusic</h2>
 
 
-<img src="https://github.com/AnonymousX1025/AnonXMus
 
 AnonXMusic lets you stream high-quality and low-latency audio and video playback into telegram group video chats.<br>
 Built with Python, Pyrogram, and Py-TgCalls, it’s optimized for reliability and easy deployment on Heroku, VPS, or Docker.
