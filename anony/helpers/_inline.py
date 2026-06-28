@@ -258,7 +258,7 @@ class Inline:
                 [
                     self.ikb(
                         text="Owner",
-                        url="https://t.me/Official_Bika",
+                        url="https://t.me/Barbarnyarnyar69",
                         style="success",
                     )
                 ]
