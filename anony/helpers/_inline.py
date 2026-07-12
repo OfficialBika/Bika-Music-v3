@@ -254,15 +254,16 @@ class Inline:
         ]
 
         if private:
-            rows += [
-                [
-                    self.ikb(
-                        text="Owner",
-                        url="https://t.me/Barbarnyarnyar69",
-                        style="success",
-                    )
-                ]
-            ]
+            if config.OWNER_BUTTON_ENABLED and config.OWNER_USERNAME:
+                rows.append(
+                    [
+                        self.ikb(
+                            text=self._clean_btn_text(config.OWNER_BUTTON_TEXT),
+                            url=f"https://t.me/{config.OWNER_USERNAME}",
+                            style="success",
+                        )
+                    ]
+                )
         else:
             rows += [
                 [
