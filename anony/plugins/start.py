@@ -9,6 +9,7 @@ from pyrogram import enums, filters, types
 
 from anony import app, config, db, lang
 from anony.helpers import buttons, rawtg, utils
+from anony.utils.old_posts import old_post_clean_enabled
 
 
 async def _maybe_await(result):
@@ -139,10 +140,16 @@ async def settings(_, message: types.Message):
     admin_only = await db.get_play_mode(message.chat.id)
     cmd_delete = await db.get_cmd_delete(message.chat.id)
     _language = await db.get_lang(message.chat.id)
+    auto_delete_old_posts = await old_post_clean_enabled(message.chat.id)
 
     text = message.lang["start_settings"].format(message.chat.title)
     key = buttons.settings_markup(
-        message.lang, admin_only, cmd_delete, _language, message.chat.id
+        message.lang,
+        admin_only,
+        cmd_delete,
+        _language,
+        message.chat.id,
+        auto_delete_old_posts,
     )
 
     result = await _send_raw_text_with_buttons(

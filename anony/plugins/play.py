@@ -2,16 +2,17 @@
 # Licensed under the MIT License.
 # This file is part of AnonXMusic
 
-
-from pathlib import Path
+import asyncio
 import html
 import inspect
+from pathlib import Path
 
 from pyrogram import enums, filters, types
 
 from anony import anon, app, config, db, lang, queue, tg, yt
-from anony.helpers import buttons, utils, rawtg
+from anony.helpers import buttons, rawtg, utils
 from anony.helpers._play import checkUB
+from anony.utils.old_posts import old_post_clean_enabled
 
 
 async def _maybe_await(result):
@@ -33,6 +34,49 @@ async def _send_raw_text_with_buttons(
         disable_web_page_preview=True,
     )
     return await _maybe_await(result)
+
+
+def _get_message_id(result) -> int | None:
+    """Extract a Telegram message id from raw Bot API or Pyrogram results."""
+    if isinstance(result, dict):
+        if result.get("ok") is not True:
+            return None
+        payload = result.get("result") or {}
+        try:
+            return int(payload.get("message_id"))
+        except (TypeError, ValueError):
+            return None
+
+    message_id = getattr(result, "id", None)
+    if message_id is None:
+        message_id = getattr(result, "message_id", None)
+    try:
+        return int(message_id) if message_id is not None else None
+    except (TypeError, ValueError):
+        return None
+
+
+async def _delete_queue_post_later(chat_id: int, message_id: int) -> None:
+    """Delete the complete queue card, including its inline button."""
+    await asyncio.sleep(config.OLD_POST_CLEAN_DELAY)
+    try:
+        await app.delete_messages(
+            chat_id=chat_id,
+            message_ids=message_id,
+            revoke=True,
+        )
+    except Exception:
+        # It may already have been deleted by Play Now or an administrator.
+        pass
+
+
+async def _schedule_queue_post_cleanup(chat_id: int, result) -> None:
+    if not await old_post_clean_enabled(chat_id):
+        return
+    message_id = _get_message_id(result)
+    if not message_id:
+        return
+    asyncio.create_task(_delete_queue_post_later(chat_id, message_id))
 
 
 def playlist_to_queue(chat_id: int, tracks: list) -> str:
@@ -65,7 +109,7 @@ async def play_hndlr(
     tracks = []
 
     requester_name = html.escape(m.from_user.first_name or "User")
-    requester_link = f'tg://user?id={m.from_user.id}'
+    requester_link = f"tg://user?id={m.from_user.id}"
     requester_mention = f'<a href="{requester_link}">{requester_name}</a>'
 
     if media:
@@ -129,18 +173,21 @@ async def play_hndlr(
                 pass
 
             song_link = html.escape(
-                getattr(file, "url", None) or url or "https://t.me/Official_Bika"
+                getattr(file, "url", None)
+                or url
+                or "https://t.me/Official_Bika"
             )
             song_title = html.escape(file.title or "Unknown")
+            brand_text = html.escape(config.MUSIC_BRAND_TEXT)
 
             text = (
-                f'<b><tg-emoji emoji-id="5361979846845014099">💃</tg-emoji> Ｂɪᴋᴀ ꭙ Ｍᴜsɪᴄ</b>\n\n'
+                f'<b><tg-emoji emoji-id="5361979846845014099">💃</tg-emoji> {brand_text}</b>\n\n'
                 f'<blockquote><b>{position}</b> ခုမြောက် <b>queue</b> ထဲသို့ ထည့်ပြီးပါပြီ</blockquote>\n\n'
                 f'<b><tg-emoji emoji-id="5990337934526517811">🎶</tg-emoji> သီချင်း</b> : '
                 f'<a href="{song_link}">{song_title}</a>\n\n'
                 f'<b><tg-emoji emoji-id="5316615057939897832">⏰</tg-emoji> ကြာချိန်</b> : {file.duration}\n\n'
                 f'<b><tg-emoji emoji-id="6154522383790114334">😅</tg-emoji> တောင်းဆိုသူ</b> : '
-                f'{requester_mention}'
+                f"{requester_mention}"
             )
 
             result = await _send_raw_text_with_buttons(
@@ -153,7 +200,7 @@ async def play_hndlr(
 
             if isinstance(result, dict) and result.get("ok") is False:
                 print(f"RAW PLAY QUEUE SEND ERROR: {result}")
-                await m.reply_text(
+                result = await m.reply_text(
                     text=text,
                     reply_markup=buttons.play_queued(
                         m.chat.id, file.id, m.lang["play_now"]
@@ -161,6 +208,10 @@ async def play_hndlr(
                     parse_mode=enums.ParseMode.HTML,
                     disable_web_page_preview=True,
                 )
+
+            # Removes the whole queue card and its Play Now button after 10s
+            # by default. Controlled through OLD_POST_CLEAN / DELAY in .env.
+            await _schedule_queue_post_cleanup(m.chat.id, result)
 
             if tracks:
                 added = playlist_to_queue(m.chat.id, tracks)
