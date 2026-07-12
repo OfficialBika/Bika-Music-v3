@@ -89,7 +89,7 @@ class Config:
 
         # Start-message owner button. OWNER_USERNAME may include or omit @.
         self.OWNER_USERNAME = getenv(
-            "OWNER_USERNAME", "Barbarnyarnyar69"
+            "OWNER_USERNAME", "Official_Bika"
         ).strip().lstrip("@")
         self.OWNER_BUTTON_TEXT = getenv("OWNER_BUTTON_TEXT", "Owner").strip() or "Owner"
         self.OWNER_BUTTON_ENABLED = _env_bool("OWNER_BUTTON_ENABLED", True)
