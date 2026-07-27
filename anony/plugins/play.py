@@ -57,8 +57,18 @@ def _get_message_id(result) -> int | None:
 
 
 async def _delete_queue_post_later(chat_id: int, message_id: int) -> None:
-    """Delete the complete queue card, including its inline button."""
+    """Safely remove queue card buttons, then delete the old queue message."""
     await asyncio.sleep(config.OLD_POST_CLEAN_DELAY)
+
+    try:
+        await app.edit_message_reply_markup(
+            chat_id=chat_id,
+            message_id=message_id,
+            reply_markup=None,
+        )
+    except Exception:
+        pass
+
     try:
         await app.delete_messages(
             chat_id=chat_id,
@@ -66,7 +76,6 @@ async def _delete_queue_post_later(chat_id: int, message_id: int) -> None:
             revoke=True,
         )
     except Exception:
-        # It may already have been deleted by Play Now or an administrator.
         pass
 
 
