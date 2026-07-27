@@ -116,10 +116,6 @@ def _post(method: str, payload: dict):
         }
 
     if _is_ignorable_edit_error(method, data):
-        print(
-            f"RAWTG {method}: ignored harmless edit error: {data.get('description')}",
-            flush=True,
-        )
         return {"ok": True, "ignored": True, "raw": data}
 
     # Avoid noisy logs for successful high-frequency timer edits.
