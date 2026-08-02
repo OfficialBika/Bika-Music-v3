@@ -66,7 +66,14 @@ class Inline:
                     self.ikb(text="⥁", callback_data=f"controls replay {chat_id}", style="primary"),
                     self.ikb(text="‣‣I", callback_data=f"controls skip {chat_id}", style="primary"),
                     self.ikb(text="▢", callback_data=f"controls stop {chat_id}", style="danger"),
-                ]
+                ],
+                [
+                    self.ikb(
+                        text="✖ Close",
+                        callback_data=f"controls close {chat_id}",
+                        style="danger",
+                    )
+                ],
             )
 
         return self.ikm(keyboard)
