@@ -52,6 +52,10 @@ async def _controls(_, query: types.CallbackQuery):
     if action == "status":
         return await safe_answer_callback(query)
 
+    if action == "close":
+        await safe_delete(query.message)
+        return await safe_answer_callback(query)
+
     if not await db.get_call(chat_id):
         try:
             return await safe_answer_callback(
