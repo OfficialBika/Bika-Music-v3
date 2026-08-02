@@ -191,69 +191,66 @@ class YouTube:
     ) -> list[Track]:
         tracks = []
 
-    try:
-        cookie = self.get_cookies()
+        try:
+            cookie = self.get_cookies()
 
-        options = {
-            "quiet": True,
-            "extract_flat": True,
-            "skip_download": True,
-            "noplaylist": False,
-            "playlistend": limit,
-        }
+            options = {
+                "quiet": True,
+                "extract_flat": True,
+                "skip_download": True,
+                "noplaylist": False,
+                "playlistend": limit,
+            }
 
-        if cookie:
-            options["cookiefile"] = cookie
+            if cookie:
+                options["cookiefile"] = cookie
 
-        def extract():
-            with yt_dlp.YoutubeDL(options) as ydl:
-                return ydl.extract_info(url, download=False)
+            def extract():
+                with yt_dlp.YoutubeDL(options) as ydl:
+                    return ydl.extract_info(url, download=False)
 
-        info = await asyncio.to_thread(extract)
+            info = await asyncio.to_thread(extract)
 
-        entries = info.get("entries", [])
+            entries = info.get("entries", [])
 
-        for item in entries:
-            if not item:
-                continue
+            for item in entries:
+                if not item:
+                    continue
 
-            video_id = item.get("id")
+                video_id = item.get("id")
 
-            if not video_id:
-                item_url = item.get("url", "")
-                if "v=" in item_url:
-                    video_id = item_url.split("v=")[1].split("&")[0]
+                if not video_id:
+                    item_url = item.get("url", "")
+                    if "v=" in item_url:
+                        video_id = item_url.split("v=")[1].split("&")[0]
 
-            if not video_id:
-                continue
+                if not video_id:
+                    continue
 
-            tracks.append(
-                Track(
-                    id=video_id,
-                    channel_name=item.get("channel", ""),
-                    duration=item.get("duration_string", "00:00"),
-                    duration_sec=item.get("duration", 0),
-                    message_id=0,
-                    title=self._safe_title(
-                        item.get("title"),
-                        50,
-                    ),
-                    thumbnail=item.get("thumbnail"),
-                    url=f"{self.base}{video_id}",
-                    user=user,
-                    view_count="",
-                    video=video,
+                tracks.append(
+                    Track(
+                        id=video_id,
+                        channel_name=item.get("channel") or "",
+                        duration=item.get("duration_string") or "00:00",
+                        duration_sec=item.get("duration") or 0,
+                        message_id=0,
+                        title=self._safe_title(item.get("title")),
+                        thumbnail=item.get("thumbnail"),
+                        url=f"{self.base}{video_id}",
+                        user=user,
+                        view_count="",
+                        video=video,
+                    )
                 )
+
+        except Exception as e:
+            logger.warning(
+                "yt-dlp playlist failed %s: %s",
+                url,
+                e,
             )
 
-    except Exception as e:
-        logger.warning(
-            "yt-dlp playlist failed %s: %s",
-            url,
-            e,
-        )
-
-    return tracks
+        return tracks
 
     def _base_ydl_opts(self, cookie: str | None, fmt: str, video: bool) -> dict:
         opts = {
