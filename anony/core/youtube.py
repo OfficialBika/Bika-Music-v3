@@ -143,7 +143,13 @@ class YouTube:
         logger.info("Cookies saved in %s.", self.cookie_dir)
 
     def valid(self, url: str) -> bool:
-        return bool(re.match(self.regex, url or ""))
+        if not url:
+            return False
+
+        return (
+            "youtube.com" in url
+            or "youtu.be" in url
+        )
 
     def invalid(self, url: str) -> bool:
         return bool(re.match(self.iregex, url or ""))
@@ -214,6 +220,11 @@ class YouTube:
             video_id = item.get("id")
 
             if not video_id:
+                item_url = item.get("url", "")
+                if "v=" in item_url:
+                    video_id = item_url.split("v=")[1].split("&")[0]
+
+            if not video_id:
                 continue
 
             tracks.append(
@@ -222,6 +233,7 @@ class YouTube:
                     channel_name=item.get("channel", ""),
                     duration=item.get("duration_string", "00:00"),
                     duration_sec=item.get("duration", 0),
+                    message_id=0,
                     title=self._safe_title(
                         item.get("title"),
                         50,
