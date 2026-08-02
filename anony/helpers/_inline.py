@@ -142,9 +142,21 @@ class Inline:
                     self.ikb(
                         text=self._clean_btn_text(_text),
                         callback_data=f"controls force {chat_id} {item_id}",
-                        style="danger",
+                        style="success",
                     )
-                ]
+                ],
+                [
+                    self.ikb(
+                        text="📋 Queue List",
+                        callback_data=f"queue {chat_id}",
+                        style="primary",
+                    ),
+                    self.ikb(
+                        text="✖ Close",
+                        callback_data=f"controls close {chat_id}",
+                        style="danger",
+                    ),
+                ],
             ]
         )
 
