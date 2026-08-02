@@ -183,13 +183,13 @@ class YouTube:
         return None
 
     async def playlist(
-    self,
-    limit: int,
-    user: str,
-    url: str,
-    video: bool,
-) -> list[Track]:
-    tracks = []
+        self,
+        limit: int,
+        user: str,
+        url: str,
+        video: bool,
+    ) -> list[Track]:
+        tracks = []
 
     try:
         cookie = self.get_cookies()
