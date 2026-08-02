@@ -176,34 +176,72 @@ class YouTube:
             )
         return None
 
-    async def playlist(self, limit: int, user: str, url: str, video: bool) -> list[Track | None]:
-        tracks = []
-        try:
-            plist = await Playlist.get(url)
-            videos = plist.get("videos", [])
-            for data in videos[:limit]:
-                video_id = data.get("id")
-                if not video_id:
-                    continue
+    async def playlist(
+    self,
+    limit: int,
+    user: str,
+    url: str,
+    video: bool,
+) -> list[Track]:
+    tracks = []
 
-                link = data.get("link") or f"{self.base}{video_id}"
-                tracks.append(
-                    Track(
-                        id=video_id,
-                        channel_name=data.get("channel", {}).get("name", ""),
-                        duration=data.get("duration") or "00:00",
-                        duration_sec=self._safe_duration_sec(data.get("duration")),
-                        title=self._safe_title(data.get("title"), 50),
-                        thumbnail=self._safe_thumb(data.get("thumbnails", [])),
-                        url=link.split("&list=")[0],
-                        user=user,
-                        view_count="",
-                        video=video,
-                    )
+    try:
+        cookie = self.get_cookies()
+
+        options = {
+            "quiet": True,
+            "extract_flat": True,
+            "skip_download": True,
+            "noplaylist": False,
+            "playlistend": limit,
+        }
+
+        if cookie:
+            options["cookiefile"] = cookie
+
+        def extract():
+            with yt_dlp.YoutubeDL(options) as ydl:
+                return ydl.extract_info(url, download=False)
+
+        info = await asyncio.to_thread(extract)
+
+        entries = info.get("entries", [])
+
+        for item in entries:
+            if not item:
+                continue
+
+            video_id = item.get("id")
+
+            if not video_id:
+                continue
+
+            tracks.append(
+                Track(
+                    id=video_id,
+                    channel_name=item.get("channel", ""),
+                    duration=item.get("duration_string", "00:00"),
+                    duration_sec=item.get("duration", 0),
+                    title=self._safe_title(
+                        item.get("title"),
+                        50,
+                    ),
+                    thumbnail=item.get("thumbnail"),
+                    url=f"{self.base}{video_id}",
+                    user=user,
+                    view_count="",
+                    video=video,
                 )
-        except Exception as e:
-            logger.warning("Playlist fetch failed for %s: %s", url, e)
-        return tracks
+            )
+
+    except Exception as e:
+        logger.warning(
+            "yt-dlp playlist failed %s: %s",
+            url,
+            e,
+        )
+
+    return tracks
 
     def _base_ydl_opts(self, cookie: str | None, fmt: str, video: bool) -> dict:
         opts = {
