@@ -227,18 +227,47 @@ class YouTube:
                 if not video_id:
                     continue
 
+                # Fetch full metadata because extract_flat playlist entries do not
+                # always contain duration/thumbnail/channel information.
+                detail_options = {
+                    "quiet": True,
+                    "skip_download": True,
+                    "noplaylist": True,
+                }
+
+                if cookie:
+                    detail_options["cookiefile"] = cookie
+
+                def extract_detail():
+                    with yt_dlp.YoutubeDL(detail_options) as ydl:
+                        return ydl.extract_info(
+                            f"{self.base}{video_id}",
+                            download=False,
+                        )
+
+                try:
+                    detail = await asyncio.to_thread(extract_detail)
+                except Exception:
+                    detail = item
+
                 tracks.append(
                     Track(
                         id=video_id,
-                        channel_name=item.get("channel") or "",
-                        duration=item.get("duration_string") or "00:00",
-                        duration_sec=item.get("duration") or 0,
+                        channel_name=detail.get("channel") or item.get("channel") or "",
+                        duration=detail.get("duration_string") or item.get("duration_string") or "00:00",
+                        duration_sec=detail.get("duration") or item.get("duration") or 0,
                         message_id=0,
-                        title=self._safe_title(item.get("title")),
-                        thumbnail=item.get("thumbnail"),
+                        title=self._safe_title(
+                            detail.get("title") or item.get("title")
+                        ),
+                        thumbnail=(
+                            self._safe_thumb(detail.get("thumbnails", []))
+                            or detail.get("thumbnail")
+                            or item.get("thumbnail")
+                        ),
                         url=f"{self.base}{video_id}",
                         user=user,
-                        view_count="",
+                        view_count=detail.get("view_count", "") or "",
                         video=video,
                     )
                 )
