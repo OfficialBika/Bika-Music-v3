@@ -11,6 +11,7 @@ from contextlib import suppress
 from anony import (anon, app, config, db, logger,
                    stop, thumb, userbot, yt)
 from anony.plugins import all_modules
+from anony.utils.cleanup import cleanup_downloads
 
 
 async def idle():
@@ -23,6 +24,8 @@ async def idle():
     await stop_event.wait()
 
 async def main():
+    await cleanup_downloads()
+
     await db.connect()
     await app.boot()
     await userbot.boot()
