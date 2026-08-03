@@ -222,8 +222,14 @@ class MongoDB:
     async def get_auto_delete_play(self, chat_id: int) -> bool:
         if chat_id not in self.auto_delete_play:
             doc = await self.chatsdb.find_one({"_id": chat_id})
-            if doc and doc.get("auto_delete_play"):
+
+            # Keep existing database settings. New chats default to ON.
+            if doc is None:
+                return True
+
+            if doc.get("auto_delete_play", True):
                 self.auto_delete_play.append(chat_id)
+
         return chat_id in self.auto_delete_play
 
     async def set_auto_delete_play(self, chat_id: int, status: bool = False) -> None:
