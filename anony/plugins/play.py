@@ -2,100 +2,23 @@
 # Licensed under the MIT License.
 # This file is part of AnonXMusic
 
-import asyncio
-import html
-import inspect
+
 from pathlib import Path
 
-from pyrogram import enums, filters, types
+from pyrogram import filters, types
 
 from anony import anon, app, config, db, lang, queue, tg, yt
-from anony.helpers import buttons, rawtg, utils
+from anony.helpers import buttons, utils
 from anony.helpers._play import checkUB
-from anony.utils.old_posts import old_post_clean_enabled
-
-
-async def _maybe_await(result):
-    if inspect.isawaitable(result):
-        return await result
-    return result
-
-
-async def _send_raw_text_with_buttons(
-    chat_id: int,
-    text: str,
-    reply_markup,
-):
-    result = rawtg.send_message(
-        chat_id=chat_id,
-        text=text,
-        reply_markup=reply_markup,
-        parse_mode="HTML",
-        disable_web_page_preview=True,
-    )
-    return await _maybe_await(result)
-
-
-def _get_message_id(result) -> int | None:
-    """Extract a Telegram message id from raw Bot API or Pyrogram results."""
-    if isinstance(result, dict):
-        if result.get("ok") is not True:
-            return None
-        payload = result.get("result") or {}
-        try:
-            return int(payload.get("message_id"))
-        except (TypeError, ValueError):
-            return None
-
-    message_id = getattr(result, "id", None)
-    if message_id is None:
-        message_id = getattr(result, "message_id", None)
-    try:
-        return int(message_id) if message_id is not None else None
-    except (TypeError, ValueError):
-        return None
-
-
-async def _delete_queue_post_later(chat_id: int, message_id: int) -> None:
-    """Safely remove queue card buttons, then delete the old queue message."""
-    await asyncio.sleep(config.OLD_POST_CLEAN_DELAY)
-
-    try:
-        await app.edit_message_reply_markup(
-            chat_id=chat_id,
-            message_id=message_id,
-            reply_markup=None,
-        )
-    except Exception:
-        pass
-
-    try:
-        await app.delete_messages(
-            chat_id=chat_id,
-            message_ids=message_id,
-            revoke=True,
-        )
-    except Exception:
-        pass
-
-
-async def _schedule_queue_post_cleanup(chat_id: int, result) -> None:
-    if not await old_post_clean_enabled(chat_id):
-        return
-    message_id = _get_message_id(result)
-    if not message_id:
-        return
-    asyncio.create_task(_delete_queue_post_later(chat_id, message_id))
 
 
 def playlist_to_queue(chat_id: int, tracks: list) -> str:
     text = "<blockquote expandable>"
     for track in tracks:
         pos = queue.add(chat_id, track)
-        text += f"<b>{pos}.</b> {html.escape(track.title)}\n"
+        text += f"<b>{pos}.</b> {track.title}\n"
     text = text[:1948] + "</blockquote>"
     return text
-
 
 @app.on_message(
     filters.command(["play", "playforce", "vplay", "vplayforce"])
@@ -114,12 +37,9 @@ async def play_hndlr(
 ) -> None:
     sent = await m.reply_text(m.lang["play_searching"])
     file = None
+    mention = m.from_user.mention
     media = tg.get_media(m.reply_to_message) if m.reply_to_message else None
     tracks = []
-
-    requester_name = html.escape(m.from_user.first_name or "User")
-    requester_link = f"tg://user?id={m.from_user.id}"
-    requester_mention = f'<a href="{requester_link}">{requester_name}</a>'
 
     if media:
         setattr(sent, "lang", m.lang)
@@ -129,10 +49,10 @@ async def play_hndlr(
         file = await tg.process_m3u8(url, sent.id, video)
 
     elif url:
-        if "list=" in url:
+        if "playlist" in url:
             await sent.edit_text(m.lang["playlist_fetch"])
             tracks = await yt.playlist(
-                config.PLAYLIST_LIMIT, requester_mention, url, video
+                config.PLAYLIST_LIMIT, mention, url, video
             )
 
             if not tracks:
@@ -168,67 +88,30 @@ async def play_hndlr(
     if await db.is_logger():
         await utils.play_log(m, sent.link, file.title, file.duration)
 
-    file.user = requester_mention
-
+    file.user = mention
     if force:
         queue.force_add(m.chat.id, file)
     else:
         position = queue.add(m.chat.id, file)
 
         if position != 0 or await db.get_call(m.chat.id):
-            try:
-                await sent.delete()
-            except Exception:
-                pass
-
-            song_link = html.escape(
-                getattr(file, "url", None)
-                or url
-                or "https://t.me/Official_Bika"
-            )
-            song_title = html.escape(file.title or "Unknown")
-            brand_text = html.escape(config.MUSIC_BRAND_TEXT)
-
-            text = (
-                f'<b><tg-emoji emoji-id="5361979846845014099">💃</tg-emoji> {brand_text}</b>\n\n'
-                f'<blockquote><b>{position}</b> ခုမြောက် <b>queue</b> ထဲသို့ ထည့်ပြီးပါပြီ</blockquote>\n\n'
-                f'<b><tg-emoji emoji-id="5990337934526517811">🎶</tg-emoji> သီချင်း</b> : '
-                f'<a href="{song_link}">{song_title}</a>\n\n'
-                f'<b><tg-emoji emoji-id="5316615057939897832">⏰</tg-emoji> ကြာချိန်</b> : {file.duration}\n\n'
-                f'<b><tg-emoji emoji-id="6154522383790114334">😅</tg-emoji> တောင်းဆိုသူ</b> : '
-                f"{requester_mention}"
-            )
-
-            result = await _send_raw_text_with_buttons(
-                chat_id=m.chat.id,
-                text=text,
+            await sent.edit_text(
+                m.lang["play_queued"].format(
+                    position,
+                    file.url,
+                    file.title,
+                    file.duration,
+                    m.from_user.mention,
+                ),
                 reply_markup=buttons.play_queued(
                     m.chat.id, file.id, m.lang["play_now"]
                 ),
             )
-
-            if isinstance(result, dict) and result.get("ok") is False:
-                print(f"RAW PLAY QUEUE SEND ERROR: {result}")
-                result = await m.reply_text(
-                    text=text,
-                    reply_markup=buttons.play_queued(
-                        m.chat.id, file.id, m.lang["play_now"]
-                    ),
-                    parse_mode=enums.ParseMode.HTML,
-                    disable_web_page_preview=True,
-                )
-
-            # Removes the whole queue card and its Play Now button after 10s
-            # by default. Controlled through OLD_POST_CLEAN / DELAY in .env.
-            await _schedule_queue_post_cleanup(m.chat.id, result)
-
             if tracks:
                 added = playlist_to_queue(m.chat.id, tracks)
                 await app.send_message(
                     chat_id=m.chat.id,
                     text=m.lang["playlist_queued"].format(len(tracks)) + added,
-                    parse_mode=enums.ParseMode.HTML,
-                    disable_web_page_preview=True,
                 )
             return
 
@@ -241,14 +124,10 @@ async def play_hndlr(
             file.file_path = await yt.download(file.id, video=video)
 
     await anon.play_media(chat_id=m.chat.id, message=sent, media=file)
-
     if not tracks:
         return
-
     added = playlist_to_queue(m.chat.id, tracks)
     await app.send_message(
         chat_id=m.chat.id,
         text=m.lang["playlist_queued"].format(len(tracks)) + added,
-        parse_mode=enums.ParseMode.HTML,
-        disable_web_page_preview=True,
     )
