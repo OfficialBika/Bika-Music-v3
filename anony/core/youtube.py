@@ -14,6 +14,7 @@ import asyncio
 import os
 import random
 import re
+import time
 from pathlib import Path
 
 import aiohttp
@@ -294,9 +295,12 @@ class YouTube:
             "nocheckcertificate": True,
             # This is the Python equivalent of the working CLI --force-ipv4.
             "source_address": "0.0.0.0",
-            "retries": 3,
-            "fragment_retries": 3,
-            "extractor_retries": 3,
+            "retries": 2,
+            "fragment_retries": 2,
+            "extractor_retries": 2,
+            # Helpful for DASH/HLS fallbacks; progressive format 18 remains single-stream.
+            "concurrent_fragment_downloads": 4,
+            "socket_timeout": 15,
             # The VPS works with yt-dlp's default YouTube client selection.
             # Do NOT force player_client=web here; that makes format 18 disappear.
             "js_runtimes": {
@@ -330,21 +334,21 @@ class YouTube:
         # If 18 is unavailable, fall back to audio-only / best formats.
         if video:
             formats_to_try = [
-                "18",
-                "22",
                 "18/22/b[height<=720][width<=1280]/best[height<=720]/best",
                 "best",
             ]
         else:
+            # Music playback does not need the video stream. Prefer direct audio
+            # first, with progressive MP4 format 18 as a reliable fallback.
             formats_to_try = [
-                "18",
-                "251/140/ba/bestaudio/best",
-                "ba/bestaudio/best",
+                "251/140/18",
                 "best",
             ]
 
         def _download_with_fallbacks() -> str | None:
             last_error = None
+            started = time.monotonic()
+
             for fmt in formats_to_try:
                 self._cleanup_partial_files(video_id)
                 opts = self._base_ydl_opts(cookie, fmt, video=video)
@@ -354,6 +358,13 @@ class YouTube:
                         ydl.download([url])
                     found = self._find_downloaded_file(video_id, video=video)
                     if found:
+                        elapsed = time.monotonic() - started
+                        logger.info(
+                            "YouTube download completed %s in %.2fs (%s)",
+                            video_id,
+                            elapsed,
+                            Path(found).name,
+                        )
                         return found
                 except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as ex:
                     last_error = ex
