@@ -6,8 +6,8 @@
 # - Uses yt-dlp's default YouTube client selection; forcing player_client=web breaks
 #   format extraction on this VPS.
 # - Enables Deno explicitly for YouTube JavaScript challenges and allows the EJS npm component.
-# - Tries progressive format 18 first because it succeeds on this VPS.
-# - Falls back to audio-only / best formats if progressive format is unavailable.
+# - Prefers direct audio formats for music playback to avoid downloading video data.
+# - Keeps progressive format 18 as a reliable fallback when direct audio is unavailable.
 # - Keeps cookie loading, playlist/search safety, actual downloaded file detection, and threaded yt-dlp execution.
 
 import asyncio
@@ -330,8 +330,8 @@ class YouTube:
         url = self.base + video_id
         cookie = self.get_cookies()
 
-        # Try format 18 first because your VPS direct test succeeded by downloading format 18.
-        # If 18 is unavailable, fall back to audio-only / best formats.
+        # For music, prefer direct audio so less data needs to be downloaded.
+        # Format 18 remains a reliable fallback for videos where audio-only is unavailable.
         if video:
             formats_to_try = [
                 "18/22/b[height<=720][width<=1280]/best[height<=720]/best",
