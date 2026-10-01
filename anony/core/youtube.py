@@ -3,10 +3,11 @@
 # This file is part of AnonXMusic
 #
 # Bika-Music-v3 YouTube reliable downloader patch
-# - Uses YouTube WEB client only, matching the VPS command that worked:
-#   yt-dlp --cookies anony/cookies/cookies.txt --force-ipv4 --extractor-args "youtube:player_client=web"
-# - Tries progressive WEB format 18 first because it succeeded on this VPS while audio-only streams returned 403.
-# - Falls back to audio-only formats if progressive format is unavailable.
+# - Uses yt-dlp's default YouTube client selection; forcing player_client=web breaks
+#   format extraction on this VPS.
+# - Enables Deno explicitly for YouTube JavaScript challenges and allows the EJS npm component.
+# - Tries progressive format 18 first because it succeeds on this VPS.
+# - Falls back to audio-only / best formats if progressive format is unavailable.
 # - Keeps cookie loading, playlist/search safety, actual downloaded file detection, and threaded yt-dlp execution.
 
 import asyncio
@@ -47,7 +48,7 @@ class YouTube:
     def _log_patch_once(self) -> None:
         if not self._patch_logged:
             self._patch_logged = True
-            logger.info("YouTube downloader patch active: web-client, cookies, IPv4, format-18 fallback")
+            logger.info("YouTube downloader patch active: Deno/EJS, cookies, IPv4, format-18 fallback")
 
     def _safe_title(self, value, limit: int = 50) -> str:
         return str(value or "Unknown")[:limit]
@@ -296,12 +297,14 @@ class YouTube:
             "retries": 3,
             "fragment_retries": 3,
             "extractor_retries": 3,
-            "extractor_args": {
-                "youtube": {
-                    # Android/iOS skipped cookies on your VPS; web client worked.
-                    "player_client": ["web"],
+            # The VPS works with yt-dlp's default YouTube client selection.
+            # Do NOT force player_client=web here; that makes format 18 disappear.
+            "js_runtimes": {
+                "deno": {
+                    "path": "/home/bika/.deno/bin/deno",
                 }
             },
+            "remote_components": {"ejs:npm"},
         }
         if cookie:
             opts["cookiefile"] = cookie
@@ -346,7 +349,7 @@ class YouTube:
                 self._cleanup_partial_files(video_id)
                 opts = self._base_ydl_opts(cookie, fmt, video=video)
                 try:
-                    logger.info("Downloading YouTube %s with web client format=%s", video_id, fmt)
+                    logger.info("Downloading YouTube %s with Deno/EJS format=%s", video_id, fmt)
                     with yt_dlp.YoutubeDL(opts) as ydl:
                         ydl.download([url])
                     found = self._find_downloaded_file(video_id, video=video)
