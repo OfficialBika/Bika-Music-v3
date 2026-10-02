@@ -87,16 +87,14 @@ async def safe_edit_text(
                             return await query.message.reply_text(
                                 text=text,
                                 reply_markup=reply_markup,
-                                disable_web_page_preview=disable_web_page_preview,
                                 parse_mode=parse_mode,
                             )
 
                         return await query.message.reply_text(
                             text=text,
                             reply_markup=reply_markup,
-                            disable_web_page_preview=disable_web_page_preview,
                             parse_mode=parse_mode,
-                        )
+                            )
 
                     return cap_result
 
@@ -111,9 +109,8 @@ async def safe_edit_text(
                     return await query.message.reply_text(
                         text=text,
                         reply_markup=reply_markup,
-                        disable_web_page_preview=disable_web_page_preview,
                         parse_mode=parse_mode,
-                    )
+                            )
 
             return result
 
@@ -150,26 +147,23 @@ async def safe_edit_text(
                         return await query.message.reply_text(
                             text=text,
                             reply_markup=reply_markup,
-                            disable_web_page_preview=disable_web_page_preview,
                             parse_mode=parse_mode,
-                        )
+                            )
 
                     return result
                 except Exception:
                     return await query.message.reply_text(
                         text=text,
                         reply_markup=reply_markup,
-                        disable_web_page_preview=disable_web_page_preview,
                         parse_mode=parse_mode,
-                    )
+                            )
 
             if _is_message_to_edit_not_found(e):
                 return await query.message.reply_text(
                     text=text,
                     reply_markup=reply_markup,
-                    disable_web_page_preview=disable_web_page_preview,
                     parse_mode=parse_mode,
-                )
+                            )
             raise
 
         except Exception:
@@ -304,18 +298,16 @@ async def safe_send_text(
                 chat_id=message.chat.id,
                 text=text,
                 reply_markup=reply_markup,
-                disable_web_page_preview=disable_web_page_preview,
                 parse_mode=parse_mode,
-            )
+                            )
             result = await _maybe_await(result)
 
             if isinstance(result, dict) and result.get("ok") is False:
                 return await message.reply_text(
                     text=text,
                     reply_markup=reply_markup,
-                    disable_web_page_preview=disable_web_page_preview,
                     parse_mode=parse_mode,
-                )
+                            )
 
             return result
 
@@ -328,17 +320,15 @@ async def safe_send_text(
                 return await message.reply_text(
                     text=text,
                     reply_markup=reply_markup,
-                    disable_web_page_preview=disable_web_page_preview,
                     parse_mode=parse_mode,
-                )
+                            )
             except FloodWait as fw:
                 await _handle_flood_wait(fw)
                 return await message.reply_text(
                     text=text,
                     reply_markup=reply_markup,
-                    disable_web_page_preview=disable_web_page_preview,
                     parse_mode=parse_mode,
-                )
+                            )
 
 
 async def safe_reply_text(
@@ -353,9 +343,8 @@ async def safe_reply_text(
             return await message.reply_text(
                 text=text,
                 reply_markup=reply_markup,
-                disable_web_page_preview=disable_web_page_preview,
                 parse_mode=parse_mode,
-            )
+                            )
         except FloodWait as e:
             await _handle_flood_wait(e)
             continue
