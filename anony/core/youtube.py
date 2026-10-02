@@ -158,31 +158,70 @@ class YouTube:
         return bool(re.match(self.iregex, url or ""))
 
     async def search(self, query: str, m_id: int, video: bool = False) -> Track | None:
+        results = None
         try:
             _search = VideosSearch(query, limit=1, with_live=False)
             results = await _search.next()
         except Exception as e:
-            logger.warning("YouTube search failed for %r: %s", query, e)
-            return None
+            logger.warning("py_yt search failed for %r: %s", query, e)
 
         if results and results.get("result"):
             data = results["result"][0]
             video_id = data.get("id")
-            if not video_id:
-                return None
+            if video_id:
+                return Track(
+                    id=video_id,
+                    channel_name=data.get("channel", {}).get("name"),
+                    duration=data.get("duration") or "00:00",
+                    duration_sec=self._safe_duration_sec(data.get("duration")),
+                    message_id=m_id,
+                    title=self._safe_title(data.get("title"), 50),
+                    thumbnail=self._safe_thumb(data.get("thumbnails", [])),
+                    url=data.get("link") or f"{self.base}{video_id}",
+                    view_count=data.get("viewCount", {}).get("short"),
+                    video=video,
+                )
 
-            return Track(
-                id=video_id,
-                channel_name=data.get("channel", {}).get("name"),
-                duration=data.get("duration") or "00:00",
-                duration_sec=self._safe_duration_sec(data.get("duration")),
-                message_id=m_id,
-                title=self._safe_title(data.get("title"), 50),
-                thumbnail=self._safe_thumb(data.get("thumbnails", [])),
-                url=data.get("link") or f"{self.base}{video_id}",
-                view_count=data.get("viewCount", {}).get("short"),
-                video=video,
-            )
+        cookie = self.get_cookies()
+
+        def extract_search():
+            options = {
+                "quiet": True,
+                "no_warnings": True,
+                "noplaylist": True,
+                "skip_download": True,
+                "default_search": "ytsearch1",
+                "js_runtimes": {"deno": {"path": "/home/bika/.deno/bin/deno"}},
+                "remote_components": {"ejs:npm"},
+                "source_address": "0.0.0.0",
+            }
+            if cookie:
+                options["cookiefile"] = cookie
+            with yt_dlp.YoutubeDL(options) as ydl:
+                return ydl.extract_info(f"ytsearch1:{query}", download=False)
+
+        try:
+            info = await asyncio.to_thread(extract_search)
+            entries = info.get("entries") or []
+            if entries:
+                data = entries[0]
+                video_id = data.get("id")
+                if video_id:
+                    return Track(
+                        id=video_id,
+                        channel_name=data.get("channel") or "",
+                        duration=data.get("duration_string") or "00:00",
+                        duration_sec=self._safe_duration_sec(data.get("duration")),
+                        message_id=m_id,
+                        title=self._safe_title(data.get("title"), 50),
+                        thumbnail=data.get("thumbnail"),
+                        url=data.get("webpage_url") or f"{self.base}{video_id}",
+                        view_count=str(data.get("view_count") or ""),
+                        video=video,
+                    )
+        except Exception as e:
+            logger.warning("yt-dlp search fallback failed for %r: %s", query, e)
+
         return None
 
     async def playlist(
@@ -352,8 +391,8 @@ class YouTube:
             # Music playback does not need the video stream. Prefer direct audio
             # first, with progressive MP4 format 18 as a reliable fallback.
             formats_to_try = [
-                "18/140/251",
-                "best",
+                "bestaudio[ext=m4a]/bestaudio/best",
+                "18",
             ]
 
         def _download_with_fallbacks() -> str | None:

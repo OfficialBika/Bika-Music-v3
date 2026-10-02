@@ -184,82 +184,46 @@ async def _controls(_, query: types.CallbackQuery):
 )
 @lang.language()
 async def _help(_, query: types.CallbackQuery):
-    data = query.data.split()
+    data = (query.data or "").split()
     print(f"HELP CALLBACK DATA: {query.data}")
-
-    if len(data) == 1:
-        await safe_answer_callback(query)
-        try:
-            return await safe_edit_text(
-                rawtg,
-                query,
-                text=query.lang["help_menu"],
-                reply_markup=buttons.help_markup(query.lang),
-                parse_mode="HTML",
-            )
-        except Exception as e:
-            print(f"HELP MENU ERROR: {e}")
-            try:
-                return await safe_reply_text(
-                    query.message,
-                    query.lang["help_menu"],
-                    reply_markup=buttons.help_markup(query.lang),
-                    parse_mode="HTML",
-                )
-            except Exception as reply_error:
-                print(f"HELP MENU REPLY ERROR: {reply_error}")
-                return
 
     await safe_answer_callback(query)
 
-    try:
-        if data[1] == "back":
-            return await safe_edit_text(
-                rawtg,
-                query,
-                text=query.lang["help_menu"],
-                reply_markup=buttons.help_markup(query.lang),
-                parse_mode="HTML",
-            )
-
-        elif data[1] == "close":
-            try:
-                await safe_delete(query.message)
-                if query.message.reply_to_message:
-                    await safe_delete(query.message.reply_to_message)
-                return
-            except Exception as e:
-                print(f"HELP CLOSE ERROR: {e}")
-                return
-
+    if len(data) == 1:
+        text = query.lang["help_menu"]
+        markup = buttons.help_markup(query.lang)
+    elif data[1] == "back":
+        text = query.lang["help_menu"]
+        markup = buttons.help_markup(query.lang)
+    elif data[1] == "close":
+        await safe_delete(query.message)
+        return
+    else:
         key = f"help_{data[1]}"
         print(f"HELP LANG KEY: {key}")
-
         if key not in query.lang:
             print(f"HELP KEY NOT FOUND: {key}")
-            return await safe_reply_text(
-                query.message,
-                f"Missing help text key: {key}",
-            )
+            return await safe_reply_text(query.message, f"Missing help text key: {key}")
+        text = query.lang[key]
+        markup = buttons.help_markup(query.lang, True)
 
-        return await safe_edit_text(
-            rawtg,
-            query,
-            text=query.lang[key],
-            reply_markup=buttons.help_markup(query.lang, True),
+    # Do not depend on editMessageText for Help navigation. Old Help messages can
+    # be stale, captions, or otherwise non-editable. Sending a fresh message makes
+    # every Help button deterministic; the old callback message is then removed.
+    try:
+        sent = await safe_reply_text(
+            query.message,
+            text,
+            reply_markup=markup,
             parse_mode="HTML",
+            disable_web_page_preview=True,
         )
-
+        if sent:
+            await safe_delete(query.message)
+        return sent
     except Exception as e:
         print(f"HELP CALLBACK ERROR: {e}")
-        try:
-            await safe_reply_text(
-                query.message,
-                f"Help callback error:\n{e}",
-            )
-        except Exception:
-            pass
-
+        return
 
 @app.on_callback_query(filters.regex("settings") & ~app.bl_users)
 @lang.language()
