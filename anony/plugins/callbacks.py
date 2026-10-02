@@ -178,7 +178,7 @@ async def _controls(_, query: types.CallbackQuery):
         print(f"CONTROLS CALLBACK ERROR: {e}")
 
 
-@app.on_callback_query(filters.regex("help") & ~app.bl_users)
+@app.on_callback_query(\n    filters.regex(r"^help(?:\\s+(?:admins|auth|blist|lang|ping|play|queue|stats|sudo|back|close))?$")\n    & ~app.bl_users\n)
 @lang.language()
 async def _help(_, query: types.CallbackQuery):
     data = query.data.split()
