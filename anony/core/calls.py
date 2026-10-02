@@ -475,6 +475,10 @@ class TgCall(PyTgCalls):
             return True
 
     async def replay(self, chat_id: int) -> None:
+        async with _play_next_locks[chat_id]:
+            await self._replay_unlocked(chat_id)
+
+    async def _replay_unlocked(self, chat_id: int) -> None:
         if not await db.get_call(chat_id):
             return
 
@@ -504,7 +508,7 @@ class TgCall(PyTgCalls):
 
         if loop := await db.get_loop(chat_id):
             await db.set_loop(chat_id, loop - 1)
-            return await self.replay(chat_id)
+            return await self._replay_unlocked(chat_id)
 
         current = queue.get_current(chat_id)
         media = queue.get_next(chat_id)
