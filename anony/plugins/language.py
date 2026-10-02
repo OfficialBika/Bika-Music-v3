@@ -7,6 +7,7 @@ from pyrogram import filters, types
 
 from anony import app, db, lang
 from anony.helpers import admin_check, buttons
+from anony.core.lang import lang_codes
 
 
 @app.on_message(filters.command(["lang", "language"]) & ~app.bl_users)
@@ -30,6 +31,8 @@ async def _lang_cb(_, query: types.CallbackQuery):
         )
 
     _lang = data[1]
+    if _lang not in lang_codes:
+        return await query.answer(query.lang["play_expired"], show_alert=True)
     current = await db.get_lang(query.message.chat.id)
     if current == _lang:
         return await query.answer(
