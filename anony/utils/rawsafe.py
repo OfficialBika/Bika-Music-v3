@@ -23,6 +23,27 @@ def _is_message_not_modified(error: Exception) -> bool:
     return "message is not modified" in text or "message not modified" in text
 
 
+def _is_entity_parse_error(value: Any) -> bool:
+    if isinstance(value, Exception):
+        text = str(value).lower()
+    else:
+        text = _dict_desc(value)
+    return (
+        "can't parse entities" in text
+        or "cant parse entities" in text
+        or "parse entities" in text
+        or "unmatched end tag" in text
+        or "unexpected end of name token" in text
+    )
+
+
+def _plain_text(value: str) -> str:
+    import html
+    import re
+
+    return html.unescape(re.sub(r"<[^>]*>", "", value))
+
+
 async def _handle_flood_wait(error: Exception) -> None:
     if isinstance(error, FloodWait):
         await asyncio.sleep(int(error.value) + 1)
@@ -101,6 +122,18 @@ async def safe_edit_text(
                 if "message is not modified" in desc:
                     return None
 
+                if _is_entity_parse_error(result) and parse_mode is not None:
+                    plain = _plain_text(text)
+                    if plain != text:
+                        return await safe_edit_text(
+                            rawtg,
+                            query,
+                            plain,
+                            reply_markup=reply_markup,
+                            disable_web_page_preview=disable_web_page_preview,
+                            parse_mode=None,
+                        )
+
                 if (
                     "message to edit not found" in desc
                     or "message_id_invalid" in desc
@@ -157,6 +190,18 @@ async def safe_edit_text(
                         reply_markup=reply_markup,
                         parse_mode=parse_mode,
                             )
+
+            if _is_entity_parse_error(e) and parse_mode is not None:
+                plain = _plain_text(text)
+                if plain != text:
+                    return await safe_edit_text(
+                        rawtg,
+                        query,
+                        plain,
+                        reply_markup=reply_markup,
+                        disable_web_page_preview=disable_web_page_preview,
+                        parse_mode=None,
+                    )
 
             if _is_message_to_edit_not_found(e):
                 return await query.message.reply_text(
