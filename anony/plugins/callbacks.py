@@ -207,20 +207,17 @@ async def _help(_, query: types.CallbackQuery):
         text = query.lang[key]
         markup = buttons.help_markup(query.lang, True)
 
-    # Do not depend on editMessageText for Help navigation. Old Help messages can
-    # be stale, captions, or otherwise non-editable. Sending a fresh message makes
-    # every Help button deterministic; the old callback message is then removed.
+    # Keep the original /help photo message and edit its caption + keyboard.
+    # This preserves the image and avoids creating a second text-only message.
     try:
-        sent = await safe_reply_text(
-            query.message,
+        return await safe_edit_text(
+            rawtg,
+            query,
             text,
             reply_markup=markup,
             parse_mode="HTML",
             disable_web_page_preview=True,
         )
-        if sent:
-            await safe_delete(query.message)
-        return sent
     except Exception as e:
         print(f"HELP CALLBACK ERROR: {e}")
         return
