@@ -294,7 +294,7 @@ class TgCall(PyTgCalls):
         except Exception as e:
             logger.exception("Failed to build MediaStream chat=%s: %s", chat_id, e)
             await _safe_edit_text(message, _lang["error_no_file"].format(config.SUPPORT_CHAT))
-            if not seek_time:
+            if not seek_time and auto_advance:
                 await self.play_next(chat_id)
             return False
 
@@ -324,7 +324,7 @@ class TgCall(PyTgCalls):
                     message,
                     _lang["error_no_file"].format(config.SUPPORT_CHAT),
                 )
-                if not seek_time:
+                if not seek_time and auto_advance:
                     await self.play_next(chat_id)
                 return False
             except exceptions.NoActiveGroupCall:
