@@ -14,6 +14,7 @@ import asyncio
 import html
 import os
 from pathlib import Path
+from collections import defaultdict
 from typing import Any
 
 from ntgcalls import (
@@ -41,6 +42,8 @@ TG_RETRY_ERRORS = (
     ConnectionNotFound,
     TelegramServerError,
 )
+
+_play_next_locks: defaultdict[int, asyncio.Lock] = defaultdict(asyncio.Lock)
 
 
 async def _safe_edit_text(message: Message, text: str, **kwargs: Any) -> bool:
@@ -239,6 +242,7 @@ class TgCall(PyTgCalls):
         message: Message,
         media: Media | Track,
         seek_time: int = 0,
+        auto_advance: bool = True,
     ) -> bool:
         _lang = await lang.get_lang(chat_id)
 
@@ -252,7 +256,7 @@ class TgCall(PyTgCalls):
                 message,
                 _lang["error_no_file"].format(config.SUPPORT_CHAT),
             )
-            if not seek_time:
+            if not seek_time and auto_advance:
                 await self.play_next(chat_id)
             return False
 
@@ -273,7 +277,7 @@ class TgCall(PyTgCalls):
                     message,
                     _lang["error_no_file"].format(config.SUPPORT_CHAT),
                 )
-                if not seek_time:
+                if not seek_time and auto_advance:
                     await self.play_next(chat_id)
                 return False
 
@@ -441,9 +445,13 @@ class TgCall(PyTgCalls):
             text=_lang["play_again"],
         )
         media.message_id = msg.id
-        await self.play_media(chat_id, msg, media)
+        await self.play_media(chat_id, msg, media, auto_advance=False)
 
     async def play_next(self, chat_id: int, _attempt: int = 0) -> None:
+        async with _play_next_locks[chat_id]:
+            return await self._play_next_unlocked(chat_id, _attempt)
+
+    async def _play_next_unlocked(self, chat_id: int, _attempt: int = 0) -> None:
         if _attempt > max(3, int(getattr(config, "QUEUE_LIMIT", 25))):
             logger.warning("play_next aborting after too many failures chat=%s", chat_id)
             return await self.stop(chat_id)
@@ -478,10 +486,10 @@ class TgCall(PyTgCalls):
 
             if not media.file_path:
                 await msg.edit_text(_lang["error_no_file"].format(config.SUPPORT_CHAT))
-                return await self.play_next(chat_id, _attempt + 1)
+                return await self._play_next_unlocked(chat_id, _attempt + 1)
 
         media.message_id = msg.id
-        ok = await self.play_media(chat_id, msg, media)
+        ok = await self.play_media(chat_id, msg, media, auto_advance=False)
         if not ok:
             return await self.play_next(chat_id, _attempt + 1)
 
