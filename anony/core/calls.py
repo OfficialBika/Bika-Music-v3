@@ -430,6 +430,49 @@ class TgCall(PyTgCalls):
 
         return True
 
+    async def force_play(self, chat_id: int, item_id: str) -> bool:
+        async with _play_next_locks[chat_id]:
+            current = queue.get_current(chat_id)
+            if not current:
+                return False
+
+            pos, media = queue.check_item(chat_id, item_id)
+            if not media or pos == -1:
+                return False
+
+            m_id = getattr(current, "message_id", 0)
+            old_media_msg_id = getattr(media, "message_id", 0)
+            queue.force_add(chat_id, media, remove=pos)
+
+            try:
+                ids = [x for x in [m_id, old_media_msg_id] if x]
+                if ids:
+                    await app.delete_messages(chat_id=chat_id, message_ids=ids, revoke=True)
+            except Exception:
+                pass
+
+            media.message_id = 0
+            _lang = await lang.get_lang(chat_id)
+            msg = await app.send_message(chat_id=chat_id, text=_lang["play_next"])
+
+            if not getattr(media, "file_path", None):
+                try:
+                    media.file_path = await yt.download(media.id, video=media.video)
+                except Exception as e:
+                    logger.warning("Force-play download failed chat=%s id=%s: %s", chat_id, media.id, e)
+                    media.file_path = None
+
+            if not getattr(media, "file_path", None):
+                await msg.edit_text(_lang["error_no_file"].format(config.SUPPORT_CHAT))
+                await self._play_next_unlocked(chat_id, 1)\n                return False
+
+            media.message_id = msg.id
+            ok = await self.play_media(chat_id, msg, media, auto_advance=False)
+            if not ok:
+                await self._play_next_unlocked(chat_id, 1)
+                return False
+            return True
+
     async def replay(self, chat_id: int) -> None:
         if not await db.get_call(chat_id):
             return
