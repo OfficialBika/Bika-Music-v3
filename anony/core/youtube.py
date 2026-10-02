@@ -14,6 +14,7 @@ import asyncio
 import os
 import random
 import re
+import shutil
 import time
 from pathlib import Path
 
@@ -313,6 +314,15 @@ class YouTube:
         }
         if cookie:
             opts["cookiefile"] = cookie
+
+        # Use aria2c when installed for multi-connection HTTP downloads.
+        # yt-dlp remains the fallback when aria2c is unavailable.
+        if shutil.which("aria2c"):
+            opts["external_downloader"] = "aria2c"
+            opts["external_downloader_args"] = {
+                "default": ["-x", "8", "-s", "8", "-k", "1M"]
+            }
+
         if video:
             opts["merge_output_format"] = "mp4"
         return opts
