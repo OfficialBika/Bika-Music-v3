@@ -491,7 +491,7 @@ class TgCall(PyTgCalls):
         media.message_id = msg.id
         ok = await self.play_media(chat_id, msg, media, auto_advance=False)
         if not ok:
-            return await self.play_next(chat_id, _attempt + 1)
+            return await self._play_next_unlocked(chat_id, _attempt + 1)
 
     async def volume(self, chat_id: int, volume: int) -> bool:
         try:
