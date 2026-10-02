@@ -47,13 +47,25 @@ class Language:
         logger.info(f"Loaded languages: {', '.join(languages.keys())}")
         return languages
 
+    def _resolve(self, lang_code: str | None) -> str:
+        code = str(lang_code or "").strip().lower()
+        if code in self.languages:
+            return code
+        if "en" in self.languages:
+            logger.warning("Unknown language code %r; falling back to en.", lang_code)
+            return "en"
+        if self.languages:
+            fallback = next(iter(self.languages))
+            logger.warning("Unknown language code %r; falling back to %s.", lang_code, fallback)
+            return fallback
+        raise RuntimeError("No language files were loaded from anony/locales.")
+
     async def get_lang(self, chat_id: int) -> dict:
-        lang_code = await db.get_lang(chat_id)
-        return self.languages[lang_code]
+        return self.languages[self._resolve(await db.get_lang(chat_id))]
 
     def get_languages(self) -> dict:
         files = {f.stem for f in self.lang_dir.glob("*.json")}
-        return {code: self.lang_codes[code] for code in sorted(files)}
+        return {code: self.lang_codes.get(code, code) for code in sorted(files)}
 
     def language(self):
         def decorator(func):
@@ -82,7 +94,7 @@ class Language:
                     logger.info(f"Chat {chat.id} is blacklisted, leaving...")
                     return await chat.leave()
 
-                lang_code = await db.get_lang(chat.id)
+                lang_code = self._resolve(await db.get_lang(chat.id))
                 lang_dict = self.languages[lang_code]
 
                 setattr(fallen, "lang", lang_dict)
