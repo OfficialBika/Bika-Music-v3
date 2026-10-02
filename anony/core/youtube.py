@@ -162,8 +162,8 @@ class YouTube:
             _search = VideosSearch(query, limit=1, with_live=False)
             results = await _search.next()
         except Exception as e:
-            logger.warning("YouTube search failed for %r: %s", query, e)
-            return None
+            logger.warning("py_yt search failed for %r: %s", query, e)
+            results = None
 
         if results and results.get("result"):
             data = results["result"][0]
