@@ -394,8 +394,8 @@ class YouTube:
             # Music playback does not need the video stream. Prefer direct audio
             # first, with progressive MP4 format 18 as a reliable fallback.
             formats_to_try = [
-                "18/140/251",
-                "best",
+                "bestaudio[ext=m4a]/bestaudio/best",
+                "18",
             ]
 
         def _download_with_fallbacks() -> str | None:
