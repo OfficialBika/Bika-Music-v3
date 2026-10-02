@@ -6,3 +6,6 @@ __pycache__/
 *.session
 downloads/
 *.log
+anony/cookies/*.txt
+cache/
+*.session-journal
