@@ -8,10 +8,23 @@ import signal
 import importlib
 from contextlib import suppress
 
-from anony import (anon, app, config, db, logger,
+from anony import (anon, app, config, db, logger, tasks,
                    stop, thumb, userbot, yt)
 from anony.plugins import all_modules
 from anony.utils.cleanup import cleanup_downloads
+
+
+async def cleanup_loop():
+    while True:
+        try:
+            deleted = await cleanup_downloads()
+            if deleted:
+                logger.info("Cleanup removed %s stale temporary file(s).", deleted)
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:
+            logger.warning("Periodic cleanup failed: %s", e)
+        await asyncio.sleep(3600)
 
 
 async def idle():
@@ -35,6 +48,8 @@ async def main():
     for module in all_modules:
         importlib.import_module(f"anony.plugins.{module}")
     logger.info(f"Loaded {len(all_modules)} modules.")
+
+    tasks.append(asyncio.create_task(cleanup_loop()))
 
     if config.COOKIES_URL:
         await yt.save_cookies(config.COOKIES_URL)
