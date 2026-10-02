@@ -33,23 +33,6 @@ async def _send_raw_photo_with_buttons(
     )
     result = await _maybe_await(result)
 
-    # sendPhoto ပြီးချက်ချင်း caption+markup ကို raw edit ပြန်လုပ်
-    if isinstance(result, dict) and result.get("ok") and result.get("result"):
-        try:
-            msg = result["result"]
-            msg_id = msg["message_id"]
-
-            edited = rawtg.edit_message_caption(
-                chat_id=chat_id,
-                message_id=msg_id,
-                caption=caption,
-                reply_markup=reply_markup,
-                parse_mode="HTML",
-            )
-            edited = await _maybe_await(edited)
-            print(f"RAW PHOTO POST-EDIT: {edited}")
-        except Exception as e:
-            print(f"RAW PHOTO POST-EDIT ERROR: {e}")
 
     return result
 
