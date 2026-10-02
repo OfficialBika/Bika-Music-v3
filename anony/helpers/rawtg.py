@@ -7,11 +7,27 @@
 from __future__ import annotations
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from anony import config
 
 API = f"https://api.telegram.org/bot{config.BOT_TOKEN}"
 REQUEST_TIMEOUT = 12
+
+_RETRY = Retry(
+    total=2,
+    connect=2,
+    read=2,
+    status=2,
+    backoff_factor=0.4,
+    status_forcelist=(429, 500, 502, 503, 504),
+    allowed_methods=frozenset({"GET", "POST"}),
+    raise_on_status=False,
+)
+_SESSION = requests.Session()
+_SESSION.mount("https://", HTTPAdapter(max_retries=_RETRY, pool_connections=8, pool_maxsize=16))
+_SESSION.mount("http://", HTTPAdapter(max_retries=_RETRY, pool_connections=2, pool_maxsize=4))
 
 
 IGNORABLE_EDIT_ERRORS = (
@@ -95,7 +111,7 @@ def _to_plain(obj):
 
 def _post(method: str, payload: dict):
     try:
-        response = requests.post(
+        response = _SESSION.post(
             f"{API}/{method}",
             json=payload,
             timeout=REQUEST_TIMEOUT,
