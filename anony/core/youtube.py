@@ -284,6 +284,48 @@ class YouTube:
 
         return tracks
 
+        cookie = self.get_cookies()
+
+        def extract_search():
+            options = {
+                "quiet": True,
+                "no_warnings": True,
+                "noplaylist": True,
+                "skip_download": True,
+                "default_search": "ytsearch1",
+                "js_runtimes": {"deno": {"path": "/home/bika/.deno/bin/deno"}},
+                "remote_components": {"ejs:npm"},
+                "source_address": "0.0.0.0",
+            }
+            if cookie:
+                options["cookiefile"] = cookie
+            with yt_dlp.YoutubeDL(options) as ydl:
+                return ydl.extract_info(f"ytsearch1:{query}", download=False)
+
+        try:
+            info = await asyncio.to_thread(extract_search)
+            entries = info.get("entries") or []
+            if entries:
+                data = entries[0]
+                video_id = data.get("id")
+                if video_id:
+                    return Track(
+                        id=video_id,
+                        channel_name=data.get("channel") or "",
+                        duration=data.get("duration_string") or "00:00",
+                        duration_sec=self._safe_duration_sec(data.get("duration")),
+                        message_id=m_id,
+                        title=self._safe_title(data.get("title"), 50),
+                        thumbnail=data.get("thumbnail"),
+                        url=data.get("webpage_url") or f"{self.base}{video_id}",
+                        view_count=str(data.get("view_count") or ""),
+                        video=video,
+                    )
+        except Exception as e:
+            logger.warning("yt-dlp search fallback failed for %r: %s", query, e)
+
+        return None
+
     def _base_ydl_opts(self, cookie: str | None, fmt: str, video: bool) -> dict:
         opts = {
             "outtmpl": "downloads/%(id)s.%(ext)s",
