@@ -29,7 +29,7 @@ class Config:
         self.BOT_TOKEN = getenv("BOT_TOKEN")
         self.MONGO_URL = getenv("MONGO_URL")
 
-        self.LOGGER_ID = _env_int("LOGGER_ID", 0, minimum=0)
+        self.LOGGER_ID = _env_int("LOGGER_ID", 0)
         owner_ids = []
         for raw_id in getenv("OWNER_ID", "").split(","):
             raw_id = raw_id.strip()
