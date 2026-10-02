@@ -27,7 +27,7 @@ from anony.utils.rawsafe import (
 
 
 @app.on_callback_query(
-    filters.regex(r"^help(?:\s+(?:admins|auth|blist|lang|ping|play|queue|stats|sudo|back|close))?$")
+    filters.regex(r"^help(?:[ ]+(?:admins|auth|blist|lang|ping|play|queue|stats|sudo|back|close))?$")
     & ~app.bl_users
 )
 @lang.language()
