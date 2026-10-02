@@ -23,22 +23,27 @@ def _env_int(name: str, default: int, minimum: int | None = None) -> int:
 
 class Config:
     def __init__(self):
-        self.API_ID = int(getenv("API_ID", 0))
+        self.API_ID = _env_int("API_ID", 0, minimum=0)
         self.API_HASH = getenv("API_HASH")
 
         self.BOT_TOKEN = getenv("BOT_TOKEN")
         self.MONGO_URL = getenv("MONGO_URL")
 
-        self.LOGGER_ID = int(getenv("LOGGER_ID", 0))
-        self.OWNER_ID = [
-            int(x.strip())
-            for x in getenv("OWNER_ID", "0").split(",")
-            if x.strip()
-        ]
+        self.LOGGER_ID = _env_int("LOGGER_ID", 0, minimum=0)
+        owner_ids = []
+        for raw_id in getenv("OWNER_ID", "").split(","):
+            raw_id = raw_id.strip()
+            if not raw_id:
+                continue
+            try:
+                owner_ids.append(int(raw_id))
+            except ValueError:
+                continue
+        self.OWNER_ID = owner_ids
 
-        self.DURATION_LIMIT = int(getenv("DURATION_LIMIT", 120)) * 60
-        self.QUEUE_LIMIT = int(getenv("QUEUE_LIMIT", 25))
-        self.PLAYLIST_LIMIT = int(getenv("PLAYLIST_LIMIT", 25))
+        self.DURATION_LIMIT = _env_int("DURATION_LIMIT", 120, minimum=1) * 60
+        self.QUEUE_LIMIT = _env_int("QUEUE_LIMIT", 25, minimum=1)
+        self.PLAYLIST_LIMIT = _env_int("PLAYLIST_LIMIT", 25, minimum=1)
 
         self.SESSION1 = getenv("SESSION", None)
         self.SESSION2 = getenv("SESSION2", None)
@@ -57,7 +62,7 @@ class Config:
         self.THUMB_GEN = _env_bool("THUMB_GEN", True)
         self.VIDEO_PLAY = _env_bool("VIDEO_PLAY", True)
 
-        self.LANG_CODE = getenv("LANG_CODE", "en")
+        self.LANG_CODE = (getenv("LANG_CODE", "en") or "en").strip().lower()
 
         self.COOKIES_URL = [
             url
