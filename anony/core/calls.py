@@ -445,7 +445,9 @@ class TgCall(PyTgCalls):
             text=_lang["play_again"],
         )
         media.message_id = msg.id
-        await self.play_media(chat_id, msg, media, auto_advance=False)
+        ok = await self.play_media(chat_id, msg, media, auto_advance=False)
+        if not ok:
+            await self._play_next_unlocked(chat_id)
 
     async def play_next(self, chat_id: int, _attempt: int = 0) -> None:
         async with _play_next_locks[chat_id]:
