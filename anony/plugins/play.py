@@ -57,8 +57,27 @@ def _get_message_id(result) -> int | None:
 
 
 async def _delete_queue_post_later(chat_id: int, message_id: int) -> None:
-    """Safely remove queue card buttons, then delete the old queue message."""
+    """Safely remove a stale queue card without deleting an opened queue list."""
     await asyncio.sleep(config.OLD_POST_CLEAN_DELAY)
+
+    # Queue List edits this message and changes its keyboard to queue_close.
+    # Once opened, keep the queue list visible instead of auto-deleting it.
+    try:
+        current = await app.get_messages(chat_id, message_id)
+        markup = getattr(current, "reply_markup", None)
+        keyboard = getattr(markup, "inline_keyboard", None) or []
+        callback_data = {
+            getattr(button, "callback_data", None)
+            for row in keyboard
+            for button in (row or [])
+        }
+        if any(
+            isinstance(data, str) and data.startswith("queue_close ")
+            for data in callback_data
+        ):
+            return
+    except Exception:
+        pass
 
     try:
         await app.edit_message_reply_markup(
@@ -77,7 +96,6 @@ async def _delete_queue_post_later(chat_id: int, message_id: int) -> None:
         )
     except Exception:
         pass
-
 
 async def _schedule_queue_post_cleanup(chat_id: int, result) -> None:
     if not await old_post_clean_enabled(chat_id):
