@@ -96,6 +96,8 @@ def _to_plain(obj):
             if hasattr(obj, key):
                 val = getattr(obj, key)
                 if val is not None:
+                    if key == "style" and hasattr(val, "value"):
+                        val = val.value
                     data[key] = _to_plain(val)
         return data
 
