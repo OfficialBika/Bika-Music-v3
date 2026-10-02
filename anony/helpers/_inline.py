@@ -160,6 +160,17 @@ class Inline:
             ]
         )
 
+    def queue_list_markup(self, chat_id: int) -> types.InlineKeyboardMarkup:
+        return self.ikm([
+            [
+                self.ikb(
+                    text="✖ Close",
+                    callback_data=f"queue_close {chat_id}",
+                    style="danger",
+                )
+            ]
+        ])
+
     def queue_markup(
         self, chat_id: int, _text: str, playing: bool
     ) -> types.InlineKeyboardMarkup:
