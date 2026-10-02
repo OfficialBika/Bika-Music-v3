@@ -245,7 +245,7 @@ class Inline:
                         style="primary",
                     ),
                     self.ikb(
-                        text=self._clean_btn_text(lang_codes[language]),
+                        text=self._clean_btn_text(lang_codes.get(language, lang_codes.get("en", "English"))),
                         callback_data="language",
                         style="success",
                     ),
