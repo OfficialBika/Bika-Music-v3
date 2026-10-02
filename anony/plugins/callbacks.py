@@ -47,6 +47,9 @@ async def _controls(_, query: types.CallbackQuery):
     except (TypeError, ValueError):
         return await safe_answer_callback(query, query.lang["play_expired"], show_alert=True)
 
+    if chat_id != query.message.chat.id:
+        return await safe_answer_callback(query, query.lang["play_expired"], show_alert=True)
+
     qaction = len(args) == 4 and action in ("pause", "resume")
     user = query.from_user.mention if query.from_user else "User"
 
