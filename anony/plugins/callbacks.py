@@ -116,46 +116,10 @@ async def _controls(_, query: types.CallbackQuery):
             return await safe_edit_text(
                 rawtg, query, query.lang["play_expired"], parse_mode="HTML"
             )
-
-        current = queue.get_current(chat_id)
-        if not current:
-            await db.remove_call(chat_id)
+        if not await anon.force_play(chat_id, args[3]):
             return await safe_edit_text(
                 rawtg, query, query.lang["play_expired"], parse_mode="HTML"
             )
-
-        pos, media = queue.check_item(chat_id, args[3])
-        if not media or pos == -1:
-            return await safe_edit_text(
-                rawtg,
-                query,
-                query.lang["play_expired"],
-                parse_mode="HTML",
-            )
-
-        m_id = getattr(current, "message_id", 0)
-        old_media_msg_id = getattr(media, "message_id", 0)
-        queue.force_add(chat_id, media, remove=pos)
-
-        try:
-            ids = [x for x in [m_id, old_media_msg_id] if x]
-            if ids:
-                await app.delete_messages(chat_id=chat_id, message_ids=ids, revoke=True)
-            media.message_id = 0
-        except Exception:
-            pass
-
-        msg = await app.send_message(chat_id=chat_id, text=query.lang["play_next"])
-        if not getattr(media, "file_path", None):
-            media.file_path = await yt.download(media.id, video=media.video)
-
-        if not getattr(media, "file_path", None):
-            return await msg.edit_text(
-                query.lang["error_no_file"].format(config.SUPPORT_CHAT)
-            )
-
-        media.message_id = msg.id
-        await anon.play_media(chat_id, msg, media)
         return
 
     elif action == "replay":
