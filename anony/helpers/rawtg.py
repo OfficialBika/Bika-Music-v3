@@ -18,11 +18,11 @@ REQUEST_TIMEOUT = 12
 _RETRY = Retry(
     total=2,
     connect=2,
-    read=2,
-    status=2,
-    backoff_factor=0.4,
-    status_forcelist=(429, 500, 502, 503, 504),
-    allowed_methods=frozenset({"GET", "POST"}),
+    read=0,
+    status=0,
+    backoff_factor=0.0,
+    status_forcelist=(),
+    allowed_methods=frozenset({"GET"}),
     raise_on_status=False,
 )
 _SESSION = requests.Session()
