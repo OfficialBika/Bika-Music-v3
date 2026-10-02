@@ -188,11 +188,27 @@ async def _help(_, query: types.CallbackQuery):
     print(f"HELP CALLBACK DATA: {query.data}")
 
     if len(data) == 1:
+        await safe_answer_callback(query)
         try:
-            return await query.answer(url=f"https://t.me/{app.username}?start=help")
+            return await safe_edit_text(
+                rawtg,
+                query,
+                text=query.lang["help_menu"],
+                reply_markup=buttons.help_markup(query.lang),
+                parse_mode="HTML",
+            )
         except Exception as e:
-            print(f"HELP URL ERROR: {e}")
-            return
+            print(f"HELP MENU ERROR: {e}")
+            try:
+                return await safe_reply_text(
+                    query.message,
+                    query.lang["help_menu"],
+                    reply_markup=buttons.help_markup(query.lang),
+                    parse_mode="HTML",
+                )
+            except Exception as reply_error:
+                print(f"HELP MENU REPLY ERROR: {reply_error}")
+                return
 
     await safe_answer_callback(query)
 
