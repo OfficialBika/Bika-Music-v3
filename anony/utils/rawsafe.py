@@ -9,6 +9,13 @@ from typing import Any
 from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid, MessageNotModified
 
 
+def _pyrogram_parse_mode(parse_mode: Any) -> Any:
+    """Use the Client default for HTML to avoid Kurigram string-mode errors."""
+    if isinstance(parse_mode, str) and parse_mode.upper() == "HTML":
+        return None
+    return parse_mode
+
+
 def _is_message_to_edit_not_found(error: Exception) -> bool:
     text = str(error).lower()
     return (
