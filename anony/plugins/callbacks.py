@@ -318,7 +318,7 @@ async def _settings_cb(_, query: types.CallbackQuery):
     )
 
 
-@app.on_callback_query(filters.regex(r"^queue\\s+-?\\d+$") & ~app.bl_users)
+@app.on_callback_query(filters.regex(r"^queue\s+-?\d+$") & ~app.bl_users)
 @lang.language()
 async def _queue_callback(_, query: types.CallbackQuery):
     data = (query.data or "").split()
@@ -346,7 +346,7 @@ async def _queue_callback(_, query: types.CallbackQuery):
         html.escape(getattr(current, "url", "") or ""),
         html.escape(getattr(current, "title", "Unknown") or "Unknown")[:50],
         html.escape(str(getattr(current, "duration", "Unknown") or "Unknown")),
-        getattr(current, "user", "User") or "User",
+        html.escape(str(getattr(current, "user", "User") or "User")),
     )
     if len(items) > 1:
         text += "<blockquote expandable>"
@@ -367,7 +367,8 @@ async def _queue_callback(_, query: types.CallbackQuery):
     )
 
 
-@app.on_callback_query(filters.regex(r"^queue_close\\s+-?\\d+$") & ~app.bl_users)
+@app.on_callback_query(filters.regex(r"^queue_close\s+-?\d+$") & ~app.bl_users)
+@lang.language()
 async def _queue_close_callback(_, query: types.CallbackQuery):
     data = (query.data or "").split()
     try:
