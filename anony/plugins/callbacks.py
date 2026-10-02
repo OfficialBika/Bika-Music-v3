@@ -10,6 +10,7 @@
 # - Settings Auto Delete toggle edits markup directly without alert popup.
 
 import asyncio
+import html
 import re
 
 from pyrogram import errors, filters, types
@@ -312,3 +313,65 @@ async def _settings_cb(_, query: types.CallbackQuery):
             _auto_delete,
         ),
     )
+
+
+@app.on_callback_query(filters.regex(r"^queue\\s+-?\\d+$") & ~app.bl_users)
+@lang.language()
+async def _queue_callback(_, query: types.CallbackQuery):
+    data = (query.data or "").split()
+    try:
+        chat_id = int(data[1])
+    except (IndexError, TypeError, ValueError):
+        return await safe_answer_callback(query, query.lang["play_expired"], show_alert=True)
+
+    if chat_id != query.message.chat.id:
+        return await safe_answer_callback(query, query.lang["play_expired"], show_alert=True)
+
+    await safe_answer_callback(query)
+    items = queue.get_queue(chat_id)
+    if not items:
+        return await safe_edit_text(
+            rawtg,
+            query,
+            query.lang["not_playing"],
+            reply_markup=buttons.queue_list_markup(chat_id),
+            parse_mode="HTML",
+        )
+
+    current = items[0]
+    text = query.lang["queue_curr"].format(
+        html.escape(getattr(current, "url", "") or ""),
+        html.escape(getattr(current, "title", "Unknown") or "Unknown")[:50],
+        html.escape(str(getattr(current, "duration", "Unknown") or "Unknown")),
+        getattr(current, "user", "User") or "User",
+    )
+    if len(items) > 1:
+        text += "<blockquote expandable>"
+        for i, media in enumerate(items[1:16], start=1):
+            text += query.lang["queue_item"].format(
+                i + 1,
+                html.escape(getattr(media, "title", "Unknown") or "Unknown"),
+                html.escape(str(getattr(media, "duration", "Unknown") or "Unknown")),
+            )
+        text += "</blockquote>"
+
+    return await safe_edit_text(
+        rawtg,
+        query,
+        text,
+        reply_markup=buttons.queue_list_markup(chat_id),
+        parse_mode="HTML",
+    )
+
+
+@app.on_callback_query(filters.regex(r"^queue_close\\s+-?\\d+$") & ~app.bl_users)
+async def _queue_close_callback(_, query: types.CallbackQuery):
+    data = (query.data or "").split()
+    try:
+        chat_id = int(data[1])
+    except (IndexError, TypeError, ValueError):
+        return await safe_answer_callback(query, show_alert=True)
+    if chat_id != query.message.chat.id:
+        return await safe_answer_callback(query, query.lang["play_expired"], show_alert=True)
+    await safe_delete(query.message)
+    await safe_answer_callback(query)
