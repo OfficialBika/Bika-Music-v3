@@ -26,10 +26,7 @@ from anony.utils.rawsafe import (
 )
 
 
-@app.on_callback_query(
-    filters.regex(r"^help(?:[ ]+(?:admins|auth|blist|lang|ping|play|queue|stats|sudo|back|close))?$")
-    & ~app.bl_users
-)
+@app.on_callback_query(filters.regex(r"^cancel_dl$") & ~app.bl_users)
 @lang.language()
 async def cancel_dl(_, query: types.CallbackQuery):
     await safe_answer_callback(query)
@@ -181,7 +178,10 @@ async def _controls(_, query: types.CallbackQuery):
         print(f"CONTROLS CALLBACK ERROR: {e}")
 
 
-@app.on_callback_query(\n    filters.regex(r"^help(?:\\s+(?:admins|auth|blist|lang|ping|play|queue|stats|sudo|back|close))?$")\n    & ~app.bl_users\n)
+@app.on_callback_query(
+    filters.regex(r"^help(?:[ ]+(?:admins|auth|blist|lang|ping|play|queue|stats|sudo|back|close))?$")
+    & ~app.bl_users
+)
 @lang.language()
 async def _help(_, query: types.CallbackQuery):
     data = query.data.split()
