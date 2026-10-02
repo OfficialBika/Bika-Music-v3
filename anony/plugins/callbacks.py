@@ -185,8 +185,6 @@ async def _controls(_, query: types.CallbackQuery):
 @lang.language()
 async def _help(_, query: types.CallbackQuery):
     data = (query.data or "").split()
-    print(f"HELP CALLBACK DATA: {query.data}")
-
     await safe_answer_callback(query)
 
     if len(data) == 1:
@@ -200,28 +198,23 @@ async def _help(_, query: types.CallbackQuery):
         return
     else:
         key = f"help_{data[1]}"
-        print(f"HELP LANG KEY: {key}")
         if key not in query.lang:
-            print(f"HELP KEY NOT FOUND: {key}")
             return await safe_reply_text(query.message, f"Missing help text key: {key}")
         text = query.lang[key]
         markup = buttons.help_markup(query.lang, True)
 
     # Keep the original /help photo message and edit its caption + keyboard.
     # Use the raw Bot API caption method directly because the original message is a photo.
-    # The result is logged so Telegram's exact response can be diagnosed.
     try:
-        result = rawtg.edit_message_caption(
+        return rawtg.edit_message_caption(
             chat_id=query.message.chat.id,
             message_id=query.message.id,
             caption=text,
             reply_markup=markup,
             parse_mode="HTML",
         )
-        print(f"HELP RAW CAPTION EDIT RESULT: {result}", flush=True)
-        return result
     except Exception as e:
-        print(f"HELP RAW CAPTION EDIT ERROR: {type(e).__name__}: {e}", flush=True)
+        print(f"HELP CALLBACK ERROR: {type(e).__name__}: {e}", flush=True)
         return
 
 @app.on_callback_query(filters.regex("settings") & ~app.bl_users)
