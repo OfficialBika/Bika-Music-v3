@@ -158,131 +158,29 @@ class YouTube:
         return bool(re.match(self.iregex, url or ""))
 
     async def search(self, query: str, m_id: int, video: bool = False) -> Track | None:
+        results = None
         try:
             _search = VideosSearch(query, limit=1, with_live=False)
             results = await _search.next()
         except Exception as e:
             logger.warning("py_yt search failed for %r: %s", query, e)
-            results = None
 
         if results and results.get("result"):
             data = results["result"][0]
             video_id = data.get("id")
-            if not video_id:
-                return None
-
-            return Track(
-                id=video_id,
-                channel_name=data.get("channel", {}).get("name"),
-                duration=data.get("duration") or "00:00",
-                duration_sec=self._safe_duration_sec(data.get("duration")),
-                message_id=m_id,
-                title=self._safe_title(data.get("title"), 50),
-                thumbnail=self._safe_thumb(data.get("thumbnails", [])),
-                url=data.get("link") or f"{self.base}{video_id}",
-                view_count=data.get("viewCount", {}).get("short"),
-                video=video,
-            )
-        return None
-
-    async def playlist(
-        self,
-        limit: int,
-        user: str,
-        url: str,
-        video: bool,
-    ) -> list[Track]:
-        tracks = []
-
-        try:
-            cookie = self.get_cookies()
-
-            options = {
-                "quiet": True,
-                "extract_flat": True,
-                "skip_download": True,
-                "noplaylist": False,
-                "playlistend": limit,
-            }
-
-            if cookie:
-                options["cookiefile"] = cookie
-
-            def extract():
-                with yt_dlp.YoutubeDL(options) as ydl:
-                    return ydl.extract_info(url, download=False)
-
-            info = await asyncio.to_thread(extract)
-
-            entries = info.get("entries", [])
-
-            for item in entries:
-                if not item:
-                    continue
-
-                video_id = item.get("id")
-
-                if not video_id:
-                    item_url = item.get("url", "")
-                    if "v=" in item_url:
-                        video_id = item_url.split("v=")[1].split("&")[0]
-
-                if not video_id:
-                    continue
-
-                # Fetch full metadata because extract_flat playlist entries do not
-                # always contain duration/thumbnail/channel information.
-                detail_options = {
-                    "quiet": True,
-                    "skip_download": True,
-                    "noplaylist": True,
-                }
-
-                if cookie:
-                    detail_options["cookiefile"] = cookie
-
-                def extract_detail():
-                    with yt_dlp.YoutubeDL(detail_options) as ydl:
-                        return ydl.extract_info(
-                            f"{self.base}{video_id}",
-                            download=False,
-                        )
-
-                try:
-                    detail = await asyncio.to_thread(extract_detail)
-                except Exception:
-                    detail = item
-
-                tracks.append(
-                    Track(
-                        id=video_id,
-                        channel_name=detail.get("channel") or item.get("channel") or "",
-                        duration=detail.get("duration_string") or item.get("duration_string") or "00:00",
-                        duration_sec=detail.get("duration") or item.get("duration") or 0,
-                        message_id=0,
-                        title=self._safe_title(
-                            detail.get("title") or item.get("title")
-                        ),
-                        thumbnail=(
-                            self._safe_thumb(detail.get("thumbnails", []))
-                            or detail.get("thumbnail")
-                            or item.get("thumbnail")
-                        ),
-                        url=f"{self.base}{video_id}",
-                        user=user,
-                        view_count=detail.get("view_count", "") or "",
-                        video=video,
-                    )
+            if video_id:
+                return Track(
+                    id=video_id,
+                    channel_name=data.get("channel", {}).get("name"),
+                    duration=data.get("duration") or "00:00",
+                    duration_sec=self._safe_duration_sec(data.get("duration")),
+                    message_id=m_id,
+                    title=self._safe_title(data.get("title"), 50),
+                    thumbnail=self._safe_thumb(data.get("thumbnails", [])),
+                    url=data.get("link") or f"{self.base}{video_id}",
+                    view_count=data.get("viewCount", {}).get("short"),
+                    video=video,
                 )
-
-        except Exception as e:
-            logger.warning(
-                "yt-dlp playlist failed %s: %s",
-                url,
-                e,
-            )
-
-        return tracks
 
         cookie = self.get_cookies()
 
