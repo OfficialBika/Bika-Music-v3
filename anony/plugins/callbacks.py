@@ -208,18 +208,20 @@ async def _help(_, query: types.CallbackQuery):
         markup = buttons.help_markup(query.lang, True)
 
     # Keep the original /help photo message and edit its caption + keyboard.
-    # This preserves the image and avoids creating a second text-only message.
+    # Use the raw Bot API caption method directly because the original message is a photo.
+    # The result is logged so Telegram's exact response can be diagnosed.
     try:
-        return await safe_edit_text(
-            rawtg,
-            query,
-            text,
+        result = rawtg.edit_message_caption(
+            chat_id=query.message.chat.id,
+            message_id=query.message.id,
+            caption=text,
             reply_markup=markup,
             parse_mode="HTML",
-            disable_web_page_preview=True,
         )
+        print(f"HELP RAW CAPTION EDIT RESULT: {result}", flush=True)
+        return result
     except Exception as e:
-        print(f"HELP CALLBACK ERROR: {e}")
+        print(f"HELP RAW CAPTION EDIT ERROR: {type(e).__name__}: {e}", flush=True)
         return
 
 @app.on_callback_query(filters.regex("settings") & ~app.bl_users)
