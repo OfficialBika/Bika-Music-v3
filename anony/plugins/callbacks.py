@@ -26,7 +26,10 @@ from anony.utils.rawsafe import (
 )
 
 
-@app.on_callback_query(filters.regex("cancel_dl") & ~app.bl_users)
+@app.on_callback_query(
+    filters.regex(r"^help(?:\s+(?:admins|auth|blist|lang|ping|play|queue|stats|sudo|back|close))?$")
+    & ~app.bl_users
+)
 @lang.language()
 async def cancel_dl(_, query: types.CallbackQuery):
     await safe_answer_callback(query)
