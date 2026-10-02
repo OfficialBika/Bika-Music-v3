@@ -292,7 +292,6 @@ class YouTube:
             "geo_bypass": True,
             "no_warnings": True,
             "overwrites": False,
-            "nocheckcertificate": True,
             # This is the Python equivalent of the working CLI --force-ipv4.
             "source_address": "0.0.0.0",
             "retries": 2,
