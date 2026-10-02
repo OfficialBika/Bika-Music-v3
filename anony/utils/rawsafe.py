@@ -388,7 +388,7 @@ async def safe_reply_text(
             return await message.reply_text(
                 text=text,
                 reply_markup=reply_markup,
-                parse_mode=parse_mode,
+                parse_mode=_pyrogram_parse_mode(parse_mode),
                             )
         except FloodWait as e:
             await _handle_flood_wait(e)
