@@ -464,7 +464,8 @@ class TgCall(PyTgCalls):
 
             if not getattr(media, "file_path", None):
                 await msg.edit_text(_lang["error_no_file"].format(config.SUPPORT_CHAT))
-                await self._play_next_unlocked(chat_id, 1)\n                return False
+                await self._play_next_unlocked(chat_id, 1)
+                return False
 
             media.message_id = msg.id
             ok = await self.play_media(chat_id, msg, media, auto_advance=False)
