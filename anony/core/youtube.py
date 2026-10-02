@@ -298,8 +298,10 @@ class YouTube:
             "fragment_retries": 2,
             "extractor_retries": 2,
             # Helpful for DASH/HLS fallbacks; progressive format 18 remains single-stream.
-            "concurrent_fragment_downloads": 4,
-            "socket_timeout": 15,
+            "concurrent_fragment_downloads": 8,
+            "socket_timeout": 12,
+            "buffersize": 1024 * 1024,
+            "http_chunk_size": 10 * 1024 * 1024,
             # The VPS works with yt-dlp's default YouTube client selection.
             # Do NOT force player_client=web here; that makes format 18 disappear.
             "js_runtimes": {
@@ -340,7 +342,7 @@ class YouTube:
             # Music playback does not need the video stream. Prefer direct audio
             # first, with progressive MP4 format 18 as a reliable fallback.
             formats_to_try = [
-                "251/140/18",
+                "18/140/251",
                 "best",
             ]
 
