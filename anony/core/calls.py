@@ -333,7 +333,7 @@ class TgCall(PyTgCalls):
                 return False
             except exceptions.NoAudioSourceFound:
                 await _safe_edit_text(message, _lang["error_no_audio"])
-                if not seek_time:
+                if not seek_time and auto_advance:
                     await self.play_next(chat_id)
                 return False
             except RTMPStreamingUnsupported:
@@ -343,7 +343,7 @@ class TgCall(PyTgCalls):
             except Exception as e:
                 logger.exception("Unhandled play_media error chat=%s: %s", chat_id, e)
                 await _safe_edit_text(message, _lang["error_tg_server"])
-                if not seek_time:
+                if not seek_time and auto_advance:
                     await self.play_next(chat_id)
                 return False
 
