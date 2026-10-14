@@ -29,7 +29,12 @@ YOUTUBE_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search"
 
 def normalise_query(value: str) -> str:
     value = unicodedata.normalize("NFKC", str(value or "")).casefold()
-    return " ".join("".join(c if c.isalnum() else " " for c in value).split())
+    # Preserve Unicode combining marks (e.g. Myanmar dependent vowels/tones).
+    normalized = "".join(
+        char if unicodedata.category(char)[0] in {"L", "N", "M"} else " "
+        for char in value
+    )
+    return " ".join(normalized.split())
 
 
 def track_id_for(path: Path, root: Path) -> str:
