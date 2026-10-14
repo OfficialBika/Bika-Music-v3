@@ -51,7 +51,7 @@ async def main():
 
     tasks.append(asyncio.create_task(cleanup_loop()))
 
-    if config.COOKIES_URL:
+    if config.COOKIES_URL and not config.MUSIC_API_ONLY:
         await yt.save_cookies(config.COOKIES_URL)
 
     sudoers = await db.get_sudoers()

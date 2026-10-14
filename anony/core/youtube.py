@@ -22,7 +22,8 @@ import aiohttp
 import yt_dlp
 from py_yt import Playlist, VideosSearch
 
-from anony import logger
+from anony import config, logger
+from anony.core.music_api import MusicAPIClient
 from anony.helpers import Track, utils
 
 
@@ -34,6 +35,7 @@ class YouTube:
         self.cookie_dir = "anony/cookies"
         self.warned = False
         self._patch_logged = False
+        self.music_api = MusicAPIClient(config.MUSIC_API_URL, config.MUSIC_API_KEY, logger)
 
         # Accept videos, shorts, playlist pages, and watch URLs that include list=.
         self.regex = re.compile(
@@ -158,6 +160,38 @@ class YouTube:
         return bool(re.match(self.iregex, url or ""))
 
     async def search(self, query: str, m_id: int, video: bool = False) -> Track | None:
+        # API-only mode is deliberately restricted to audio files in an authorized catalog.
+        # It must not fall back to YouTube extraction when a catalog item is missing.
+        if config.MUSIC_API_ONLY:
+            if video or not self.music_api.enabled:
+                return None
+            items = await self.music_api.search_library(query, limit=1)
+            if not items:
+                return None
+            data = items[0]
+            track_id = str(data.get("id") or "")
+            source_url = str(data.get("source_url") or "")
+            try:
+                duration_sec = int(data.get("duration_seconds") or 0)
+            except (TypeError, ValueError):
+                duration_sec = 0
+            if not track_id or not source_url or duration_sec <= 0:
+                logger.warning("Music API returned a track without valid playback metadata.")
+                return None
+            return Track(
+                id=track_id,
+                channel_name="Authorized audio library",
+                duration=str(data.get("duration") or "00:00"),
+                duration_sec=duration_sec,
+                message_id=m_id,
+                title=self._safe_title(data.get("title"), 50),
+                thumbnail=None,
+                url="https://t.me/Official_Bika",
+                file_path=source_url,
+                view_count="",
+                video=False,
+            )
+
         results = None
         try:
             _search = VideosSearch(query, limit=1, with_live=False)
@@ -232,6 +266,8 @@ class YouTube:
         video: bool,
     ) -> list[Track]:
         tracks = []
+        if config.MUSIC_API_ONLY:
+            return tracks
 
         try:
             cookie = self.get_cookies()
@@ -367,7 +403,7 @@ class YouTube:
         return opts
 
     async def download(self, video_id: str, video: bool = False) -> str | None:
-        if not video_id:
+        if not video_id or config.MUSIC_API_ONLY:
             return None
 
         self._log_patch_once()

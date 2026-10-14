@@ -9,3 +9,6 @@ downloads/
 anony/cookies/*.txt
 cache/
 *.session-journal
+
+# Private catalog files must never be committed.
+authorized_audio/
