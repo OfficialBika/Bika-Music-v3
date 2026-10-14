@@ -9,3 +9,6 @@ __pycache__/
 anony/cookies/*.txt
 *.session
 *.session-journal
+
+# Mount private authorized audio at runtime; do not bake it into images.
+authorized_audio/
