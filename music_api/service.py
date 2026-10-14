@@ -90,12 +90,14 @@ class MusicAPI:
             self.port = 8765
         self.base_url = (os.getenv("MUSIC_API_PUBLIC_BASE_URL", "").strip().rstrip("/") or f"http://127.0.0.1:{self.port}")
         try:
-            self.stream_ttl = min(MAX_TTL, max(300, int(os.getenv("MUSIC_API_STREAM_TTL", "86400"))))
+            self.stream_ttl = min(MAX_TTL, max(300, int(os.getenv("MUSIC_API_STREAM_TTL", "259200"))))
         except ValueError:
-            self.stream_ttl = 86400
+            self.stream_ttl = 259200
         self._duration_cache: dict[tuple[str, int, int], int] = {}
         self._youtube_semaphore = asyncio.Semaphore(4)
         self._search_cache: dict[str, tuple[float, list[dict]]] = {}
+        self._audio_index: tuple[float, list[Path]] | None = None
+        self._audio_index_lock = asyncio.Lock()
 
     def validate(self) -> None:
         if len(self.api_key) < 32:
@@ -140,12 +142,38 @@ class MusicAPI:
         sig = sign_source(track_id, expires, self.signing_secret)
         return f"{self.base_url}/api/v1/library/{track_id}/stream?{urlencode({'expires': expires, 'sig': sig})}"
 
-    def _file_for_id(self, track_id: str) -> Path | None:
+    async def _get_audio_index(self, refresh: bool = False) -> list[Path]:
+        cached = self._audio_index
+        if not refresh and cached and cached[0] > time.monotonic():
+            return cached[1]
+
+        async with self._audio_index_lock:
+            cached = self._audio_index
+            if not refresh and cached and cached[0] > time.monotonic():
+                return cached[1]
+            paths = await asyncio.to_thread(scan_audio_files, self.audio_root)
+            # Short index TTL avoids rescanning a large catalog for each unique query.
+            self._audio_index = (time.monotonic() + 30, paths)
+            return paths
+
+    async def _file_for_id(self, track_id: str) -> Path | None:
         if not TRACK_ID_RE.fullmatch(track_id or ""):
             return None
-        for path in scan_audio_files(self.audio_root):
+
+        paths = await self._get_audio_index()
+        for path in paths:
             if hmac.compare_digest(track_id_for(path, self.audio_root), track_id):
-                return path
+                if path.is_file() and not path.is_symlink():
+                    return path
+                break
+
+        # Refresh once if the catalog changed while a queued track was waiting.
+        paths = await self._get_audio_index(refresh=True)
+        for path in paths:
+            if hmac.compare_digest(track_id_for(path, self.audio_root), track_id):
+                if path.is_file() and not path.is_symlink():
+                    return path
+                break
         return None
 
     async def search_library(self, query: str, limit: int) -> list[dict]:
@@ -157,9 +185,11 @@ class MusicAPI:
         if cached and cached[0] > time.monotonic():
             return cached[1]
 
-        def find() -> list[Path]:
+        index = await self._get_audio_index()
+
+        def find(paths: list[Path]) -> list[Path]:
             matches = []
-            for path in scan_audio_files(self.audio_root):
+            for path in paths:
                 title = normalise_query(path.stem.replace("_", " "))
                 if not title:
                     continue
@@ -177,7 +207,7 @@ class MusicAPI:
             matches.sort(key=lambda item: (item[0], item[1]))
             return [item[2] for item in matches[:limit]]
 
-        paths = await asyncio.to_thread(find)
+        paths = await asyncio.to_thread(find, index)
 
         def serialize(path: Path) -> dict:
             seconds = self._duration(path)
@@ -295,7 +325,7 @@ async def stream_item(request: web.Request) -> web.StreamResponse:
     signature = request.query.get("sig", "")
     if not verify_source_signature(track_id, expires, signature, api.signing_secret):
         return web.json_response({"error": "invalid_or_expired_stream_signature"}, status=403)
-    path = await asyncio.to_thread(api._file_for_id, track_id)
+    path = await api._file_for_id(track_id)
     if path is None:
         return web.json_response({"error": "track_not_found"}, status=404)
     content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
