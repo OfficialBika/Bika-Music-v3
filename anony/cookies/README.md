@@ -1,14 +1,11 @@
 <p align="center">
-    1. Upload your <b>Netscape format</b> youtube cookies to batbin.me<br>
-    2. Add <code>COOKIES_URL</code> variable in the env and enter the batbin url in the value.<br>
-    <i>Note: (Multiple values should be seperated by " ")</i>
+    This directory is for local runtime data only. Never commit YouTube/browser cookies,
+    upload them to public paste services, or put them in logs or chat messages.
 </p>
 
 <p align="center">
-    <b>or</b>
-</p>
-
-<p align="center">
-    Local storage for cookies.<br>
-    The file extension must be .txt and the cookie must be in <b>Netscape format.</b>
+    API-only voice-chat playback uses an authorized local audio catalog and does not
+    require YouTube cookies. If you previously committed or shared a cookie file, treat
+    the session as exposed: revoke/sign out that session and rotate it. Removing a file
+    from the latest commit does not remove older Git history.
 </p>
