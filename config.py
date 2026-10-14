@@ -69,6 +69,11 @@ class Config:
             for url in getenv("COOKIES_URL", "").split(" ")
             if url and "batbin.me" in url
         ]
+
+        # Optional API-backed playback from a local, authorized audio catalog.
+        self.MUSIC_API_URL = getenv("MUSIC_API_URL", "").strip().rstrip("/") or None
+        self.MUSIC_API_KEY = getenv("MUSIC_API_KEY", "").strip()
+        self.MUSIC_API_ONLY = _env_bool("MUSIC_API_ONLY", False)
         self.DEFAULT_THUMB = getenv(
             "DEFAULT_THUMB",
             "https://graph.org/file/57c13c2b739bc2443c4f3-6a4fa57e870d529794.jpg",
@@ -119,6 +124,12 @@ class Config:
             ]
             if not getattr(self, var)
         ]
+        if self.MUSIC_API_ONLY:
+            if not self.MUSIC_API_URL:
+                missing.append("MUSIC_API_URL (required when MUSIC_API_ONLY=true)")
+            if not self.MUSIC_API_KEY:
+                missing.append("MUSIC_API_KEY (required when MUSIC_API_ONLY=true)")
+
         if missing:
             raise SystemExit(
                 f"Missing required environment variables: {', '.join(missing)}"
