@@ -32,7 +32,7 @@ Set the generated values in environment variables or in a private `.env` file:
     MUSIC_API_PORT=8765
     MUSIC_API_AUDIO_DIR=/srv/bika-music/authorized_audio
     MUSIC_API_PUBLIC_BASE_URL=http://127.0.0.1:8765
-    MUSIC_API_STREAM_TTL=86400
+    MUSIC_API_STREAM_TTL=259200
 
 Start the API from the repository root:
 
@@ -50,7 +50,7 @@ Add these to the bot's private environment file:
     MUSIC_API_KEY=<the same MUSIC_API_KEY used by the API>
     MUSIC_API_ONLY=true
 
-Restart the bot after updating the private environment. In this mode, the bot's `/play <query>` and voice-chat queue search only the authorized local catalog. If a song is not present in that catalog, the bot will not fall back to extracting audio from a YouTube URL. Keep `MUSIC_API_ONLY=false` to preserve the existing default downloader behavior; that legacy path is separate from the secure API-only mode.
+Restart the bot after updating the private environment. In this mode, the bot's `/play <query>` and voice-chat queue search only the authorized local catalog. If a song is not present in that catalog, the bot will not fall back to extracting audio from a YouTube URL. API-only mode currently supports audio tracks only; video playback and YouTube playlist playback are not supported in this mode. Keep `MUSIC_API_ONLY=false` to preserve the existing default downloader behavior; that legacy path is separate from the secure API-only mode.
 
 The YouTube metadata endpoint can find a video, but it cannot make that YouTube video directly playable in a Telegram voice chat. A licensed source or a local file you are allowed to stream is needed for audio playback.
 
