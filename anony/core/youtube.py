@@ -393,51 +393,44 @@ class YouTube:
             url = self.base + video_id
             cookie = self.get_cookies()
 
-        # For music, prefer direct audio so less data needs to be downloaded.
-    # Format 18 remains a reliable fallback for videos where audio-only is unavailable.
-    if video:
-        formats_to_try = [
-            "18/22/b[height<=720][width<=1280]/best[height<=720]/best",
-            "best",
-        ]
-    else:
-        # Music playback does not need the video stream. Prefer direct audio
-        # first, with progressive MP4 format 18 as a reliable fallback.
-        formats_to_try = [
-            "bestaudio[ext=m4a]/bestaudio/best",
-            "18",
-        ]
+            if video:
+                formats_to_try = [
+                    "18/22/b[height<=720][width<=1280]/best[height<=720]/best",
+                    "best",
+                ]
+            else:
+                formats_to_try = [
+                    "bestaudio[ext=m4a]/bestaudio/best",
+                    "18",
+                ]
 
-    def _download_with_fallbacks() -> str | None:
-        last_error = None
-        started = time.monotonic()
+            def _download_with_fallbacks() -> str | None:
+                last_error = None
+                started = time.monotonic()
 
-        for fmt in formats_to_try:
-            self._cleanup_partial_files(video_id)
-            opts = self._base_ydl_opts(cookie, fmt, video=video)
-            try:
-                logger.info("Downloading YouTube %s with Deno/EJS format=%s", video_id, fmt)
-                with yt_dlp.YoutubeDL(opts) as ydl:
-                    ydl.download([url])
-                found = self._find_downloaded_file(video_id, video=video)
-                if found:
-                    elapsed = time.monotonic() - started
-                    logger.info(
-                        "YouTube download completed %s in %.2fs (%s)",
-                        video_id,
-                        elapsed,
-                        Path(found).name,
-                    )
-                    return found
-            except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as ex:
-                last_error = ex
-                logger.warning("Download attempt failed for %s format=%s: %s", video_id, fmt, ex)
-            except Exception as ex:
-                last_error = ex
-                logger.warning("Unexpected download attempt failed for %s format=%s: %s", video_id, fmt, ex)
+                for fmt in formats_to_try:
+                    self._cleanup_partial_files(video_id)
+                    opts = self._base_ydl_opts(cookie, fmt, video=video)
+                    try:
+                        logger.info("Downloading YouTube %s with Deno/EJS format=%s", video_id, fmt)
+                        with yt_dlp.YoutubeDL(opts) as ydl:
+                            ydl.download([url])
+                        found = self._find_downloaded_file(video_id, video=video)
+                        if found and Path(found).is_file() and Path(found).stat().st_size > 0:
+                            logger.info(
+                                "YouTube download completed %s in %.2fs (%s)",
+                                video_id, time.monotonic() - started, Path(found).name,
+                            )
+                            return found
+                    except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as ex:
+                        last_error = ex
+                        logger.warning("Download attempt failed for %s format=%s: %s", video_id, fmt, ex)
+                    except Exception as ex:
+                        last_error = ex
+                        logger.warning("Unexpected download attempt failed for %s format=%s: %s", video_id, fmt, ex)
 
-        if last_error:
-            logger.warning("All YouTube download attempts failed for %s: %s", video_id, last_error)
-        return None
+                if last_error:
+                    logger.warning("All YouTube download attempts failed for %s: %s", video_id, last_error)
+                return None
 
-    return await asyncio.to_thread(_download_with_fallbacks)
+            return await asyncio.to_thread(_download_with_fallbacks)
