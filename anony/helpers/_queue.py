@@ -73,5 +73,5 @@ class Queue:
             self.queues[chat_id].popleft()
 
     def clear(self, chat_id: int) -> None:
-        """Clear the entire queue."""
+        """Clear the entire queue and release its per-chat deque."""
         self.queues.pop(chat_id, None)
