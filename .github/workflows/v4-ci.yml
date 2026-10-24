@@ -25,6 +25,14 @@ jobs:
       - name: Compile Python sources
         run: python -m compileall -q anony config.py
       - name: Unit tests
+        env:
+          API_ID: "12345"
+          API_HASH: "test-hash"
+          BOT_TOKEN: "123456:TEST_TOKEN"
+          MONGO_URL: "mongodb://localhost:27017"
+          LOGGER_ID: "12345"
+          OWNER_ID: "12345"
+          SESSION: "test-session"
         run: python -m unittest discover -s tests -p "test_*.py" -v
       - name: Import smoke test
         env:
