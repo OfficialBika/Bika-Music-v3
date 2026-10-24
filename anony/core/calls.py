@@ -299,7 +299,7 @@ class TgCall(PyTgCalls):
             return False
 
         # Retry temporary Telegram/ntgcalls server errors. Do not clear queue on first hiccup.
-        for attempt in range(3):
+        for attempt in range(max(1, int(getattr(config, "PLAYBACK_RETRY_LIMIT", 3)))):
             try:
                 await client.play(
                     chat_id=chat_id,
@@ -502,7 +502,7 @@ class TgCall(PyTgCalls):
             return await self._play_next_unlocked(chat_id, _attempt)
 
     async def _play_next_unlocked(self, chat_id: int, _attempt: int = 0) -> None:
-        if _attempt > max(3, int(getattr(config, "QUEUE_LIMIT", 25))):
+        if _attempt >= max(1, int(getattr(config, "PLAYBACK_SKIP_LIMIT", 8))):
             logger.warning("play_next aborting after too many failures chat=%s", chat_id)
             return await self.stop(chat_id)
 
