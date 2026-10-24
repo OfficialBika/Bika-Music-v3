@@ -51,26 +51,35 @@ class Queue:
 
     def get_current(self, chat_id: int) -> MediaItem | None:
         """Return the currently playing item (first in queue), if any."""
-        return self.queues[chat_id][0] if self.queues[chat_id] else None
+        items = self.queues.get(chat_id)
+        return items[0] if items else None
 
     def get_next(self, chat_id: int, check: bool = False) -> MediaItem | None:
         """Remove current item and return the next one, or None if empty."""
-        if not self.queues[chat_id]:
+        items = self.queues.get(chat_id)
+        if not items:
             return None
         if check:
-            return self.queues[chat_id][1] if len(self.queues[chat_id]) > 1 else None
+            return items[1] if len(items) > 1 else None
 
-        self.queues[chat_id].popleft()
-        return self.queues[chat_id][0] if self.queues[chat_id] else None
+        items.popleft()
+        if not items:
+            self.queues.pop(chat_id, None)
+            return None
+        return items[0]
 
     def get_queue(self, chat_id: int) -> list[MediaItem]:
         """Return the full queue including the currently playing item."""
-        return list(self.queues[chat_id])
+        items = self.queues.get(chat_id)
+        return list(items) if items else []
 
     def remove_current(self, chat_id: int) -> None:
         """Remove the currently playing item only (if exists)."""
-        if self.queues[chat_id]:
-            self.queues[chat_id].popleft()
+        items = self.queues.get(chat_id)
+        if items:
+            items.popleft()
+            if not items:
+                self.queues.pop(chat_id, None)
 
     def clear(self, chat_id: int) -> None:
         """Clear the entire queue and release its per-chat deque."""
