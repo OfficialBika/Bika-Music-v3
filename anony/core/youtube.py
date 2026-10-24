@@ -22,7 +22,7 @@ import aiohttp
 import yt_dlp
 from py_yt import Playlist, VideosSearch
 
-from anony import logger
+from anony import config, logger
 from anony.helpers import Track, utils
 
 
@@ -34,6 +34,7 @@ class YouTube:
         self.cookie_dir = "anony/cookies"
         self.warned = False
         self._patch_logged = False
+        self._download_locks: dict[tuple[str, bool], asyncio.Lock] = {}
 
         # Accept videos, shorts, playlist pages, and watch URLs that include list=.
         self.regex = re.compile(
@@ -130,17 +131,23 @@ class YouTube:
     async def save_cookies(self, urls: list[str]) -> None:
         logger.info("Saving cookies from urls...")
         os.makedirs(self.cookie_dir, exist_ok=True)
-        async with aiohttp.ClientSession() as session:
+        timeout = aiohttp.ClientTimeout(total=20, connect=5)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
             for url in urls:
                 try:
-                    name = url.split("/")[-1]
+                    name = url.rstrip("/").split("/")[-1]
+                    if not re.fullmatch(r"[A-Za-z0-9_-]{1,100}", name):
+                        logger.warning("Skipping invalid cookie identifier")
+                        continue
                     link = "https://batbin.me/raw/" + name
-                    async with session.get(link) as resp:
+                    async with session.get(link, allow_redirects=False) as resp:
                         resp.raise_for_status()
-                        with open(f"{self.cookie_dir}/{name}.txt", "wb") as fw:
-                            fw.write(await resp.read())
+                        payload = await resp.content.read(2_000_001)
+                        if not payload or len(payload) > 2_000_000:
+                            raise ValueError("Cookie payload size invalid")
+                        (Path(self.cookie_dir) / f"{name}.txt").write_bytes(payload)
                 except Exception as e:
-                    logger.warning("Failed to save cookie from %s: %s", url, e)
+                    logger.warning("Failed to save cookie from configured source: %s", type(e).__name__)
         self.checked = False
         self.cookies.clear()
         logger.info("Cookies saved in %s.", self.cookie_dir)
@@ -332,6 +339,8 @@ class YouTube:
             "geo_bypass": True,
             "no_warnings": True,
             "overwrites": False,
+            "nocheckcertificate": False,
+            "socket_timeout": max(30, int(getattr(config, "YOUTUBE_DOWNLOAD_TIMEOUT", 900))),
             # This is the Python equivalent of the working CLI --force-ipv4.
             "source_address": "0.0.0.0",
             "retries": 2,
@@ -367,64 +376,68 @@ class YouTube:
         return opts
 
     async def download(self, video_id: str, video: bool = False) -> str | None:
-        if not video_id:
+        if not video_id or not re.fullmatch(r"[A-Za-z0-9_-]{11}", str(video_id)):
+            logger.warning("Refusing YouTube download with invalid video id")
             return None
 
-        self._log_patch_once()
-        os.makedirs("downloads", exist_ok=True)
+        key = (str(video_id), bool(video))
+        lock = self._download_locks.setdefault(key, asyncio.Lock())
+        async with lock:
+            self._log_patch_once()
+            os.makedirs("downloads", exist_ok=True)
 
-        existing = self._find_downloaded_file(video_id, video=video)
-        if existing:
-            return existing
+            existing = self._find_downloaded_file(video_id, video=video)
+            if existing:
+                return existing
 
-        url = self.base + video_id
-        cookie = self.get_cookies()
+            url = self.base + video_id
+            cookie = self.get_cookies()
 
         # For music, prefer direct audio so less data needs to be downloaded.
-        # Format 18 remains a reliable fallback for videos where audio-only is unavailable.
-        if video:
-            formats_to_try = [
-                "18/22/b[height<=720][width<=1280]/best[height<=720]/best",
-                "best",
-            ]
-        else:
-            # Music playback does not need the video stream. Prefer direct audio
-            # first, with progressive MP4 format 18 as a reliable fallback.
-            formats_to_try = [
-                "bestaudio[ext=m4a]/bestaudio/best",
-                "18",
-            ]
+    # Format 18 remains a reliable fallback for videos where audio-only is unavailable.
+    if video:
+        formats_to_try = [
+            "18/22/b[height<=720][width<=1280]/best[height<=720]/best",
+            "best",
+        ]
+    else:
+        # Music playback does not need the video stream. Prefer direct audio
+        # first, with progressive MP4 format 18 as a reliable fallback.
+        formats_to_try = [
+            "bestaudio[ext=m4a]/bestaudio/best",
+            "18",
+        ]
 
-        def _download_with_fallbacks() -> str | None:
-            last_error = None
-            started = time.monotonic()
+    def _download_with_fallbacks() -> str | None:
+        last_error = None
+        started = time.monotonic()
 
-            for fmt in formats_to_try:
-                self._cleanup_partial_files(video_id)
-                opts = self._base_ydl_opts(cookie, fmt, video=video)
-                try:
-                    logger.info("Downloading YouTube %s with Deno/EJS format=%s", video_id, fmt)
-                    with yt_dlp.YoutubeDL(opts) as ydl:
-                        ydl.download([url])
-                    found = self._find_downloaded_file(video_id, video=video)
-                    if found:
-                        elapsed = time.monotonic() - started
-                        logger.info(
-                            "YouTube download completed %s in %.2fs (%s)",
-                            video_id,
-                            elapsed,
-                            Path(found).name,
-                        )
-                        return found
-                except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as ex:
-                    last_error = ex
-                    logger.warning("Download attempt failed for %s format=%s: %s", video_id, fmt, ex)
-                except Exception as ex:
-                    last_error = ex
-                    logger.warning("Unexpected download attempt failed for %s format=%s: %s", video_id, fmt, ex)
+        for fmt in formats_to_try:
+            self._cleanup_partial_files(video_id)
+            opts = self._base_ydl_opts(cookie, fmt, video=video)
+            try:
+                logger.info("Downloading YouTube %s with Deno/EJS format=%s", video_id, fmt)
+                with yt_dlp.YoutubeDL(opts) as ydl:
+                    ydl.download([url])
+                found = self._find_downloaded_file(video_id, video=video)
+                if found:
+                    elapsed = time.monotonic() - started
+                    logger.info(
+                        "YouTube download completed %s in %.2fs (%s)",
+                        video_id,
+                        elapsed,
+                        Path(found).name,
+                    )
+                    return found
+            except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as ex:
+                last_error = ex
+                logger.warning("Download attempt failed for %s format=%s: %s", video_id, fmt, ex)
+            except Exception as ex:
+                last_error = ex
+                logger.warning("Unexpected download attempt failed for %s format=%s: %s", video_id, fmt, ex)
 
-            if last_error:
-                logger.warning("All YouTube download attempts failed for %s: %s", video_id, last_error)
-            return None
+        if last_error:
+            logger.warning("All YouTube download attempts failed for %s: %s", video_id, last_error)
+        return None
 
-        return await asyncio.to_thread(_download_with_fallbacks)
+    return await asyncio.to_thread(_download_with_fallbacks)
