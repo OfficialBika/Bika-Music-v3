@@ -11,9 +11,9 @@ class MigrationSafetyTests(unittest.IsolatedAsyncioTestCase):
         db.usersdb = MagicMock()
         db.chatsdb = MagicMock()
         db.db.tgusersdb = MagicMock()
-        db.usersdb.find.return_value = self._cursor([{"_id": 1}, {"user_id": 1}])
-        db.db.tgusersdb.find.return_value = self._cursor([{"_id": 2}])
-        db.chatsdb.find.return_value = self._cursor([{"_id": -1001}])
+        db.usersdb.find = MagicMock(side_effect=lambda *a, **k: self._cursor([{"_id": 1}, {"user_id": 1}]))
+        db.db.tgusersdb.find = MagicMock(side_effect=lambda *a, **k: self._cursor([{"_id": 2}]))
+        db.chatsdb.find = MagicMock(side_effect=lambda *a, **k: self._cursor([{"_id": -1001}]))
         db.usersdb.count_documents = AsyncMock(return_value=0)
         db.db.tgusersdb.count_documents = AsyncMock(return_value=0)
         db.chatsdb.count_documents = AsyncMock(return_value=0)
@@ -35,9 +35,9 @@ class MigrationSafetyTests(unittest.IsolatedAsyncioTestCase):
         db.usersdb = MagicMock()
         db.chatsdb = MagicMock()
         db.db.tgusersdb = MagicMock()
-        db.usersdb.find.return_value = self._cursor([{"_id": "invalid"}])
-        db.db.tgusersdb.find.return_value = self._cursor([])
-        db.chatsdb.find.return_value = self._cursor([])
+        db.usersdb.find = MagicMock(side_effect=lambda *a, **k: self._cursor([{"_id": "invalid"}]))
+        db.db.tgusersdb.find = MagicMock(side_effect=lambda *a, **k: self._cursor([]))
+        db.chatsdb.find = MagicMock(side_effect=lambda *a, **k: self._cursor([]))
         cfg = MagicMock()
         cfg.MIGRATION_DRY_RUN = True
         cfg.MIGRATION_BACKUP_DIR = "/tmp/v4-migration-test"
@@ -53,9 +53,9 @@ class MigrationSafetyTests(unittest.IsolatedAsyncioTestCase):
         db.usersdb = MagicMock()
         db.chatsdb = MagicMock()
         db.db.tgusersdb = MagicMock()
-        db.usersdb.find.return_value = self._cursor([])
-        db.db.tgusersdb.find.return_value = self._cursor([])
-        db.chatsdb.find.return_value = self._cursor([])
+        db.usersdb.find = MagicMock(side_effect=lambda *a, **k: self._cursor([]))
+        db.db.tgusersdb.find = MagicMock(side_effect=lambda *a, **k: self._cursor([]))
+        db.chatsdb.find = MagicMock(side_effect=lambda *a, **k: self._cursor([]))
         cfg = MagicMock()
         cfg.MIGRATION_DRY_RUN = False
         cfg.MIGRATION_BACKUP_DIR = "/tmp/v4-migration-test"
