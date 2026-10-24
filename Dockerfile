@@ -13,7 +13,8 @@ RUN apt-get update -y \
     && rm -rf /var/lib/apt/lists/* \
     && curl -fsSL https://deno.land/install.sh | sh \
     && mkdir -p /usr/local/deno \
-    && cp -a /root/.deno/. /usr/local/deno/
+    && cp -a /root/.deno/. /usr/local/deno/ \
+    && ln -s /usr/local/deno /home/bika-deno
 
 ENV DENO_INSTALL="/usr/local/deno"
 ENV PATH="${DENO_INSTALL}/bin:${PATH}"
@@ -25,7 +26,9 @@ COPY . .
 
 RUN useradd --system --create-home --home-dir /home/bikamusic bikamusic \
     && mkdir -p /app/downloads /app/anony/cookies /app/migration_backups \
-    && chown -R bikamusic:bikamusic /app /usr/local/deno
+    && mkdir -p /home/bika \
+    && ln -s /usr/local/deno /home/bika/.deno \
+    && chown -R bikamusic:bikamusic /app /usr/local/deno /home/bika
 
 USER bikamusic
 
