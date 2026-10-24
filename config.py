@@ -57,6 +57,8 @@ class Config:
         self.MIGRATION_DRY_RUN = _env_bool("MIGRATION_DRY_RUN", True)
         self.MIGRATION_BACKUP_DIR = getenv("MIGRATION_BACKUP_DIR", "migration_backups")
         self.MIGRATION_CONFIRM_APPLY = getenv("MIGRATION_CONFIRM_APPLY", "")
+        self.PLAYBACK_RETRY_LIMIT = _env_int("PLAYBACK_RETRY_LIMIT", 3, minimum=1)
+        self.YOUTUBE_DOWNLOAD_TIMEOUT = _env_int("YOUTUBE_DOWNLOAD_TIMEOUT", 900, minimum=30)
 
         self.SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/MyanmarBotCommunity")
         self.SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/Myanmarbotcommunitychat")
@@ -112,3 +114,5 @@ class Config:
             raise SystemExit("QUEUE_LIMIT and PLAYLIST_LIMIT must be positive")
         if self.PLAYBACK_SKIP_LIMIT < 1:
             raise SystemExit("PLAYBACK_SKIP_LIMIT must be positive")
+        if self.PLAYBACK_RETRY_LIMIT < 1 or self.YOUTUBE_DOWNLOAD_TIMEOUT < 30:
+            raise SystemExit("Playback retry/download timeout values are invalid")
